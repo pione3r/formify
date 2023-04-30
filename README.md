@@ -3,9 +3,11 @@
 </div>
 
 ## 프로젝트 주제
+
 - GDSC TUK 멤버 모집 지원서 폼 만들기
 
 ## 개요
+
 - 리액트를 활용하여 [GDSC TUK 멤버 모집 지원서 폼](https://www.figma.com/file/fzDiVHk1QKTMSEyH6goL9G/GDSC-TUK-Form?node-id=0%3A1&t=Gl1GbiApGS4v4kP1-1)을 만듭니다.
 
 ## 실행 방법
@@ -27,4 +29,5 @@
   - 이외에 리드미에 추가하고 싶은 항목이 있다면 자유롭게 추가하시면 됩니다.
 
 ## 참고 링크
+
 - https://www.figma.com/file/fzDiVHk1QKTMSEyH6goL9G/GDSC-TUK-Form?node-id=0%3A1&t=Gl1GbiApGS4v4kP1-1
