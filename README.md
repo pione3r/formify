@@ -1,5 +1,5 @@
 <div align="middle" style="margin-bottom: 60px">
-  <img src="https://user-images.githubusercontent.com/72335632/235572997-92bf43f7-c717-4e7b-8cef-6ee2eaaa83b7.png" width="150">
+  <img src="https://user-images.githubusercontent.com/72335632/235573021-e2dbab39-6377-485a-85e9-fbd00ac6b0b1.png" width="200">
 </div>
 
 ## 프로젝트 주제
