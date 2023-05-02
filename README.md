@@ -6,7 +6,7 @@
 - GDSC TUK 멤버 모집 지원서 폼 만들기
 
 ## 개요
-- 리액트를 사용하여 [GDSC TUK 멤버 모집 지원서 폼](https://www.figma.com/file/fzDiVHk1QKTMSEyH6goL9G/GDSC-TUK-Form?node-id=0%3A1&t=Gl1GbiApGS4v4kP1-1)을 만듭니다.
+- 리액트를 활용하여 [GDSC TUK 멤버 모집 지원서 폼](https://www.figma.com/file/fzDiVHk1QKTMSEyH6goL9G/GDSC-TUK-Form?node-id=0%3A1&t=Gl1GbiApGS4v4kP1-1)을 만듭니다.
 
 ## 실행 방법
 
