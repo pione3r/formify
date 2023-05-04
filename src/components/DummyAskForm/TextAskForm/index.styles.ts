@@ -6,7 +6,6 @@ export const Wrapper = styled.div`
 
   background-color: #ffffff;
 
-  margin: 20px;
   padding: 20px;
 
   border-radius: 20px;

@@ -6,7 +6,6 @@ export function TextAskForm({
   index = 0,
   질문 = { id: "", type: "text", askTitle: "" },
   질문제목수정,
-  질문삭제,
 }: TextAskFormProps) {
   return (
     <S.Wrapper>
@@ -16,15 +15,8 @@ export function TextAskForm({
         value={질문.askTitle}
         onChange={질문제목수정}
         readOnly={질문.askTitle === "더미질문"}
+        onMouseDown={(event) => event.stopPropagation()}
       />
-      <S.DeleteButton onClick={질문삭제}>
-        <S.DeleteButtonIcon
-          src="/images/delete-button.svg"
-          alt="delete-button"
-          width={20}
-          height={20}
-        />
-      </S.DeleteButton>
     </S.Wrapper>
   );
 }

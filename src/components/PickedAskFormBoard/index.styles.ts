@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
   background-color: rgb(245, 245, 247);
 
   width: 70rem;
@@ -16,4 +20,8 @@ export const Title = styled.h1`
   font-weight: 500;
 `;
 
-export const Body = styled.div``;
+export const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;

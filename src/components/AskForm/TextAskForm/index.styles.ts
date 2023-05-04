@@ -10,7 +10,6 @@ export const Wrapper = styled.div`
 
   background-color: #ffffff;
 
-  margin: 20px;
   padding: 20px;
 
   border-radius: 20px;
@@ -46,28 +45,4 @@ export const Title = styled.input`
   resize: none;
   outline: none;
   border: none;
-`;
-
-export const DeleteButton = styled.div`
-  position: absolute;
-  top: -6px;
-  right: -6px;
-
-  padding: 6px;
-
-  border-radius: 50%;
-
-  background-color: rgb(191 191 191);
-
-  cursor: pointer;
-
-  transition: 200ms ease;
-
-  &:hover {
-    background-color: rgb(207 203 203);
-  }
-`;
-
-export const DeleteButtonIcon = styled(Image)`
-  object-fit: contain;
 `;
