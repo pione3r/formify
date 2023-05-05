@@ -43,7 +43,7 @@ export default function Form() {
   return (
     <>
       <Head>
-        <title>Home</title>
+        <title>폼 만들기</title>
       </Head>
       <main style={{ display: "flex", gap: "10px" }}>
         <AskFormBoard>

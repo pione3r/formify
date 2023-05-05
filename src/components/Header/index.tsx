@@ -5,6 +5,7 @@ import { SignInButton } from "../SigninButton";
 import { signInModalOpen } from "@/stores/signInModalSlice";
 import { useAppDispatch } from "@/stores/hooks";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 
 export function Header() {
   const dispatch = useAppDispatch();
@@ -15,10 +16,9 @@ export function Header() {
     <S.Wrapper>
       <S.NavWrapper>
         <S.NavItem href="/">메인 페이지</S.NavItem>
-        {status === "authenticated" &&
-          window.location.pathname !== "/form" && (
-            <S.NavItem href="/form">폼 생성 페이지</S.NavItem>
-          )}
+        {status === "authenticated" && window.location.pathname !== "/form" && (
+          <S.NavItem href="/form">폼 생성 페이지</S.NavItem>
+        )}
       </S.NavWrapper>
       {status !== "authenticated" && (
         <SignInButton onClick={() => dispatch(signInModalOpen())}>
