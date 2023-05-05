@@ -11,10 +11,6 @@ import { TextAskForm } from "@/components/AskForm/TextAskForm";
 import { usePickedFormPosSwitch } from "@/hooks/usePickedFormPosSwitch";
 
 export default function Home() {
-  fetch("http://localhost:3000/api/hello")
-    .then((res) => res.json())
-    .then((res) => console.log(res));
-
   const [선택된질문리스트, set선택된질문리스트] = useState<TextAskFormType[]>(
     []
   );
