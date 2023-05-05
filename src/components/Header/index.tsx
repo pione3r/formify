@@ -13,7 +13,13 @@ export function Header() {
 
   return (
     <S.Wrapper>
-      <S.HeaderItem href="/">메인 페이지</S.HeaderItem>
+      <S.NavWrapper>
+        <S.NavItem href="/">메인 페이지</S.NavItem>
+        {status === "authenticated" &&
+          window.location.pathname !== "/form" && (
+            <S.NavItem href="/form">폼 생성 페이지</S.NavItem>
+          )}
+      </S.NavWrapper>
       {status !== "authenticated" && (
         <SignInButton onClick={() => dispatch(signInModalOpen())}>
           로그인

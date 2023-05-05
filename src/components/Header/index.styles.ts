@@ -17,7 +17,12 @@ export const Wrapper = styled.div`
   z-index: 100;
 `;
 
-export const HeaderItem = styled(Link)`
+export const NavWrapper = styled.nav`
+  display: flex;
+  gap: 10px;
+`;
+
+export const NavItem = styled(Link)`
   font-size: 1.6rem;
   font-weight: 600;
   color: black;
