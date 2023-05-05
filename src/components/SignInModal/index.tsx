@@ -14,8 +14,8 @@ export function SignInModal() {
       {isOpen && (
         <S.Overlay onClick={() => dispatch(signInModalClose())}>
           <S.Wrapper onClick={(event) => event.stopPropagation()}>
-            <SignInButton id="kakao" onClick={() => signIn("kakao")}>
-              카카오 로그인
+            <SignInButton onClick={() => signIn("google")}>
+              구글 로그인
             </SignInButton>
           </S.Wrapper>
         </S.Overlay>

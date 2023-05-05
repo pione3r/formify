@@ -44,6 +44,7 @@ export default function Form() {
     <>
       <Head>
         <title>폼 만들기</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main style={{ display: "flex", gap: "10px" }}>
         <AskFormBoard>

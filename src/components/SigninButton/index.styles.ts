@@ -1,7 +1,6 @@
-import styled, { css } from "styled-components";
-import { SignInButtonProps } from "./index.types";
+import styled from "styled-components";
 
-export const Wrapper = styled.button<Pick<SignInButtonProps, "id">>`
+export const Wrapper = styled.button`
   padding: 10px 12px;
 
   background-color: rgb(255, 255, 255);
@@ -19,17 +18,4 @@ export const Wrapper = styled.button<Pick<SignInButtonProps, "id">>`
     color: rgb(0, 0, 0);
     border: 1px solid rgb(234, 234, 236);
   }
-
-  ${(props) =>
-    props.id === "kakao" &&
-    css`
-      background-color: #fee500;
-
-      color: #101010;
-
-      &:hover {
-        background-color: #ffed47;
-        border: 1px solid rgb(234, 234, 236);
-      }
-    `}
 `;

@@ -1,14 +1,15 @@
 import NextAuth, { Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
-import KakaoProvider from "next-auth/providers/kakao";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions = {
   providers: [
-    KakaoProvider({
-      clientId: process.env.KAKAO_REST_API_KEY!,
-      clientSecret: process.env.KAKAO_SECRET_KEY!,
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {
       // Send properties to the client, like an access_token from a provider.
