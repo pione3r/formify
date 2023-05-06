@@ -5,12 +5,11 @@ import { SignInButton } from "../SigninButton";
 import { signInModalOpen } from "@/stores/signInModalSlice";
 import { useAppDispatch } from "@/stores/hooks";
 import { useSession } from "next-auth/react";
-import Head from "next/head";
 
 export function Header() {
   const dispatch = useAppDispatch();
 
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
   return (
     <S.Wrapper>
