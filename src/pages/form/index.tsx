@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
+import * as S from "./index.styles";
 
 import { TextAskFormType } from "./index.types";
 
@@ -46,7 +47,7 @@ export default function Form() {
         <title>폼 만들기</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <main style={{ display: "flex", gap: "10px" }}>
+      <S.Wrapper>
         <AskFormBoard>
           <DraggableItem onMouseDown={onMouseDownHandler}>
             <DummyTextAskForm />
@@ -81,8 +82,30 @@ export default function Form() {
               />
             </DraggableItem>
           ))}
+          <S.SubmitButton
+            onClick={() => {
+              // 비어있는 질문 있는지 검사
+              for (const 질문 of 선택된질문리스트) {
+                if (질문.askTitle === "") {
+                  alert("비어있는 질문이 있습니다.");
+                  return;
+                }
+              }
+
+              const 정렬된질문리스트 = 선택된질문리스트.map((질문, index) => ({
+                ...질문,
+                id: "" + (index + 1),
+              }));
+              fetch("http://localhost:3000/api/form", {
+                method: "POST",
+                body: JSON.stringify(정렬된질문리스트),
+              });
+            }}
+          >
+            폼 제출
+          </S.SubmitButton>
         </PickedAskFormBoard>
-      </main>
+      </S.Wrapper>
     </>
   );
 }

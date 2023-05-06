@@ -1,10 +1,10 @@
-import NextAuth, { User } from "next-auth";
+import NextAuth, { AuthOptions, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/utils/db";
 
-export default NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -61,4 +61,6 @@ export default NextAuth({
     },
   },
   secret: process.env.AUTH_SECRET,
-});
+};
+
+export default NextAuth(authOptions);
