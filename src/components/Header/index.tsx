@@ -4,7 +4,7 @@ import { SignInButton } from "../SigninButton";
 
 import { signInModalOpen } from "@/stores/signInModalSlice";
 import { useAppDispatch } from "@/stores/hooks";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export function Header() {
   const dispatch = useAppDispatch();
@@ -17,7 +17,7 @@ export function Header() {
         <S.NavItem href="/">메인 페이지</S.NavItem>
         {status === "authenticated" && (
           <>
-            <S.NavItem href="/form">폼 생성 페이지</S.NavItem>
+            <S.NavItem href="/ask-form">폼 생성 페이지</S.NavItem>
             <S.NavItem href={`/forms/${session.user?.email}`}>
               내가 만든 질문 보기
             </S.NavItem>
@@ -28,6 +28,9 @@ export function Header() {
         <SignInButton onClick={() => dispatch(signInModalOpen())}>
           로그인
         </SignInButton>
+      )}
+      {status === "authenticated" && (
+        <SignInButton onClick={() => signOut()}>로그아웃</SignInButton>
       )}
     </S.Wrapper>
   );

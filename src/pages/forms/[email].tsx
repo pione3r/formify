@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { GetServerSidePropsContext } from "next";
 import * as S from "./index.styles";
 import { FormsProps, FormsType } from "./index.types";
@@ -9,19 +10,23 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/utils/db";
 
 export default function Forms({ forms }: FormsProps) {
-  console.log(forms);
   return (
-    <S.Wrapper>
-      <S.Title>내가 만든 질문폼들</S.Title>
-      <S.Body>
-        {forms.map((form) => (
-          <S.FormWrapper key={form.created} href={`/form/${form.formId}`}>
-            <S.Created>{form.created}</S.Created>
-            <S.FormMaker>{form.formMadeUser}</S.FormMaker>
-          </S.FormWrapper>
-        ))}
-      </S.Body>
-    </S.Wrapper>
+    <>
+      <Head>
+        <title>내가 만든 질문폼들</title>
+      </Head>
+      <S.Wrapper>
+        <S.Title>내가 만든 질문폼들</S.Title>
+        <S.Body>
+          {forms.map((form) => (
+            <S.FormWrapper key={form.created} href={`/form/${form.formId}`}>
+              <S.Created>{form.created}</S.Created>
+              <S.FormMaker>{form.formMadeUser}</S.FormMaker>
+            </S.FormWrapper>
+          ))}
+        </S.Body>
+      </S.Wrapper>
+    </>
   );
 }
 

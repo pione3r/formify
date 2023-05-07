@@ -1,10 +1,4 @@
-export interface TextAskFormType {
-  id: string;
-  type: string;
-  askTitle: string;
-}
-
-export interface FormProps {
+export interface FormAnswerProps {
   form: {
     formId: string;
     created: string;

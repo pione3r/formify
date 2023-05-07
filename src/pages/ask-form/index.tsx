@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useState } from "react";
 import * as S from "./index.styles";
 
-import { TextAskFormType } from "./index.types";
+import { QuestionType } from "./index.types";
 
 import { AskFormBoard } from "@/components/AskFormBoard";
 import { DraggableItem } from "@/components/DraggableItem";
@@ -13,19 +13,17 @@ import { TextAskForm } from "@/components/AskForm/TextAskForm";
 import { useDraggable } from "@/hooks/useDraggable";
 import { usePickedFormPosSwitch } from "@/hooks/usePickedFormPosSwitch";
 
-export default function Form() {
-  const [선택된질문리스트, set선택된질문리스트] = useState<TextAskFormType[]>(
-    []
-  );
+export default function AskForm() {
+  const [선택된질문리스트, set선택된질문리스트] = useState<QuestionType[]>([]);
 
   const 질문추가 = () => {
     const newId = Math.max(
       0,
-      ...선택된질문리스트.map((질문) => Number.parseInt(질문.id))
+      ...선택된질문리스트.map((질문) => Number.parseInt(질문.questionId))
     );
     set선택된질문리스트((prev) => [
       ...prev,
-      { id: "" + (newId + 1), type: "text", askTitle: "" },
+      { questionId: "" + (newId + 1), questionType: "text", questionTitle: "" },
     ]);
   };
 
@@ -56,7 +54,7 @@ export default function Form() {
         <PickedAskFormBoard>
           {선택된질문리스트.map((질문, index) => (
             <DraggableItem
-              key={질문.id}
+              key={질문.questionId}
               className="draggable-item"
               data-index={index}
               onMouseDown={폼순서바꾸기}
@@ -73,8 +71,8 @@ export default function Form() {
                   const 수정한제목 = event.target.value;
                   set선택된질문리스트((prev) =>
                     prev.map((item) =>
-                      item.id === 질문.id
-                        ? { ...item, askTitle: 수정한제목 }
+                      item.questionId === 질문.questionId
+                        ? { ...item, questionTitle: 수정한제목 }
                         : { ...item }
                     )
                   );
@@ -86,7 +84,7 @@ export default function Form() {
             onClick={() => {
               // 비어있는 질문 있는지 검사
               for (const 질문 of 선택된질문리스트) {
-                if (질문.askTitle === "") {
+                if (질문.questionTitle === "") {
                   alert("비어있는 질문이 있습니다.");
                   return;
                 }
@@ -96,7 +94,7 @@ export default function Form() {
                 ...질문,
                 id: "" + (index + 1),
               }));
-              fetch("http://localhost:3000/api/form", {
+              fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/ask-form`, {
                 method: "POST",
                 body: JSON.stringify(정렬된질문리스트),
               });

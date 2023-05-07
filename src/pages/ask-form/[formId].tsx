@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { GetServerSidePropsContext } from "next";
 import { FormProps } from "./index.types";
 
@@ -6,7 +7,14 @@ import { doc, getDoc } from "firebase/firestore";
 
 export default function Form({ form }: FormProps) {
   console.log(form);
-  return <>hi</>;
+  return (
+    <>
+      <Head>
+        <title>내가 만든 질문</title>
+      </Head>
+      <>hi</>
+    </>
+  );
 }
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
