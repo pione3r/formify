@@ -26,13 +26,13 @@ export const Title = styled.div`
   font-weight: 600;
 `;
 
-export const AskListWrapper = styled.div`
+export const AskFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
 `;
 
-export const AskWrapper = styled.div`
+export const QuestionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -44,7 +44,7 @@ export const AskWrapper = styled.div`
   border-radius: 16px;
 `;
 
-export const AskTitle = styled.div`
+export const QuestionTitle = styled.div`
   font-size: 2rem;
   font-weight: 500;
 `;

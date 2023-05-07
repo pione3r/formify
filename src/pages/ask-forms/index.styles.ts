@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-import Link from "next/link";
-
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,7 +26,11 @@ export const Body = styled.div`
   gap: 10px;
 `;
 
-export const FormWrapper = styled(Link)`
+export const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
   text-decoration: none;
   color: #000000;
 
@@ -49,6 +51,8 @@ export const FormWrapper = styled(Link)`
   }
 `;
 
+export const FormHeader = styled.div``;
+
 export const Created = styled.div`
   font-size: 1.3rem;
 `;
@@ -57,3 +61,18 @@ export const FormMaker = styled.div`
   font-size: 1.6rem;
   font-weight: 500;
 `;
+
+export const QuestionsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const QuestionWrapper = styled.div``;
+
+export const QuestionTitle = styled.div`
+  font-size: 1.4rem;
+  font-weight: 500;
+`;
+
+export const LinkCopyButton = styled.button``;

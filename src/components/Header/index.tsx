@@ -18,7 +18,7 @@ export function Header() {
         {status === "authenticated" && (
           <>
             <S.NavItem href="/ask-form">폼 생성 페이지</S.NavItem>
-            <S.NavItem href={`/forms/${session.user?.email}`}>
+            <S.NavItem href={`/ask-forms/${session.user?.email}`}>
               내가 만든 질문 보기
             </S.NavItem>
           </>

@@ -26,6 +26,7 @@ export default async function askFormHandler(
         created: new Date(),
         askFormMaker: session.user?.email,
         questions: parsed질문리스트,
+        answerFormLink: `http://localhost:3000/answer-form/${uuid}`,
       });
 
       await setDoc(doc(db, "answerForms", uuid), {});
