@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { DummySimpleTextQuestion } from "./index";
 
 const meta: Meta<typeof DummySimpleTextQuestion> = {
-  title: "DummyQuestionForm/DummySimpleTextQuestion",
+  title: "Components/DummyQuestionForm/DummySimpleTextQuestion",
   component: DummySimpleTextQuestion,
 };
 
