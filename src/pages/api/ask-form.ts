@@ -28,7 +28,7 @@ export default async function askFormHandler(
         questions: parsed질문리스트,
       });
 
-      await setDoc(doc(db, "answers", uuid), { answerList: [] });
+      await setDoc(doc(db, "answerForms", uuid), {});
 
       res.status(201).json({ status: "질문폼 생성 성공" });
     }

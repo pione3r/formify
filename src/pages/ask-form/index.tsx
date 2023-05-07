@@ -12,8 +12,14 @@ import { TextAskForm } from "@/components/AskForm/TextAskForm";
 
 import { useDraggable } from "@/hooks/useDraggable";
 import { usePickedFormPosSwitch } from "@/hooks/usePickedFormPosSwitch";
+import { getServerSession } from "next-auth";
+import { GetServerSidePropsContext } from "next";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { useRouter } from "next/router";
 
 export default function AskForm() {
+  const router = useRouter();
+
   const [선택된질문리스트, set선택된질문리스트] = useState<QuestionType[]>([]);
 
   const 질문추가 = () => {
@@ -81,7 +87,7 @@ export default function AskForm() {
             </DraggableItem>
           ))}
           <S.SubmitButton
-            onClick={() => {
+            onClick={async () => {
               // 비어있는 질문 있는지 검사
               for (const 질문 of 선택된질문리스트) {
                 if (질문.questionTitle === "") {
@@ -92,12 +98,24 @@ export default function AskForm() {
 
               const 정렬된질문리스트 = 선택된질문리스트.map((질문, index) => ({
                 ...질문,
-                id: "" + (index + 1),
+                questionId: "" + (index + 1),
               }));
-              fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/ask-form`, {
-                method: "POST",
-                body: JSON.stringify(정렬된질문리스트),
-              });
+              const { status } = await fetch(
+                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/ask-form`,
+                {
+                  method: "POST",
+                  body: JSON.stringify(정렬된질문리스트),
+                }
+              );
+
+              if (status === 201) {
+                alert("질문폼 생성 성공");
+                router.replace("/");
+              }
+
+              if (status === 401) {
+                alert("질문폼 생성 실패");
+              }
             }}
           >
             폼 제출
@@ -106,4 +124,17 @@ export default function AskForm() {
       </S.Wrapper>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/",
+      },
+    };
+
+  return { props: {} };
 }
