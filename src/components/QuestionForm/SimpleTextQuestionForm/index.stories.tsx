@@ -1,17 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { TextAskForm } from "./index";
+import { SimpleTextQuestionForm } from "./index";
 
-const meta: Meta<typeof TextAskForm> = {
-  title: "TextAskForm",
-  component: TextAskForm,
+const meta: Meta<typeof SimpleTextQuestionForm> = {
+  title: "QuestionForm/SimpleTextQuestionForm",
+  component: SimpleTextQuestionForm,
 };
 
 export default meta;
-type Story = StoryObj<typeof TextAskForm>;
+type Story = StoryObj<typeof SimpleTextQuestionForm>;
 
 export const Primary: Story = {
-  render: () => <TextAskForm />,
+  render: (args) => <SimpleTextQuestionForm {...args} />,
+  args: {
+    질문순서: 0,
+  },
   decorators: [
     (Story) => (
       <div
@@ -20,6 +23,7 @@ export const Primary: Story = {
           maxWidth: "50rem",
           minHeight: "50rem",
           margin: "0 auto",
+          padding: "20px",
         }}
       >
         <Story />

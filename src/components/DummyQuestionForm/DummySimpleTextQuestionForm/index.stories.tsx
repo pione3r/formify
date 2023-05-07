@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { DummyTextAskForm } from "./index";
+import { DummySimpleTextQuestion } from "./index";
 
-const meta: Meta<typeof DummyTextAskForm> = {
-  title: "DummyTextAskForm",
-  component: DummyTextAskForm,
+const meta: Meta<typeof DummySimpleTextQuestion> = {
+  title: "DummyQuestionForm/DummySimpleTextQuestion",
+  component: DummySimpleTextQuestion,
 };
 
 export default meta;
-type Story = StoryObj<typeof DummyTextAskForm>;
+type Story = StoryObj<typeof DummySimpleTextQuestion>;
 
 export const Primary: Story = {
-  render: () => <DummyTextAskForm />,
+  render: () => <DummySimpleTextQuestion />,
   decorators: [
     (Story) => (
       <div
@@ -20,6 +20,7 @@ export const Primary: Story = {
           maxWidth: "50rem",
           minHeight: "50rem",
           margin: "0 auto",
+          padding: "20px",
         }}
       >
         <Story />

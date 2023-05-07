@@ -1,6 +1,6 @@
 import * as S from "./index.styles";
 
-export function DummyTextAskForm() {
+export function DummySimpleTextQuestion() {
   return (
     <S.Wrapper>
       <S.Title>

@@ -4,11 +4,9 @@ import * as S from "./index.styles";
 
 import { QuestionType } from "./index.types";
 
-import { AskFormBoard } from "@/components/AskFormBoard";
 import { DraggableItem } from "@/components/DraggableItem";
-import { DummyTextAskForm } from "@/components/DummyAskForm/TextAskForm";
-import { PickedAskFormBoard } from "@/components/PickedAskFormBoard";
-import { TextAskForm } from "@/components/AskForm/TextAskForm";
+import { DummySimpleTextQuestion } from "@/components/DummyQuestionForm/DummySimpleTextQuestionForm";
+import { SimpleTextQuestionForm } from "@/components/QuestionForm/SimpleTextQuestionForm";
 
 import { useDraggable } from "@/hooks/useDraggable";
 import { usePickedFormPosSwitch } from "@/hooks/usePickedFormPosSwitch";
@@ -52,12 +50,14 @@ export default function AskForm() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <S.Wrapper>
-        <AskFormBoard>
+        <S.QuestionFormBoardWrapper>
+          <S.QuestionFormBoardTitle>질문타입 선택 보드</S.QuestionFormBoardTitle>
           <DraggableItem onMouseDown={onMouseDownHandler}>
-            <DummyTextAskForm />
+            <DummySimpleTextQuestion />
           </DraggableItem>
-        </AskFormBoard>
-        <PickedAskFormBoard>
+        </S.QuestionFormBoardWrapper>
+        <S.QuestionFormBoardWrapper id="picked-askform-board">
+          <S.QuestionFormBoardTitle>선택된 질문들</S.QuestionFormBoardTitle>
           {선택된질문리스트.map((질문, index) => (
             <DraggableItem
               key={질문.questionId}
@@ -70,9 +70,9 @@ export default function AskForm() {
                 set선택된질문리스트(삭제된질문);
               }}
             >
-              <TextAskForm
-                index={index}
-                질문={질문}
+              <SimpleTextQuestionForm
+                질문순서={index}
+                질문제목={질문.questionTitle}
                 질문제목수정={(event: React.ChangeEvent<HTMLInputElement>) => {
                   const 수정한제목 = event.target.value;
                   set선택된질문리스트((prev) =>
@@ -120,7 +120,7 @@ export default function AskForm() {
           >
             폼 제출
           </S.SubmitButton>
-        </PickedAskFormBoard>
+        </S.QuestionFormBoardWrapper>
       </S.Wrapper>
     </>
   );
