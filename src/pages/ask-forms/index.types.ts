@@ -14,4 +14,5 @@ export type AskFormType = {
 
 export interface FormsProps {
   forms: AskFormType[];
+  formMakerEmail: string;
 }

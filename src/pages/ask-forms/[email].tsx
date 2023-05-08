@@ -20,23 +20,29 @@ export default function AskForms({ forms }: FormsProps) {
         <S.Body>
           {forms.map((form) => (
             <S.FormWrapper key={form.created}>
-              <S.FormHeader>
-                <S.Created>{form.created}</S.Created>
-                <S.FormMaker>{form.askFormMaker}</S.FormMaker>
-              </S.FormHeader>
-              <S.QuestionsWrapper>
-                {form.questions.map((question) => (
-                  <S.QuestionWrapper key={question.questionId}>
-                    <S.QuestionTitle>{`질문 ${question.questionId} : ${question.questionTitle}`}</S.QuestionTitle>
-                  </S.QuestionWrapper>
-                ))}
-              </S.QuestionsWrapper>
+              <S.FormSubWrapper
+                href={`/ask-forms/${form.askFormMaker}/${form.askFormId}`}
+              >
+                <S.FormHeader>
+                  <S.Created>{form.created}</S.Created>
+                  <S.FormMaker>{form.askFormMaker}</S.FormMaker>
+                </S.FormHeader>
+                <S.QuestionsWrapper>
+                  {form.questions.map((question) => (
+                    <S.QuestionWrapper key={question.questionId}>
+                      <S.QuestionTitle>{`질문 ${question.questionId} : ${question.questionTitle}`}</S.QuestionTitle>
+                    </S.QuestionWrapper>
+                  ))}
+                </S.QuestionsWrapper>
+              </S.FormSubWrapper>
               <S.LinkCopyButton
-                onClick={() =>
+                onClick={() => {
                   window.navigator.clipboard
                     .writeText(form.answerFormLink)
-                    .then(() => alert("클립보드에 응답 링크가 복사되었습니다."))
-                }
+                    .then(() =>
+                      alert("클립보드에 응답 링크가 복사되었습니다.")
+                    );
+                }}
               >
                 응답 링크 복사하기
               </S.LinkCopyButton>

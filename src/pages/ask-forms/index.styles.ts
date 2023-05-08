@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import Link from "next/link";
+
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,9 +33,6 @@ export const FormWrapper = styled.div`
   flex-direction: column;
   gap: 10px;
 
-  text-decoration: none;
-  color: #000000;
-
   background-color: #ffffff;
   padding: 20px;
 
@@ -44,10 +43,22 @@ export const FormWrapper = styled.div`
   transition: all 0.2s ease-in-out 0s;
 
   &:hover {
-    text-decoration: none;
-
     box-shadow: rgb(0 0 0 / 12%) 6px 8px 16px;
     transform: translateY(-2px);
+  }
+`;
+
+export const FormSubWrapper = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  color: #000000;
+
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
   }
 `;
 
@@ -58,8 +69,8 @@ export const Created = styled.div`
 `;
 
 export const FormMaker = styled.div`
-  font-size: 1.6rem;
-  font-weight: 500;
+  font-size: 2rem;
+  font-weight: 600;
 `;
 
 export const QuestionsWrapper = styled.div`
@@ -71,8 +82,8 @@ export const QuestionsWrapper = styled.div`
 export const QuestionWrapper = styled.div``;
 
 export const QuestionTitle = styled.div`
-  font-size: 1.4rem;
-  font-weight: 500;
+  font-size: 1.6rem;
+  font-weight: 400;
 `;
 
 export const LinkCopyButton = styled.button``;
