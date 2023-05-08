@@ -4,7 +4,7 @@ import * as S from "./index.styles";
 import { AskFormType, FormsProps } from "./index.types";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth].api";
 
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/utils/db";

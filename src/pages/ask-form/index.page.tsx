@@ -12,7 +12,7 @@ import { useDraggable } from "@/hooks/useDraggable";
 import { usePickedFormPosSwitch } from "@/hooks/usePickedFormPosSwitch";
 import { getServerSession } from "next-auth";
 import { GetServerSidePropsContext } from "next";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth].api";
 import { useRouter } from "next/router";
 import { DummyRadioButtonQuestionForm } from "@/components/DummyQuestionForm/DummyRadioButtonQuestionForm";
 import { RadioButtonQuestionForm } from "@/components/QuestionForm/RadioButtonQuestionForm";

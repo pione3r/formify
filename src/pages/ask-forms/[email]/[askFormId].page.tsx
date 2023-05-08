@@ -5,7 +5,7 @@ import { AnswerFormType, AnswersForAskFormProps } from "./index.types";
 import { useMemo } from "react";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { authOptions } from "@/pages/api/auth/[...nextauth].api";
 
 import { db } from "@/utils/db";
 import { doc, getDoc } from "firebase/firestore";
