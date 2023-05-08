@@ -1,14 +1,25 @@
-export interface QuestionType {
+interface SimpleTextQuestionFormType {
   questionId: string;
-  questionType: string;
+  questionType: "simple-text";
   questionTitle: string;
 }
 
-export interface AskFormProps {
-  askForm: {
-    askFormId: string;
-    created: string;
-    askFormMaker: string;
-    questions: QuestionType[];
-  };
+interface RadioButtonQuestionFormType {
+  questionId: string;
+  questionType: "radio-button";
+  questionTitle: string;
+  radioButtonOptions: string[];
 }
+
+export type QuestionType =
+  | SimpleTextQuestionFormType
+  | RadioButtonQuestionFormType;
+
+// export interface AskFormProps {
+//   askForm: {
+//     askFormId: string;
+//     created: string;
+//     askFormMaker: string;
+//     questions: SimpleTextQuestionFormType[] | RadioButtonQuestionFormType[];
+//   };
+// }
