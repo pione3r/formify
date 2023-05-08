@@ -117,8 +117,6 @@ export default function AskForm() {
     );
   };
 
-  console.log(선택된질문리스트);
-
   return (
     <>
       <Head>

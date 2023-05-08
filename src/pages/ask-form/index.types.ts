@@ -14,12 +14,3 @@ interface RadioButtonQuestionFormType {
 export type QuestionType =
   | SimpleTextQuestionFormType
   | RadioButtonQuestionFormType;
-
-// export interface AskFormProps {
-//   askForm: {
-//     askFormId: string;
-//     created: string;
-//     askFormMaker: string;
-//     questions: SimpleTextQuestionFormType[] | RadioButtonQuestionFormType[];
-//   };
-// }

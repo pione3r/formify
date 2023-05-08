@@ -56,6 +56,12 @@ export const AnswerTitle = styled.div`
   font-weight: 400;
 `;
 
-export const Answer = styled.input``;
+export const AnswerTypeSimpleText = styled.input``;
+
+export const AnswerTypeRadioButtonWrapper = styled.div``;
+
+export const AnswerTypeRadioButtonLabel = styled.label``;
+
+export const AnswerTypeRadioButtonInput = styled.input``;
 
 export const AnswerButton = styled.button``;

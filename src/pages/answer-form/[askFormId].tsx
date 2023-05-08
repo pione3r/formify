@@ -26,33 +26,81 @@ export default function AnswerForm({ askForm }: AnswerFormProps) {
           <S.Title>{`${askForm.askFormMaker}님의 질문폼`}</S.Title>
         </S.Header>
         <S.AskFormWrapper>
-          {askForm.questions.map((question, index) => (
-            <S.QuestionWrapper key={question.questionId}>
-              <S.QuestionTitle>{`질문 ${index + 1} : ${
-                question.questionTitle
-              }`}</S.QuestionTitle>
-              <S.AnswerWrapper>
-                <S.AnswerTitle>답변 : </S.AnswerTitle>
-                <S.Answer
-                  onChange={(event) =>
-                    setAnswers((answers) =>
-                      answers.map((answer) =>
-                        answer.questionId === question.questionId
-                          ? {
-                              ...answer,
-                              answer: event.target.value,
+          {askForm.questions.map((question, index) => {
+            if (question.questionType === "simple-text") {
+              return (
+                <S.QuestionWrapper key={question.questionId}>
+                  <S.QuestionTitle>{`질문 ${index + 1} : ${
+                    question.questionTitle
+                  }`}</S.QuestionTitle>
+                  <S.AnswerWrapper>
+                    <S.AnswerTitle>답변 : </S.AnswerTitle>
+                    <S.AnswerTypeSimpleText
+                      onChange={(event) =>
+                        setAnswers((answers) =>
+                          answers.map((answer) =>
+                            answer.questionId === question.questionId
+                              ? {
+                                  ...answer,
+                                  answer: event.target.value,
+                                }
+                              : answer
+                          )
+                        )
+                      }
+                    />
+                  </S.AnswerWrapper>
+                </S.QuestionWrapper>
+              );
+            }
+            if (question.questionType === "radio-button") {
+              return (
+                <S.QuestionWrapper key={question.questionId}>
+                  <S.QuestionTitle>{`질문 ${index + 1} : ${
+                    question.questionTitle
+                  }`}</S.QuestionTitle>
+                  <S.AnswerWrapper>
+                    <S.AnswerTitle>답변 : </S.AnswerTitle>
+                    {question.radioButtonOptions.map((option, index) => (
+                      <S.AnswerTypeRadioButtonWrapper key={index}>
+                        <S.AnswerTypeRadioButtonLabel>
+                          <S.AnswerTypeRadioButtonInput
+                            type="radio"
+                            name={question.questionId}
+                            value={option}
+                            onChange={(event) =>
+                              setAnswers((answers) =>
+                                answers.map((answer) =>
+                                  answer.questionId === question.questionId
+                                    ? {
+                                        ...answer,
+                                        answer: event.target.value,
+                                      }
+                                    : answer
+                                )
+                              )
                             }
-                          : { ...answer }
-                      )
-                    )
-                  }
-                />
-              </S.AnswerWrapper>
-            </S.QuestionWrapper>
-          ))}
+                          />
+                          {option}
+                        </S.AnswerTypeRadioButtonLabel>
+                      </S.AnswerTypeRadioButtonWrapper>
+                    ))}
+                  </S.AnswerWrapper>
+                </S.QuestionWrapper>
+              );
+            }
+          })}
         </S.AskFormWrapper>
         <S.AnswerButton
           onClick={async () => {
+            // 비어있는 답변 검사
+            for (const answer of answers) {
+              if (answer.answer === "") {
+                alert("비어있는 답변이 있습니다.");
+                return;
+              }
+            }
+
             const { status } = await fetch(
               `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/answer-form/${askForm.askFormId}`,
               {
