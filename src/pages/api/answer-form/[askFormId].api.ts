@@ -22,7 +22,7 @@ export default async function answerFormHandler(
     });
 
     res.status(201).json({ status: "응답폼 제출 성공" });
+  } else {
+    res.status(401).json({ status: "BAD REQUEST: 401" });
   }
-
-  res.status(401).json({ status: "BAD REQUEST: 401" });
 }
