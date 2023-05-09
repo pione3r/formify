@@ -26,7 +26,7 @@ export default async function askFormHandler(
         created: new Date(),
         askFormMaker: session.user?.email,
         questions: parsed질문리스트,
-        answerFormLink: `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/answer-form/${uuid}`,
+        answerFormLink: `https://pione3r-easy-form.vercel.app/answer-form/${uuid}`,
       });
 
       await setDoc(doc(db, "answerForms", uuid), {});
