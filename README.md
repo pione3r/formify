@@ -11,8 +11,13 @@
 - 리액트를 활용하여 [GDSC TUK 멤버 모집 지원서 폼](https://www.figma.com/file/fzDiVHk1QKTMSEyH6goL9G/GDSC-TUK-Form?node-id=0%3A1&t=Gl1GbiApGS4v4kP1-1)을 만듭니다.
 
 ## 실행 방법
+- 아래 URL의 웹페이지 접속 후, 로그인
+- 만들고 싶은 질문폼을 생성한 후, 응답자들에게 링크 공유
+- 응답자들은 해당 링크에 접속하여 질문 응답
+- 응답받은 결과 조회
 
 ## URL
+- 웹서비스 URL : https://pione3r-easy-form.vercel.app/
 
 ## 기술 스택
 
