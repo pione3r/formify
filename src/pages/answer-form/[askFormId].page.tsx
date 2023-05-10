@@ -7,6 +7,7 @@ import { AnswerFormProps } from "./index.types";
 
 import { db } from "@/utils/db";
 import { doc, getDoc } from "firebase/firestore";
+import { Backend_API_URL } from "@/common/url";
 
 export default function AnswerForm({ askForm }: AnswerFormProps) {
   const router = useRouter();
@@ -102,7 +103,7 @@ export default function AnswerForm({ askForm }: AnswerFormProps) {
             }
 
             const { status } = await fetch(
-              `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/answer-form/${askForm.askFormId}`,
+              `${Backend_API_URL}/answer-form/${askForm.askFormId}`,
               {
                 method: "POST",
                 body: JSON.stringify({

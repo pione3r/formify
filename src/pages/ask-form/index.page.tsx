@@ -16,6 +16,7 @@ import { authOptions } from "../api/auth/[...nextauth].api";
 import { useRouter } from "next/router";
 import { DummyRadioButtonQuestionForm } from "@/components/DummyQuestionForm/DummyRadioButtonQuestionForm";
 import { RadioButtonQuestionForm } from "@/components/QuestionForm/RadioButtonQuestionForm";
+import { Backend_API_URL } from "@/common/url";
 
 export default function AskForm() {
   const router = useRouter();
@@ -211,13 +212,10 @@ export default function AskForm() {
                 questionId: "" + (index + 1),
               }));
 
-              const { status } = await fetch(
-                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/ask-form`,
-                {
-                  method: "POST",
-                  body: JSON.stringify(정렬된질문리스트),
-                }
-              );
+              const { status } = await fetch(`${Backend_API_URL}/ask-form`, {
+                method: "POST",
+                body: JSON.stringify(정렬된질문리스트),
+              });
 
               if (status === 201) {
                 alert("질문폼 생성 성공");
