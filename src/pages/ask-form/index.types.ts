@@ -11,6 +11,14 @@ interface RadioButtonQuestionFormType {
   radioButtonOptions: string[];
 }
 
+interface CheckBoxQuestionFormType {
+  questionId: string;
+  questionType: "check-box";
+  questionTitle: string;
+  checkBoxOptions: string[];
+}
+
 export type QuestionType =
   | SimpleTextQuestionFormType
-  | RadioButtonQuestionFormType;
+  | RadioButtonQuestionFormType
+  | CheckBoxQuestionFormType;

@@ -11,9 +11,17 @@ interface RadioButtonQuestionFormType {
   radioButtonOptions: string[];
 }
 
+interface CheckBoxQuestionFormType {
+  questionId: string;
+  questionType: "check-box";
+  questionTitle: string;
+  checkBoxOptions: string[];
+}
+
 export type QuestionType =
   | SimpleTextQuestionFormType
-  | RadioButtonQuestionFormType;
+  | RadioButtonQuestionFormType
+  | CheckBoxQuestionFormType;
 
 export interface AnswerFormProps {
   askForm: {
@@ -23,3 +31,26 @@ export interface AnswerFormProps {
     questions: QuestionType[];
   };
 }
+
+export type AnswersType = (
+  | {
+      answer: string;
+      questionId: string;
+      questionType: "simple-text";
+      questionTitle: string;
+    }
+  | {
+      answer: string;
+      questionId: string;
+      questionType: "radio-button";
+      questionTitle: string;
+      radioButtonOptions: string[];
+    }
+  | {
+      answer: string[];
+      questionId: string;
+      questionType: "check-box";
+      questionTitle: string;
+      checkBoxOptions: string[];
+    }
+)[];

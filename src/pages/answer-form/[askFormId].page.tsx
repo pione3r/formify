@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import * as S from "./index.styles";
-import { AnswerFormProps } from "./index.types";
+import { AnswerFormProps, AnswersType } from "./index.types";
 
 import { db } from "@/utils/db";
 import { doc, getDoc } from "firebase/firestore";
@@ -12,8 +12,16 @@ import { Backend_API_URL } from "@/common/url";
 export default function AnswerForm({ askForm }: AnswerFormProps) {
   const router = useRouter();
 
-  const [answers, setAnswers] = useState(
-    askForm.questions.map((question) => ({ ...question, answer: "" }))
+  const [answers, setAnswers] = useState<AnswersType>(
+    askForm.questions.map((question) => {
+      if (question.questionType === "radio-button") {
+        return { ...question, answer: "" };
+      }
+      if (question.questionType === "check-box") {
+        return { ...question, answer: [] };
+      }
+      return { ...question, answer: "" };
+    })
   );
 
   return (
@@ -39,14 +47,18 @@ export default function AnswerForm({ askForm }: AnswerFormProps) {
                     <S.AnswerTypeSimpleText
                       onChange={(event) =>
                         setAnswers((answers) =>
-                          answers.map((answer) =>
-                            answer.questionId === question.questionId
-                              ? {
+                          answers.map((answer) => {
+                            if (answer.questionType === "simple-text") {
+                              if (answer.questionId === question.questionId) {
+                                return {
                                   ...answer,
                                   answer: event.target.value,
-                                }
-                              : answer
-                          )
+                                };
+                              }
+                              return { ...answer };
+                            }
+                            return answer;
+                          })
                         )
                       }
                     />
@@ -71,14 +83,20 @@ export default function AnswerForm({ askForm }: AnswerFormProps) {
                             value={option}
                             onChange={(event) =>
                               setAnswers((answers) =>
-                                answers.map((answer) =>
-                                  answer.questionId === question.questionId
-                                    ? {
+                                answers.map((answer) => {
+                                  if (answer.questionType === "radio-button") {
+                                    if (
+                                      answer.questionId === question.questionId
+                                    ) {
+                                      return {
                                         ...answer,
                                         answer: event.target.value,
-                                      }
-                                    : answer
-                                )
+                                      };
+                                    }
+                                    return { ...answer };
+                                  }
+                                  return answer;
+                                })
                               )
                             }
                           />
@@ -90,13 +108,82 @@ export default function AnswerForm({ askForm }: AnswerFormProps) {
                 </S.QuestionWrapper>
               );
             }
+            if (question.questionType === "check-box") {
+              return (
+                <S.QuestionWrapper key={question.questionId}>
+                  <S.QuestionTitle>{`질문 ${index + 1} : ${
+                    question.questionTitle
+                  }`}</S.QuestionTitle>
+                  <S.AnswerWrapper>
+                    <S.AnswerTitle>답변 : </S.AnswerTitle>
+                    {question.checkBoxOptions.map((option, index) => (
+                      <S.AnswerTypeCheckBoxWrapper key={index}>
+                        <S.AnswerTypeCheckBoxLabel>
+                          <S.AnswerTypeCheckBoxInput
+                            type="checkbox"
+                            name={question.questionId}
+                            value={option}
+                            onChange={(event) => {
+                              if (event.target.checked) {
+                                setAnswers((answers) =>
+                                  answers.map((answer) => {
+                                    if (answer.questionType === "check-box") {
+                                      if (
+                                        answer.questionId ===
+                                        question.questionId
+                                      ) {
+                                        return {
+                                          ...answer,
+                                          answer: [
+                                            ...answer.answer,
+                                            event.target.value,
+                                          ],
+                                        };
+                                      }
+                                      return { ...answer };
+                                    }
+                                    return answer;
+                                  })
+                                );
+                              } else {
+                                setAnswers((answers) =>
+                                  answers.map((answer) => {
+                                    if (answer.questionType === "check-box") {
+                                      if (
+                                        answer.questionId ===
+                                        question.questionId
+                                      ) {
+                                        return {
+                                          ...answer,
+                                          answer: answer.answer.filter(
+                                            (item) =>
+                                              item !== event.target.value
+                                          ),
+                                        };
+                                      }
+                                      return { ...answer };
+                                    }
+                                    return answer;
+                                  })
+                                );
+                              }
+                            }}
+                          />
+                          {option}
+                        </S.AnswerTypeCheckBoxLabel>
+                      </S.AnswerTypeCheckBoxWrapper>
+                    ))}
+                  </S.AnswerWrapper>
+                </S.QuestionWrapper>
+              );
+            }
           })}
         </S.AskFormWrapper>
         <S.AnswerButton
           onClick={async () => {
             // 비어있는 답변 검사
             for (const answer of answers) {
-              if (answer.answer === "") {
+              if (answer.answer === "" || !answer.answer.length) {
                 alert("비어있는 답변이 있습니다.");
                 return;
               }

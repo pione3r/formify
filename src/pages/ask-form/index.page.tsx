@@ -17,6 +17,8 @@ import { useRouter } from "next/router";
 import { DummyRadioButtonQuestionForm } from "@/components/DummyQuestionForm/DummyRadioButtonQuestionForm";
 import { RadioButtonQuestionForm } from "@/components/QuestionForm/RadioButtonQuestionForm";
 import { Backend_API_URL } from "@/common/url";
+import { DummyCheckBoxQuestionForm } from "@/components/DummyQuestionForm/DummyCheckBoxQuestionForm";
+import { CheckBoxQuestionForm } from "@/components/QuestionForm/CheckBoxQuestionForm";
 
 export default function AskForm() {
   const router = useRouter();
@@ -38,7 +40,8 @@ export default function AskForm() {
           questionTitle: "",
         },
       ]);
-    } else if (elementId === "radio-button") {
+    }
+    if (elementId === "radio-button") {
       set선택된질문리스트((prev) => [
         ...prev,
         {
@@ -46,6 +49,17 @@ export default function AskForm() {
           questionType: elementId,
           questionTitle: "",
           radioButtonOptions: [],
+        },
+      ]);
+    }
+    if (elementId === "check-box") {
+      set선택된질문리스트((prev) => [
+        ...prev,
+        {
+          questionId: "" + (newId + 1),
+          questionType: elementId,
+          questionTitle: "",
+          checkBoxOptions: [],
         },
       ]);
     }
@@ -89,6 +103,14 @@ export default function AskForm() {
           }
           return 질문;
         }
+        if (질문.questionType === "check-box") {
+          if (질문Index === idx) {
+            return {
+              ...질문,
+              checkBoxOptions: [...질문.checkBoxOptions, ""],
+            };
+          }
+        }
         return 질문;
       })
     );
@@ -108,6 +130,17 @@ export default function AskForm() {
               radioButtonOptions: 질문.radioButtonOptions.map(
                 (option, 옵션Idx) =>
                   옵션Index === 옵션Idx ? event.target.value : option
+              ),
+            };
+          }
+          return 질문;
+        }
+        if (질문.questionType === "check-box") {
+          if (질문Index === idx) {
+            return {
+              ...질문,
+              checkBoxOptions: 질문.checkBoxOptions.map((option, 옵션Idx) =>
+                옵션Index === 옵션Idx ? event.target.value : option
               ),
             };
           }
@@ -135,6 +168,9 @@ export default function AskForm() {
             </DraggableItem>
             <DraggableItem id="radio-button" onMouseDown={onMouseDownHandler}>
               <DummyRadioButtonQuestionForm />
+            </DraggableItem>
+            <DraggableItem id="check-box" onMouseDown={onMouseDownHandler}>
+              <DummyCheckBoxQuestionForm />
             </DraggableItem>
           </S.QuestionFormBoardBody>
         </S.QuestionFormBoardWrapper>
@@ -175,6 +211,18 @@ export default function AskForm() {
                     선택지내용수정={선택지내용수정}
                   />
                 )}
+                {질문.questionType === "check-box" && (
+                  <CheckBoxQuestionForm
+                    질문순서={index}
+                    질문제목={질문.questionTitle}
+                    질문제목수정={(event) =>
+                      질문제목수정(event, 질문.questionId)
+                    }
+                    선택지목록={질문.checkBoxOptions}
+                    선택지추가={선택지추가}
+                    선택지내용수정={선택지내용수정}
+                  />
+                )}
               </DraggableItem>
             ))}
           </S.QuestionFormBoardBody>
@@ -198,7 +246,23 @@ export default function AskForm() {
               // 비어있는 옵션 검사
               for (const 질문 of 선택된질문리스트) {
                 if (질문.questionType === "radio-button") {
+                  if (!질문.radioButtonOptions.length) {
+                    alert("최소 1개 이상의 옵션을 입력하세요");
+                    return;
+                  }
                   for (const 옵션 of 질문.radioButtonOptions) {
+                    if (옵션 === "") {
+                      alert("비어있는 옵션이 있는 질문이 있습니다.");
+                      return;
+                    }
+                  }
+                }
+                if (질문.questionType === "check-box") {
+                  if (!질문.checkBoxOptions.length) {
+                    alert("최소 1개 이상의 옵션을 입력하세요");
+                    return;
+                  }
+                  for (const 옵션 of 질문.checkBoxOptions) {
                     if (옵션 === "") {
                       alert("비어있는 옵션이 있는 질문이 있습니다.");
                       return;

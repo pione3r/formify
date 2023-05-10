@@ -64,4 +64,10 @@ export const AnswerTypeRadioButtonLabel = styled.label``;
 
 export const AnswerTypeRadioButtonInput = styled.input``;
 
+export const AnswerTypeCheckBoxWrapper = styled.div``;
+
+export const AnswerTypeCheckBoxLabel = styled.label``;
+
+export const AnswerTypeCheckBoxInput = styled.input``;
+
 export const AnswerButton = styled.button``;

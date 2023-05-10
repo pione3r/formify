@@ -1,27 +1,27 @@
 import * as S from "./index.styles";
-import { RadioButtonQuestionFormProps } from "./index.types";
+import { CheckBoxQuestionFormProps } from "./index.types";
 
-export function RadioButtonQuestionForm({
+export function CheckBoxQuestionForm({
   질문순서,
   질문제목,
   질문제목수정,
   선택지목록,
   선택지추가,
   선택지내용수정,
-}: RadioButtonQuestionFormProps) {
+}: CheckBoxQuestionFormProps) {
   return (
     <S.Wrapper onMouseDown={(event) => event.stopPropagation()}>
       <S.Index>{`${질문순서 + 1}번 째 질문`}</S.Index>
       <S.Title
-        placeholder="선택 질문 제목을 입력해주세요. ex) 타입을 선택해주세요"
+        placeholder="선택 질문 제목을 입력해주세요. ex) 해당하는 항목에 체크해주세요"
         value={질문제목}
         onChange={질문제목수정}
-      />
+      ></S.Title>
       <S.AnswerGroupWrapper>
         {선택지목록.map((선택지, index) => (
           <S.AnswerWrapper key={index}>
-            <S.RadioButtonInput type="radio" name={`answer-${질문순서}`} />
-            <S.RadioLabelInput
+            <S.CheckBoxInput type="checkbox" />
+            <S.CheckBoxLabelInput
               placeholder="답변을 입력해주세요"
               value={선택지}
               onChange={(event) => 선택지내용수정(event, 질문순서, index)}
