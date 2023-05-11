@@ -38,6 +38,9 @@ export function usePickedFormPosSwitch(
       document.body.style.cursor = "grabbing";
       document.body.appendChild(이동할질문폼복사본);
 
+      currentSourceItem = 이동할질문폼;
+      currentSourceIndex = Number(currentSourceItem.dataset.index);
+
       const onMouseMoveHandler = (mouseMoveEvent: MouseEvent) => {
         const dX = mouseMoveEvent.pageX - mouseDownEvent.pageX;
         const dY = mouseMoveEvent.pageY - mouseDownEvent.pageY;
@@ -56,10 +59,9 @@ export function usePickedFormPosSwitch(
           ?.closest<HTMLElement>(".draggable-item");
         currentDestinationIndex = Number(currentDestinationItem?.dataset.index);
 
-        currentSourceItem = 이동할질문폼;
-        currentSourceIndex = Number(currentSourceItem.dataset.index);
+        if (currentDestinationItem?.isSameNode(currentSourceItem!)) return;
 
-        if (currentDestinationItem?.isSameNode(currentSourceItem)) return;
+        순서바꾸기(currentSourceIndex, currentDestinationIndex);
       };
 
       const onMouseUpHandler = () => {
@@ -80,10 +82,6 @@ export function usePickedFormPosSwitch(
             이동할질문폼.removeAttribute("style");
             document.body.removeAttribute("style");
             이동할질문폼복사본.remove();
-
-            if (currentDestinationItem) {
-              순서바꾸기(currentSourceIndex, currentDestinationIndex);
-            }
           },
           { once: true }
         );
