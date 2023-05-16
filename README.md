@@ -17,7 +17,7 @@
 - 응답받은 결과 조회
 
 ## URL
-- 웹서비스 URL : https://formify-pione3r.vercel.app/[https://formify-pione3r.vercel.app/]
+- 웹서비스 URL : https://formify-pione3r.vercel.app/
 
 ## 기술 스택
 - Next.js
