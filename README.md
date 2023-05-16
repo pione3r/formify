@@ -17,9 +17,15 @@
 - 응답받은 결과 조회
 
 ## URL
-- 웹서비스 URL : https://pione3r-easy-form.vercel.app/
+- 웹서비스 URL : https://formify-pione3r.vercel.app/[https://formify-pione3r.vercel.app/]
 
 ## 기술 스택
+- Next.js
+- React.js
+- Redux
+- Firebase
+- Styled-components
+- Storybook
 
 ## 폴더 구조
 
