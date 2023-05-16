@@ -17,7 +17,7 @@ export default async function askFormHandler(
   if (session) {
     // 질문폼 저장
     if (req.method === "POST") {
-      const parsed질문리스트 = JSON.parse(req.body);
+      const parsed설문폼 = JSON.parse(req.body);
 
       const uuid = v4();
 
@@ -25,7 +25,8 @@ export default async function askFormHandler(
         askFormId: uuid,
         created: new Date(),
         askFormMaker: session.user?.email,
-        questions: parsed질문리스트,
+        askFormTitle: parsed설문폼.설문제목,
+        sections: parsed설문폼.설문폼,
         answerFormLink:
           process.env.NODE_ENV === "production"
             ? `${process.env.NEXT_ANSWER_FORM_LINK_ROOT_PROD}/${uuid}`

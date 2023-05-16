@@ -66,7 +66,7 @@ export const QuestionFormBoardWrapper = styled.div`
   background-color: #ffffff;
 `;
 
-export const QuestionFormBoardTitle = styled.h1`
+export const QuestionFormBoardTitle = styled.input`
   font-size: 2rem;
   font-weight: 500;
 `;
@@ -87,9 +87,20 @@ export const QuestionFormBoardBody = styled.div`
 
 export const SectionWrapper = styled.div``;
 
+export const SectionHeader = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
 export const SectionTitle = styled.h2`
   font-size: 2rem;
   font-weight: 500;
 `;
+
+export const SectionFlowSelect = styled.select``;
+
+export const SectionFlowOption = styled.option``;
+
+export const SectionDeleteButton = styled.button``;
 
 export const SubmitButton = styled.button``;

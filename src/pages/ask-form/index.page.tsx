@@ -23,11 +23,11 @@ import { CheckBoxQuestionForm } from "@/components/QuestionForm/CheckBoxQuestion
 export default function AskForm() {
   const router = useRouter();
 
-  const [선택된질문리스트, set선택된질문리스트] = useState<QuestionType[]>([]);
+  const [설문제목, set설문제목] = useState("");
 
   const [섹션리스트, set섹션리스트] = useState<
-    { sectionId: string; questions: QuestionType[] }[]
-  >([{ sectionId: "1", questions: [] }]);
+    { sectionId: string; questions: QuestionType[]; next: string }[]
+  >([{ sectionId: "1", questions: [], next: "submit" }]);
 
   const 질문추가 = (droppableItemId: string, questionType: string) => {
     const 섹션Idx = 섹션리스트.findIndex(
@@ -224,35 +224,6 @@ export default function AskForm() {
         } else return 섹션;
       })
     );
-
-    set선택된질문리스트((prev) =>
-      prev.map((질문, idx) => {
-        if (질문.questionType === "radio-button") {
-          if (질문Index === idx) {
-            return {
-              ...질문,
-              radioButtonOptions: 질문.radioButtonOptions.map(
-                (option, 옵션Idx) =>
-                  옵션Index === 옵션Idx ? event.target.value : option
-              ),
-            };
-          }
-          return 질문;
-        }
-        if (질문.questionType === "check-box") {
-          if (질문Index === idx) {
-            return {
-              ...질문,
-              checkBoxOptions: 질문.checkBoxOptions.map((option, 옵션Idx) =>
-                옵션Index === 옵션Idx ? event.target.value : option
-              ),
-            };
-          }
-          return 질문;
-        }
-        return 질문;
-      })
-    );
   };
 
   return (
@@ -292,9 +263,11 @@ export default function AskForm() {
 
         <S.Column>
           <S.QuestionFormBoardWrapper>
-            <S.QuestionFormBoardTitle>
-              질문폼을 작성해주세요
-            </S.QuestionFormBoardTitle>
+            <S.QuestionFormBoardTitle
+              placeholder="설문 제목을 입력해주세요"
+              value={설문제목}
+              onChange={(event) => set설문제목(event.target.value)}
+            />
             <S.AddSectionButton
               onClick={() => {
                 const newId = Math.max(
@@ -302,10 +275,14 @@ export default function AskForm() {
                   ...섹션리스트.map((섹션) => Number.parseInt(섹션.sectionId))
                 );
                 set섹션리스트((prev) => [
-                  ...prev,
+                  ...prev.map((prev섹션) => ({
+                    ...prev섹션,
+                    next: String(Number.parseInt(prev섹션.sectionId) + 1),
+                  })),
                   {
                     sectionId: "" + (newId + 1),
                     questions: [],
+                    next: "submit",
                   },
                 ]);
               }}
@@ -314,7 +291,72 @@ export default function AskForm() {
             </S.AddSectionButton>
             {섹션리스트.map((섹션, i) => (
               <S.SectionWrapper key={i}>
-                <S.SectionTitle>{`섹션 ${i + 1}`}</S.SectionTitle>
+                <S.SectionHeader>
+                  <S.SectionTitle>{`섹션 ${i + 1}`}</S.SectionTitle>
+                  <S.SectionFlowSelect
+                    value={섹션.next}
+                    onChange={(event) => {
+                      const copied섹션리스트 = [...섹션리스트];
+
+                      const 섹션Idx = 섹션리스트.findIndex(
+                        (섹션픽) => 섹션픽.sectionId === 섹션.sectionId
+                      );
+
+                      copied섹션리스트[섹션Idx].next = event.target.value;
+                      set섹션리스트(copied섹션리스트);
+                    }}
+                  >
+                    <>
+                      {섹션리스트.map((섹션, flowIdx) => (
+                        <S.SectionFlowOption
+                          key={flowIdx}
+                          value={섹션.sectionId}
+                        >
+                          {섹션.sectionId}
+                        </S.SectionFlowOption>
+                      ))}
+                      <S.SectionFlowOption value={"submit"}>
+                        제출
+                      </S.SectionFlowOption>
+                    </>
+                  </S.SectionFlowSelect>
+                  <S.SectionDeleteButton
+                    onClick={() => {
+                      const copied섹션리스트 = [...섹션리스트];
+
+                      const 섹션Idx = 섹션리스트.findIndex(
+                        (섹션픽) => 섹션픽.sectionId === 섹션.sectionId
+                      );
+
+                      copied섹션리스트.splice(섹션Idx, 1);
+
+                      const 정렬된섹션리스트 = copied섹션리스트.map(
+                        (섹션, idx) => ({
+                          ...섹션,
+                          sectionId: String(idx + 1),
+                        })
+                      );
+
+                      const next정렬된섹션리스트 = 정렬된섹션리스트.map(
+                        (섹션, idx, origin) => {
+                          if (idx === origin.length - 1)
+                            return { ...섹션, next: "submit" };
+                          if (origin.find((el) => el.sectionId === 섹션.next)) {
+                            return 섹션;
+                          } else {
+                            return {
+                              ...섹션,
+                              next: String(Number.parseInt(섹션.sectionId) + 1),
+                            };
+                          }
+                        }
+                      );
+                      set섹션리스트(next정렬된섹션리스트);
+                    }}
+                  >
+                    섹션 삭제
+                  </S.SectionDeleteButton>
+                </S.SectionHeader>
                 <S.QuestionFormBoardBody
                   id={섹션.sectionId}
                   className="picked-askform-board"
@@ -326,9 +368,18 @@ export default function AskForm() {
                       data-index={index}
                       onMouseDown={폼순서바꾸기}
                       요소삭제={() => {
-                        const 삭제된질문 = [...선택된질문리스트];
+                        const copied섹션리스트 = [...섹션리스트];
+
+                        const 섹션Idx = 섹션리스트.findIndex(
+                          (섹션픽) => 섹션픽.sectionId === 섹션.sectionId
+                        );
+
+                        const 삭제된질문 = [...섹션.questions];
                         삭제된질문.splice(index, 1);
-                        set선택된질문리스트(삭제된질문);
+
+                        copied섹션리스트[섹션Idx].questions = 삭제된질문;
+
+                        set섹션리스트(copied섹션리스트);
                       }}
                     >
                       {질문.questionType === "simple-text" && (
@@ -374,58 +425,12 @@ export default function AskForm() {
 
             <S.SubmitButton
               onClick={async () => {
-                // 질문이 없는지 검사
-                if (!선택된질문리스트.length) {
-                  alert("최소 1개 이상의 질문을 포함해주세요");
-                  return;
-                }
-
-                // 비어있는 질문 있는지 검사
-                for (const 질문 of 선택된질문리스트) {
-                  if (질문.questionTitle === "") {
-                    alert("비어있는 질문이 있습니다.");
-                    return;
-                  }
-                }
-
-                // 비어있는 옵션 검사
-                for (const 질문 of 선택된질문리스트) {
-                  if (질문.questionType === "radio-button") {
-                    if (!질문.radioButtonOptions.length) {
-                      alert("최소 1개 이상의 옵션을 입력하세요");
-                      return;
-                    }
-                    for (const 옵션 of 질문.radioButtonOptions) {
-                      if (옵션 === "") {
-                        alert("비어있는 옵션이 있는 질문이 있습니다.");
-                        return;
-                      }
-                    }
-                  }
-                  if (질문.questionType === "check-box") {
-                    if (!질문.checkBoxOptions.length) {
-                      alert("최소 1개 이상의 옵션을 입력하세요");
-                      return;
-                    }
-                    for (const 옵션 of 질문.checkBoxOptions) {
-                      if (옵션 === "") {
-                        alert("비어있는 옵션이 있는 질문이 있습니다.");
-                        return;
-                      }
-                    }
-                  }
-                }
-
-                const 정렬된질문리스트 = 선택된질문리스트.map(
-                  (질문, index) => ({
-                    ...질문,
-                    questionId: "" + (index + 1),
-                  })
-                );
-
                 const { status } = await fetch(`${Backend_API_URL}/ask-form`, {
                   method: "POST",
-                  body: JSON.stringify(정렬된질문리스트),
+                  body: JSON.stringify({
+                    설문제목: 설문제목,
+                    설문폼: 섹션리스트,
+                  }),
                 });
 
                 if (status === 201) {

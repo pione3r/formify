@@ -26,14 +26,8 @@ export default function AskForms({ forms }: FormsProps) {
                 <S.FormHeader>
                   <S.Created>{form.created}</S.Created>
                   <S.FormMaker>{form.askFormMaker}</S.FormMaker>
+                  <S.FormTitle>{form.askFormTitle}</S.FormTitle>
                 </S.FormHeader>
-                <S.QuestionsWrapper>
-                  {form.questions.map((question) => (
-                    <S.QuestionWrapper key={question.questionId}>
-                      <S.QuestionTitle>{`질문 ${question.questionId} : ${question.questionTitle}`}</S.QuestionTitle>
-                    </S.QuestionWrapper>
-                  ))}
-                </S.QuestionsWrapper>
               </S.FormSubWrapper>
               <S.LinkCopyButton
                 onClick={() => {
@@ -73,7 +67,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         askFormId: doc.data().askFormId,
         created: String(new Date(doc.data().created.toDate())),
         askFormMaker: doc.data().askFormMaker,
-        questions: doc.data().questions,
+        askFormTitle: doc.data().askFormTitle,
+        sections: doc.data().sections,
         answerFormLink: doc.data().answerFormLink,
       });
     });

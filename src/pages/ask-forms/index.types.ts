@@ -8,7 +8,8 @@ export type AskFormType = {
   askFormId: string;
   created: string;
   askFormMaker: string;
-  questions: QuestionType[];
+  askFormTitle: string;
+  sections: { sectionId: string; questions: QuestionType[]; next: string }[];
   answerFormLink: string;
 };
 

@@ -69,6 +69,11 @@ export const Created = styled.div`
 `;
 
 export const FormMaker = styled.div`
+  font-size: 1.6rem;
+  font-weight: 500;
+`;
+
+export const FormTitle = styled.h3`
   font-size: 2rem;
   font-weight: 600;
 `;
