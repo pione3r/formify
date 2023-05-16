@@ -2,6 +2,7 @@ import * as S from "./index.styles";
 import { RadioButtonQuestionFormProps } from "./index.types";
 
 export function RadioButtonQuestionForm({
+  섹션Id,
   질문순서,
   질문제목,
   질문제목수정,
@@ -24,12 +25,14 @@ export function RadioButtonQuestionForm({
             <S.RadioLabelInput
               placeholder="답변을 입력해주세요"
               value={선택지}
-              onChange={(event) => 선택지내용수정(event, 질문순서, index)}
+              onChange={(event) =>
+                선택지내용수정(섹션Id, event, 질문순서, index)
+              }
               spellCheck={false}
             />
           </S.AnswerWrapper>
         ))}
-        <S.AddAnswerButton onClick={() => 선택지추가(질문순서)}>
+        <S.AddAnswerButton onClick={선택지추가}>
           답변 추가 버튼
         </S.AddAnswerButton>
       </S.AnswerGroupWrapper>

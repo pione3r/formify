@@ -25,102 +25,206 @@ export default function AskForm() {
 
   const [선택된질문리스트, set선택된질문리스트] = useState<QuestionType[]>([]);
 
-  const 질문추가 = (elementId: string) => {
+  const [섹션리스트, set섹션리스트] = useState<
+    { sectionId: string; questions: QuestionType[] }[]
+  >([{ sectionId: "1", questions: [] }]);
+
+  const 질문추가 = (droppableItemId: string, questionType: string) => {
+    const 섹션Idx = 섹션리스트.findIndex(
+      (섹션) => 섹션.sectionId === droppableItemId
+    );
     const newId = Math.max(
       0,
-      ...선택된질문리스트.map((질문) => Number.parseInt(질문.questionId))
+      ...섹션리스트[섹션Idx].questions.map((질문) =>
+        Number.parseInt(질문.questionId)
+      )
     );
 
-    if (elementId === "simple-text") {
-      set선택된질문리스트((prev) => [
-        ...prev,
-        {
-          questionId: "" + (newId + 1),
-          questionType: elementId,
-          questionTitle: "",
-        },
-      ]);
+    if (questionType === "simple-text") {
+      set섹션리스트((prev) =>
+        prev.map((섹션) => {
+          if (섹션.sectionId === droppableItemId) {
+            return {
+              ...섹션,
+              questions: [
+                ...섹션.questions,
+                {
+                  questionId: "" + (newId + 1),
+                  questionType: questionType,
+                  questionTitle: "",
+                },
+              ],
+            };
+          } else return 섹션;
+        })
+      );
     }
-    if (elementId === "radio-button") {
-      set선택된질문리스트((prev) => [
-        ...prev,
-        {
-          questionId: "" + (newId + 1),
-          questionType: elementId,
-          questionTitle: "",
-          radioButtonOptions: [],
-        },
-      ]);
+    if (questionType === "radio-button") {
+      set섹션리스트((prev) =>
+        prev.map((섹션) => {
+          if (섹션.sectionId === droppableItemId) {
+            return {
+              ...섹션,
+              questions: [
+                ...섹션.questions,
+                {
+                  questionId: "" + (newId + 1),
+                  questionType: questionType,
+                  questionTitle: "",
+                  radioButtonOptions: [],
+                },
+              ],
+            };
+          } else return 섹션;
+        })
+      );
     }
-    if (elementId === "check-box") {
-      set선택된질문리스트((prev) => [
-        ...prev,
-        {
-          questionId: "" + (newId + 1),
-          questionType: elementId,
-          questionTitle: "",
-          checkBoxOptions: [],
-        },
-      ]);
+    if (questionType === "check-box") {
+      set섹션리스트((prev) =>
+        prev.map((섹션) => {
+          if (섹션.sectionId === droppableItemId) {
+            return {
+              ...섹션,
+              questions: [
+                ...섹션.questions,
+                {
+                  questionId: "" + (newId + 1),
+                  questionType: questionType,
+                  questionTitle: "",
+                  checkBoxOptions: [],
+                },
+              ],
+            };
+          } else return 섹션;
+        })
+      );
     }
   };
 
   const { onMouseDownHandler } = useDraggable(질문추가);
 
-  const 질문순서바꾸기 = (sourceIdx: number, destinationIdx: number) => {
-    const copied질문리스트 = [...선택된질문리스트];
+  const 질문순서바꾸기 = (
+    droppableItemId: string,
+    sourceIdx: number,
+    destinationIdx: number
+  ) => {
+    const 섹션Idx = 섹션리스트.findIndex(
+      (섹션) => 섹션.sectionId === droppableItemId
+    );
+
+    const copied질문리스트 = [...섹션리스트[섹션Idx].questions];
     const moving질문 = copied질문리스트[sourceIdx];
     copied질문리스트.splice(sourceIdx, 1);
     copied질문리스트.splice(destinationIdx, 0, moving질문);
-    set선택된질문리스트(copied질문리스트);
+    set섹션리스트((prev) =>
+      prev.map((섹션) => {
+        if (섹션.sectionId === droppableItemId) {
+          return { ...섹션, questions: copied질문리스트 };
+        } else return 섹션;
+      })
+    );
   };
 
   const { 폼순서바꾸기 } = usePickedFormPosSwitch(질문순서바꾸기);
 
   const 질문제목수정 = (
+    섹션Id: string,
     event: React.ChangeEvent<HTMLInputElement>,
     질문Id: string
   ) => {
     const 수정한제목 = event.target.value;
-    set선택된질문리스트((prev) =>
-      prev.map((item) =>
-        item.questionId === 질문Id
-          ? { ...item, questionTitle: 수정한제목 }
-          : { ...item }
-      )
+    set섹션리스트((prev) =>
+      prev.map((섹션) => {
+        if (섹션.sectionId === 섹션Id) {
+          return {
+            ...섹션,
+            questions: 섹션.questions.map((item) =>
+              item.questionId === 질문Id
+                ? { ...item, questionTitle: 수정한제목 }
+                : { ...item }
+            ),
+          };
+        } else {
+          return 섹션;
+        }
+      })
     );
   };
 
-  const 선택지추가 = (질문Index: number) => {
-    set선택된질문리스트((prev) =>
-      prev.map((질문, idx) => {
-        if (질문.questionType === "radio-button") {
-          if (질문Index === idx) {
-            return {
-              ...질문,
-              radioButtonOptions: [...질문.radioButtonOptions, ""],
-            };
-          }
-          return 질문;
-        }
-        if (질문.questionType === "check-box") {
-          if (질문Index === idx) {
-            return {
-              ...질문,
-              checkBoxOptions: [...질문.checkBoxOptions, ""],
-            };
-          }
-        }
-        return 질문;
+  const 선택지추가 = (sectionId: string, 질문Index: number) => {
+    set섹션리스트((prev) =>
+      prev.map((섹션) => {
+        if (섹션.sectionId === sectionId) {
+          return {
+            ...섹션,
+            questions: 섹션.questions.map((질문, idx) => {
+              if (질문.questionType === "radio-button") {
+                if (질문Index === idx) {
+                  return {
+                    ...질문,
+                    radioButtonOptions: [...질문.radioButtonOptions, ""],
+                  };
+                }
+                return 질문;
+              }
+              if (질문.questionType === "check-box") {
+                if (질문Index === idx) {
+                  return {
+                    ...질문,
+                    checkBoxOptions: [...질문.checkBoxOptions, ""],
+                  };
+                }
+              }
+              return 질문;
+            }),
+          };
+        } else return 섹션;
       })
     );
   };
 
   const 선택지내용수정 = (
+    sectionId: string,
     event: React.ChangeEvent<HTMLInputElement>,
     질문Index: number,
     옵션Index: number
   ) => {
+    set섹션리스트((prev) =>
+      prev.map((섹션) => {
+        if (섹션.sectionId === sectionId) {
+          return {
+            ...섹션,
+            questions: 섹션.questions.map((질문, idx) => {
+              if (질문.questionType === "radio-button") {
+                if (질문Index === idx) {
+                  return {
+                    ...질문,
+                    radioButtonOptions: 질문.radioButtonOptions.map(
+                      (option, 옵션Idx) =>
+                        옵션Index === 옵션Idx ? event.target.value : option
+                    ),
+                  };
+                }
+                return 질문;
+              }
+              if (질문.questionType === "check-box") {
+                if (질문Index === idx) {
+                  return {
+                    ...질문,
+                    checkBoxOptions: 질문.checkBoxOptions.map(
+                      (option, 옵션Idx) =>
+                        옵션Index === 옵션Idx ? event.target.value : option
+                    ),
+                  };
+                }
+              }
+              return 질문;
+            }),
+          };
+        } else return 섹션;
+      })
+    );
+
     set선택된질문리스트((prev) =>
       prev.map((질문, idx) => {
         if (질문.questionType === "radio-button") {
@@ -158,142 +262,186 @@ export default function AskForm() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <S.Wrapper>
-        <S.QuestionFormBoardWrapper>
-          <S.QuestionFormBoardTitle>
-            질문타입 선택 보드
-          </S.QuestionFormBoardTitle>
-          <S.QuestionFormBoardBody>
-            <DraggableItem id="simple-text" onMouseDown={onMouseDownHandler}>
-              <DummySimpleTextQuestion />
-            </DraggableItem>
-            <DraggableItem id="radio-button" onMouseDown={onMouseDownHandler}>
-              <DummyRadioButtonQuestionForm />
-            </DraggableItem>
-            <DraggableItem id="check-box" onMouseDown={onMouseDownHandler}>
-              <DummyCheckBoxQuestionForm />
-            </DraggableItem>
-          </S.QuestionFormBoardBody>
-        </S.QuestionFormBoardWrapper>
-
-        <S.QuestionFormBoardWrapper>
-          <S.QuestionFormBoardTitle>선택된 질문들</S.QuestionFormBoardTitle>
-          <S.QuestionFormBoardBody id="picked-askform-board">
-            {선택된질문리스트.map((질문, index) => (
+        <S.Column>
+          <S.DummyQuestionFormBoardWrapper>
+            <S.DummyQuestionFormBoardTitle>
+              질문유형 선택
+            </S.DummyQuestionFormBoardTitle>
+            <S.DummyQuestionFormBoardBody>
               <DraggableItem
-                key={질문.questionId}
-                className="draggable-item"
-                data-index={index}
-                onMouseDown={폼순서바꾸기}
-                요소삭제={() => {
-                  const 삭제된질문 = [...선택된질문리스트];
-                  삭제된질문.splice(index, 1);
-                  set선택된질문리스트(삭제된질문);
-                }}
+                data-question-type="simple-text"
+                onMouseDown={onMouseDownHandler}
               >
-                {질문.questionType === "simple-text" && (
-                  <SimpleTextQuestionForm
-                    질문순서={index}
-                    질문제목={질문.questionTitle}
-                    질문제목수정={(event) =>
-                      질문제목수정(event, 질문.questionId)
-                    }
-                  />
-                )}
-                {질문.questionType === "radio-button" && (
-                  <RadioButtonQuestionForm
-                    질문순서={index}
-                    질문제목={질문.questionTitle}
-                    질문제목수정={(event) =>
-                      질문제목수정(event, 질문.questionId)
-                    }
-                    선택지목록={질문.radioButtonOptions}
-                    선택지추가={선택지추가}
-                    선택지내용수정={선택지내용수정}
-                  />
-                )}
-                {질문.questionType === "check-box" && (
-                  <CheckBoxQuestionForm
-                    질문순서={index}
-                    질문제목={질문.questionTitle}
-                    질문제목수정={(event) =>
-                      질문제목수정(event, 질문.questionId)
-                    }
-                    선택지목록={질문.checkBoxOptions}
-                    선택지추가={선택지추가}
-                    선택지내용수정={선택지내용수정}
-                  />
-                )}
+                <DummySimpleTextQuestion />
               </DraggableItem>
+              <DraggableItem
+                data-question-type="radio-button"
+                onMouseDown={onMouseDownHandler}
+              >
+                <DummyRadioButtonQuestionForm />
+              </DraggableItem>
+              <DraggableItem
+                data-question-type="check-box"
+                onMouseDown={onMouseDownHandler}
+              >
+                <DummyCheckBoxQuestionForm />
+              </DraggableItem>
+            </S.DummyQuestionFormBoardBody>
+          </S.DummyQuestionFormBoardWrapper>
+        </S.Column>
+
+        <S.Column>
+          <S.QuestionFormBoardWrapper>
+            <S.QuestionFormBoardTitle>
+              질문폼을 작성해주세요
+            </S.QuestionFormBoardTitle>
+            <S.AddSectionButton
+              onClick={() => {
+                const newId = Math.max(
+                  0,
+                  ...섹션리스트.map((섹션) => Number.parseInt(섹션.sectionId))
+                );
+                set섹션리스트((prev) => [
+                  ...prev,
+                  {
+                    sectionId: "" + (newId + 1),
+                    questions: [],
+                  },
+                ]);
+              }}
+            >
+              섹션 추가
+            </S.AddSectionButton>
+            {섹션리스트.map((섹션, i) => (
+              <S.SectionWrapper key={i}>
+                <S.SectionTitle>{`섹션 ${i + 1}`}</S.SectionTitle>
+                <S.QuestionFormBoardBody
+                  id={섹션.sectionId}
+                  className="picked-askform-board"
+                >
+                  {섹션.questions.map((질문, index) => (
+                    <DraggableItem
+                      key={질문.questionId}
+                      className="draggable-item"
+                      data-index={index}
+                      onMouseDown={폼순서바꾸기}
+                      요소삭제={() => {
+                        const 삭제된질문 = [...선택된질문리스트];
+                        삭제된질문.splice(index, 1);
+                        set선택된질문리스트(삭제된질문);
+                      }}
+                    >
+                      {질문.questionType === "simple-text" && (
+                        <SimpleTextQuestionForm
+                          질문순서={index}
+                          질문제목={질문.questionTitle}
+                          질문제목수정={(event) =>
+                            질문제목수정(섹션.sectionId, event, 질문.questionId)
+                          }
+                        />
+                      )}
+                      {질문.questionType === "radio-button" && (
+                        <RadioButtonQuestionForm
+                          섹션Id={섹션.sectionId}
+                          질문순서={index}
+                          질문제목={질문.questionTitle}
+                          질문제목수정={(event) =>
+                            질문제목수정(섹션.sectionId, event, 질문.questionId)
+                          }
+                          선택지목록={질문.radioButtonOptions}
+                          선택지추가={() => 선택지추가(섹션.sectionId, index)}
+                          선택지내용수정={선택지내용수정}
+                        />
+                      )}
+                      {질문.questionType === "check-box" && (
+                        <CheckBoxQuestionForm
+                          섹션Id={섹션.sectionId}
+                          질문순서={index}
+                          질문제목={질문.questionTitle}
+                          질문제목수정={(event) =>
+                            질문제목수정(섹션.sectionId, event, 질문.questionId)
+                          }
+                          선택지목록={질문.checkBoxOptions}
+                          선택지추가={() => 선택지추가(섹션.sectionId, index)}
+                          선택지내용수정={선택지내용수정}
+                        />
+                      )}
+                    </DraggableItem>
+                  ))}
+                </S.QuestionFormBoardBody>
+              </S.SectionWrapper>
             ))}
-          </S.QuestionFormBoardBody>
 
-          <S.SubmitButton
-            onClick={async () => {
-              // 질문이 없는지 검사
-              if (!선택된질문리스트.length) {
-                alert("최소 1개 이상의 질문을 포함해주세요");
-                return;
-              }
-
-              // 비어있는 질문 있는지 검사
-              for (const 질문 of 선택된질문리스트) {
-                if (질문.questionTitle === "") {
-                  alert("비어있는 질문이 있습니다.");
+            <S.SubmitButton
+              onClick={async () => {
+                // 질문이 없는지 검사
+                if (!선택된질문리스트.length) {
+                  alert("최소 1개 이상의 질문을 포함해주세요");
                   return;
                 }
-              }
 
-              // 비어있는 옵션 검사
-              for (const 질문 of 선택된질문리스트) {
-                if (질문.questionType === "radio-button") {
-                  if (!질문.radioButtonOptions.length) {
-                    alert("최소 1개 이상의 옵션을 입력하세요");
+                // 비어있는 질문 있는지 검사
+                for (const 질문 of 선택된질문리스트) {
+                  if (질문.questionTitle === "") {
+                    alert("비어있는 질문이 있습니다.");
                     return;
                   }
-                  for (const 옵션 of 질문.radioButtonOptions) {
-                    if (옵션 === "") {
-                      alert("비어있는 옵션이 있는 질문이 있습니다.");
+                }
+
+                // 비어있는 옵션 검사
+                for (const 질문 of 선택된질문리스트) {
+                  if (질문.questionType === "radio-button") {
+                    if (!질문.radioButtonOptions.length) {
+                      alert("최소 1개 이상의 옵션을 입력하세요");
                       return;
+                    }
+                    for (const 옵션 of 질문.radioButtonOptions) {
+                      if (옵션 === "") {
+                        alert("비어있는 옵션이 있는 질문이 있습니다.");
+                        return;
+                      }
+                    }
+                  }
+                  if (질문.questionType === "check-box") {
+                    if (!질문.checkBoxOptions.length) {
+                      alert("최소 1개 이상의 옵션을 입력하세요");
+                      return;
+                    }
+                    for (const 옵션 of 질문.checkBoxOptions) {
+                      if (옵션 === "") {
+                        alert("비어있는 옵션이 있는 질문이 있습니다.");
+                        return;
+                      }
                     }
                   }
                 }
-                if (질문.questionType === "check-box") {
-                  if (!질문.checkBoxOptions.length) {
-                    alert("최소 1개 이상의 옵션을 입력하세요");
-                    return;
-                  }
-                  for (const 옵션 of 질문.checkBoxOptions) {
-                    if (옵션 === "") {
-                      alert("비어있는 옵션이 있는 질문이 있습니다.");
-                      return;
-                    }
-                  }
+
+                const 정렬된질문리스트 = 선택된질문리스트.map(
+                  (질문, index) => ({
+                    ...질문,
+                    questionId: "" + (index + 1),
+                  })
+                );
+
+                const { status } = await fetch(`${Backend_API_URL}/ask-form`, {
+                  method: "POST",
+                  body: JSON.stringify(정렬된질문리스트),
+                });
+
+                if (status === 201) {
+                  alert("질문폼 생성 성공");
+                  router.replace("/");
                 }
-              }
 
-              const 정렬된질문리스트 = 선택된질문리스트.map((질문, index) => ({
-                ...질문,
-                questionId: "" + (index + 1),
-              }));
-
-              const { status } = await fetch(`${Backend_API_URL}/ask-form`, {
-                method: "POST",
-                body: JSON.stringify(정렬된질문리스트),
-              });
-
-              if (status === 201) {
-                alert("질문폼 생성 성공");
-                router.replace("/");
-              }
-
-              if (status === 401) {
-                alert("질문폼 생성 실패");
-              }
-            }}
-          >
-            폼 제출
-          </S.SubmitButton>
-        </S.QuestionFormBoardWrapper>
+                if (status === 401) {
+                  alert("질문폼 생성 실패");
+                }
+              }}
+            >
+              폼 제출
+            </S.SubmitButton>
+          </S.QuestionFormBoardWrapper>
+        </S.Column>
       </S.Wrapper>
     </>
   );

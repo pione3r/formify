@@ -1,5 +1,9 @@
 export function usePickedFormPosSwitch(
-  순서바꾸기: (sourceIdx: number, destinationIdx: number) => void
+  순서바꾸기: (
+    droppableItemId: string,
+    sourceIdx: number,
+    destinationIdx: number
+  ) => void
 ) {
   return {
     폼순서바꾸기: (mouseDownEvent: React.MouseEvent) => {
@@ -41,6 +45,16 @@ export function usePickedFormPosSwitch(
       currentSourceItem = 이동할질문폼;
       currentSourceIndex = Number(currentSourceItem.dataset.index);
 
+      const copiedElementPos = 이동할질문폼복사본.getBoundingClientRect();
+      const copiedElementCenterX =
+        copiedElementPos.left + copiedElementPos.width / 2;
+      const copiedElementCenterY =
+        copiedElementPos.top + copiedElementPos.height / 2;
+
+      const droppableItem = document
+        .elementFromPoint(copiedElementCenterX, copiedElementCenterY)
+        ?.closest<HTMLElement>(".picked-askform-board");
+
       const onMouseMoveHandler = (mouseMoveEvent: MouseEvent) => {
         const dX = mouseMoveEvent.pageX - mouseDownEvent.pageX;
         const dY = mouseMoveEvent.pageY - mouseDownEvent.pageY;
@@ -61,7 +75,11 @@ export function usePickedFormPosSwitch(
 
         if (currentDestinationItem?.isSameNode(currentSourceItem!)) return;
 
-        순서바꾸기(currentSourceIndex, currentDestinationIndex);
+        순서바꾸기(
+          droppableItem?.id!,
+          currentSourceIndex,
+          currentDestinationIndex
+        );
       };
 
       const onMouseUpHandler = () => {

@@ -1,4 +1,6 @@
-export function useDraggable(질문추가: (elementId: string) => void) {
+export function useDraggable(
+  질문추가: (droppableItemId: string, questionType: string) => void
+) {
   return {
     onMouseDownHandler: (mouseDownEvent: React.MouseEvent) => {
       const element = mouseDownEvent.currentTarget as HTMLElement;
@@ -7,7 +9,7 @@ export function useDraggable(질문추가: (elementId: string) => void) {
 
       const copiedElement = element.cloneNode(true) as HTMLElement;
 
-      copiedElement.style.position = "absolute";
+      copiedElement.style.position = "fixed";
       copiedElement.style.top = `${elementPos.top}px`;
       copiedElement.style.left = `${elementPos.left + 10}px`;
       copiedElement.style.pointerEvents = "none";
@@ -38,13 +40,13 @@ export function useDraggable(질문추가: (elementId: string) => void) {
 
         const droppableItem = document
           .elementFromPoint(copiedElementCenterX, copiedElementCenterY)
-          ?.closest<HTMLElement>("#picked-askform-board");
+          ?.closest<HTMLElement>(".picked-askform-board");
 
         if (droppableItem) {
           const droppableItemPos = droppableItem.getBoundingClientRect();
           copiedElement.style.left = `${droppableItemPos.left}px`;
           copiedElement.style.top = `${droppableItemPos.top}px`;
-          질문추가(element.id);
+          질문추가(droppableItem.id, element.dataset.questionType!);
         } else {
           copiedElement.style.left = `${elementPos.left}px`;
           copiedElement.style.top = `${elementPos.top}px`;
