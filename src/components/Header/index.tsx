@@ -18,7 +18,7 @@ export function Header() {
         <S.NavWrapper>
           {status === "authenticated" ? (
             <>
-              <S.NavItem href="/ask-form">폼 생성</S.NavItem>
+              <S.NavItem href="/ask-form">폼 생성하기</S.NavItem>
               <S.NavItem href={`/ask-forms/${session.user?.email}`}>
                 내가 만든 폼 보기
               </S.NavItem>

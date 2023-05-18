@@ -49,7 +49,11 @@ export const QuestionTitle = styled.div`
   font-weight: 500;
 `;
 
-export const AnswerWrapper = styled.div``;
+export const AnswerWrapper = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+`;
 
 export const AnswerTitle = styled.div`
   font-size: 1.6rem;
@@ -60,13 +64,21 @@ export const AnswerTypeSimpleText = styled.input``;
 
 export const AnswerTypeRadioButtonWrapper = styled.div``;
 
-export const AnswerTypeRadioButtonLabel = styled.label``;
+export const AnswerTypeRadioButtonLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
 
 export const AnswerTypeRadioButtonInput = styled.input``;
 
 export const AnswerTypeCheckBoxWrapper = styled.div``;
 
-export const AnswerTypeCheckBoxLabel = styled.label``;
+export const AnswerTypeCheckBoxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
 
 export const AnswerTypeCheckBoxInput = styled.input``;
 
