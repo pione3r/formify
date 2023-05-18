@@ -7,7 +7,7 @@ export function useDraggable(질문추가: (elementId: string) => void) {
 
       const copiedElement = element.cloneNode(true) as HTMLElement;
 
-      copiedElement.style.position = "absolute";
+      copiedElement.style.position = "fixed";
       copiedElement.style.top = `${elementPos.top}px`;
       copiedElement.style.left = `${elementPos.left + 10}px`;
       copiedElement.style.pointerEvents = "none";

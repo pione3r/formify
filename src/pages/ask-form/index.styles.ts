@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.main`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
   gap: 20px;
 
   max-width: 130rem;
@@ -10,6 +11,27 @@ export const Wrapper = styled.main`
   padding: 20px;
 
   background-color: rgb(245, 245, 247);
+`;
+
+export const ColumnLeft = styled.div``;
+
+export const ColumnRight = styled.div``;
+
+export const DummyQuestionFormBoardWrapper = styled.div`
+  position: sticky;
+  top: 100px;
+  left: 0px;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  padding: 20px;
+  border-radius: 12px;
+
+  background-color: #ffffff;
 `;
 
 export const QuestionFormBoardWrapper = styled.div`

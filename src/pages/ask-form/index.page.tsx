@@ -158,142 +158,148 @@ export default function AskForm() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <S.Wrapper>
-        <S.QuestionFormBoardWrapper>
-          <S.QuestionFormBoardTitle>
-            질문타입 선택 보드
-          </S.QuestionFormBoardTitle>
-          <S.QuestionFormBoardBody>
-            <DraggableItem id="simple-text" onMouseDown={onMouseDownHandler}>
-              <DummySimpleTextQuestion />
-            </DraggableItem>
-            <DraggableItem id="radio-button" onMouseDown={onMouseDownHandler}>
-              <DummyRadioButtonQuestionForm />
-            </DraggableItem>
-            <DraggableItem id="check-box" onMouseDown={onMouseDownHandler}>
-              <DummyCheckBoxQuestionForm />
-            </DraggableItem>
-          </S.QuestionFormBoardBody>
-        </S.QuestionFormBoardWrapper>
-
-        <S.QuestionFormBoardWrapper>
-          <S.QuestionFormBoardTitle>선택된 질문들</S.QuestionFormBoardTitle>
-          <S.QuestionFormBoardBody id="picked-askform-board">
-            {선택된질문리스트.map((질문, index) => (
-              <DraggableItem
-                key={질문.questionId}
-                className="draggable-item"
-                data-index={index}
-                onMouseDown={폼순서바꾸기}
-                요소삭제={() => {
-                  const 삭제된질문 = [...선택된질문리스트];
-                  삭제된질문.splice(index, 1);
-                  set선택된질문리스트(삭제된질문);
-                }}
-              >
-                {질문.questionType === "simple-text" && (
-                  <SimpleTextQuestionForm
-                    질문순서={index}
-                    질문제목={질문.questionTitle}
-                    질문제목수정={(event) =>
-                      질문제목수정(event, 질문.questionId)
-                    }
-                  />
-                )}
-                {질문.questionType === "radio-button" && (
-                  <RadioButtonQuestionForm
-                    질문순서={index}
-                    질문제목={질문.questionTitle}
-                    질문제목수정={(event) =>
-                      질문제목수정(event, 질문.questionId)
-                    }
-                    선택지목록={질문.radioButtonOptions}
-                    선택지추가={선택지추가}
-                    선택지내용수정={선택지내용수정}
-                  />
-                )}
-                {질문.questionType === "check-box" && (
-                  <CheckBoxQuestionForm
-                    질문순서={index}
-                    질문제목={질문.questionTitle}
-                    질문제목수정={(event) =>
-                      질문제목수정(event, 질문.questionId)
-                    }
-                    선택지목록={질문.checkBoxOptions}
-                    선택지추가={선택지추가}
-                    선택지내용수정={선택지내용수정}
-                  />
-                )}
+        <S.ColumnLeft>
+          <S.DummyQuestionFormBoardWrapper>
+            <S.QuestionFormBoardTitle>
+              질문타입 선택 보드
+            </S.QuestionFormBoardTitle>
+            <S.QuestionFormBoardBody>
+              <DraggableItem id="simple-text" onMouseDown={onMouseDownHandler}>
+                <DummySimpleTextQuestion />
               </DraggableItem>
-            ))}
-          </S.QuestionFormBoardBody>
+              <DraggableItem id="radio-button" onMouseDown={onMouseDownHandler}>
+                <DummyRadioButtonQuestionForm />
+              </DraggableItem>
+              <DraggableItem id="check-box" onMouseDown={onMouseDownHandler}>
+                <DummyCheckBoxQuestionForm />
+              </DraggableItem>
+            </S.QuestionFormBoardBody>
+          </S.DummyQuestionFormBoardWrapper>
+        </S.ColumnLeft>
 
-          <S.SubmitButton
-            onClick={async () => {
-              // 질문이 없는지 검사
-              if (!선택된질문리스트.length) {
-                alert("최소 1개 이상의 질문을 포함해주세요");
-                return;
-              }
+        <S.ColumnRight>
+          <S.QuestionFormBoardWrapper>
+            <S.QuestionFormBoardTitle>선택된 질문들</S.QuestionFormBoardTitle>
+            <S.QuestionFormBoardBody id="picked-askform-board">
+              {선택된질문리스트.map((질문, index) => (
+                <DraggableItem
+                  key={질문.questionId}
+                  className="draggable-item"
+                  data-index={index}
+                  onMouseDown={폼순서바꾸기}
+                  요소삭제={() => {
+                    const 삭제된질문 = [...선택된질문리스트];
+                    삭제된질문.splice(index, 1);
+                    set선택된질문리스트(삭제된질문);
+                  }}
+                >
+                  {질문.questionType === "simple-text" && (
+                    <SimpleTextQuestionForm
+                      질문순서={index}
+                      질문제목={질문.questionTitle}
+                      질문제목수정={(event) =>
+                        질문제목수정(event, 질문.questionId)
+                      }
+                    />
+                  )}
+                  {질문.questionType === "radio-button" && (
+                    <RadioButtonQuestionForm
+                      질문순서={index}
+                      질문제목={질문.questionTitle}
+                      질문제목수정={(event) =>
+                        질문제목수정(event, 질문.questionId)
+                      }
+                      선택지목록={질문.radioButtonOptions}
+                      선택지추가={선택지추가}
+                      선택지내용수정={선택지내용수정}
+                    />
+                  )}
+                  {질문.questionType === "check-box" && (
+                    <CheckBoxQuestionForm
+                      질문순서={index}
+                      질문제목={질문.questionTitle}
+                      질문제목수정={(event) =>
+                        질문제목수정(event, 질문.questionId)
+                      }
+                      선택지목록={질문.checkBoxOptions}
+                      선택지추가={선택지추가}
+                      선택지내용수정={선택지내용수정}
+                    />
+                  )}
+                </DraggableItem>
+              ))}
+            </S.QuestionFormBoardBody>
 
-              // 비어있는 질문 있는지 검사
-              for (const 질문 of 선택된질문리스트) {
-                if (질문.questionTitle === "") {
-                  alert("비어있는 질문이 있습니다.");
+            <S.SubmitButton
+              onClick={async () => {
+                // 질문이 없는지 검사
+                if (!선택된질문리스트.length) {
+                  alert("최소 1개 이상의 질문을 포함해주세요");
                   return;
                 }
-              }
 
-              // 비어있는 옵션 검사
-              for (const 질문 of 선택된질문리스트) {
-                if (질문.questionType === "radio-button") {
-                  if (!질문.radioButtonOptions.length) {
-                    alert("최소 1개 이상의 옵션을 입력하세요");
+                // 비어있는 질문 있는지 검사
+                for (const 질문 of 선택된질문리스트) {
+                  if (질문.questionTitle === "") {
+                    alert("비어있는 질문이 있습니다.");
                     return;
                   }
-                  for (const 옵션 of 질문.radioButtonOptions) {
-                    if (옵션 === "") {
-                      alert("비어있는 옵션이 있는 질문이 있습니다.");
+                }
+
+                // 비어있는 옵션 검사
+                for (const 질문 of 선택된질문리스트) {
+                  if (질문.questionType === "radio-button") {
+                    if (!질문.radioButtonOptions.length) {
+                      alert("최소 1개 이상의 옵션을 입력하세요");
                       return;
+                    }
+                    for (const 옵션 of 질문.radioButtonOptions) {
+                      if (옵션 === "") {
+                        alert("비어있는 옵션이 있는 질문이 있습니다.");
+                        return;
+                      }
+                    }
+                  }
+                  if (질문.questionType === "check-box") {
+                    if (!질문.checkBoxOptions.length) {
+                      alert("최소 1개 이상의 옵션을 입력하세요");
+                      return;
+                    }
+                    for (const 옵션 of 질문.checkBoxOptions) {
+                      if (옵션 === "") {
+                        alert("비어있는 옵션이 있는 질문이 있습니다.");
+                        return;
+                      }
                     }
                   }
                 }
-                if (질문.questionType === "check-box") {
-                  if (!질문.checkBoxOptions.length) {
-                    alert("최소 1개 이상의 옵션을 입력하세요");
-                    return;
-                  }
-                  for (const 옵션 of 질문.checkBoxOptions) {
-                    if (옵션 === "") {
-                      alert("비어있는 옵션이 있는 질문이 있습니다.");
-                      return;
-                    }
-                  }
+
+                const 정렬된질문리스트 = 선택된질문리스트.map(
+                  (질문, index) => ({
+                    ...질문,
+                    questionId: "" + (index + 1),
+                  })
+                );
+
+                const { status } = await fetch(`${Backend_API_URL}/ask-form`, {
+                  method: "POST",
+                  body: JSON.stringify(정렬된질문리스트),
+                });
+
+                if (status === 201) {
+                  alert("질문폼 생성 성공");
+                  router.replace("/");
                 }
-              }
 
-              const 정렬된질문리스트 = 선택된질문리스트.map((질문, index) => ({
-                ...질문,
-                questionId: "" + (index + 1),
-              }));
-
-              const { status } = await fetch(`${Backend_API_URL}/ask-form`, {
-                method: "POST",
-                body: JSON.stringify(정렬된질문리스트),
-              });
-
-              if (status === 201) {
-                alert("질문폼 생성 성공");
-                router.replace("/");
-              }
-
-              if (status === 401) {
-                alert("질문폼 생성 실패");
-              }
-            }}
-          >
-            폼 제출
-          </S.SubmitButton>
-        </S.QuestionFormBoardWrapper>
+                if (status === 401) {
+                  alert("질문폼 생성 실패");
+                }
+              }}
+            >
+              폼 제출
+            </S.SubmitButton>
+          </S.QuestionFormBoardWrapper>
+        </S.ColumnRight>
       </S.Wrapper>
     </>
   );
