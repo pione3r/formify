@@ -25,39 +25,41 @@ export default function AskForm() {
 
   const [선택된질문리스트, set선택된질문리스트] = useState<QuestionType[]>([]);
 
-  const 질문추가 = (elementId: string) => {
+  console.log(선택된질문리스트);
+
+  const 질문추가 = (questionType: string) => {
     const newId = Math.max(
       0,
       ...선택된질문리스트.map((질문) => Number.parseInt(질문.questionId))
     );
 
-    if (elementId === "simple-text") {
+    if (questionType === "simple-text") {
       set선택된질문리스트((prev) => [
         ...prev,
         {
           questionId: "" + (newId + 1),
-          questionType: elementId,
+          questionType: questionType,
           questionTitle: "",
         },
       ]);
     }
-    if (elementId === "radio-button") {
+    if (questionType === "radio-button") {
       set선택된질문리스트((prev) => [
         ...prev,
         {
           questionId: "" + (newId + 1),
-          questionType: elementId,
+          questionType: questionType,
           questionTitle: "",
           radioButtonOptions: [],
         },
       ]);
     }
-    if (elementId === "check-box") {
+    if (questionType === "check-box") {
       set선택된질문리스트((prev) => [
         ...prev,
         {
           questionId: "" + (newId + 1),
-          questionType: elementId,
+          questionType: questionType,
           questionTitle: "",
           checkBoxOptions: [],
         },
@@ -155,22 +157,30 @@ export default function AskForm() {
     <>
       <Head>
         <title>폼 만들기</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <S.Wrapper>
         <S.ColumnLeft>
           <S.DummyQuestionFormBoardWrapper>
             <S.QuestionFormBoardTitle>
-              질문타입 선택 보드
+              질문 유형 선택하기
             </S.QuestionFormBoardTitle>
             <S.QuestionFormBoardBody>
-              <DraggableItem id="simple-text" onMouseDown={onMouseDownHandler}>
+              <DraggableItem
+                data-question-type="simple-text"
+                onMouseDown={onMouseDownHandler}
+              >
                 <DummySimpleTextQuestion />
               </DraggableItem>
-              <DraggableItem id="radio-button" onMouseDown={onMouseDownHandler}>
+              <DraggableItem
+                data-question-type="radio-button"
+                onMouseDown={onMouseDownHandler}
+              >
                 <DummyRadioButtonQuestionForm />
               </DraggableItem>
-              <DraggableItem id="check-box" onMouseDown={onMouseDownHandler}>
+              <DraggableItem
+                data-question-type="check-box"
+                onMouseDown={onMouseDownHandler}
+              >
                 <DummyCheckBoxQuestionForm />
               </DraggableItem>
             </S.QuestionFormBoardBody>
@@ -179,8 +189,8 @@ export default function AskForm() {
 
         <S.ColumnRight>
           <S.QuestionFormBoardWrapper>
-            <S.QuestionFormBoardTitle>선택된 질문들</S.QuestionFormBoardTitle>
-            <S.QuestionFormBoardBody id="picked-askform-board">
+            <S.QuestionFormBoardTitle>선택한 질문들</S.QuestionFormBoardTitle>
+            <S.QuestionFormBoardBody className="section">
               {선택된질문리스트.map((질문, index) => (
                 <DraggableItem
                   key={질문.questionId}

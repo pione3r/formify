@@ -7,15 +7,21 @@ import { store } from "@/stores/store";
 
 import { SignInModal } from "@/components/SignInModal";
 import { Header } from "@/components/Header";
+import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <SessionProvider session={pageProps.session}>
-      <Provider store={store}>
-        <Header />
-        <Component {...pageProps} />
-        <SignInModal />
-      </Provider>
-    </SessionProvider>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <SessionProvider session={pageProps.session}>
+        <Provider store={store}>
+          <Header />
+          <Component {...pageProps} />
+          <SignInModal />
+        </Provider>
+      </SessionProvider>
+    </>
   );
 }
