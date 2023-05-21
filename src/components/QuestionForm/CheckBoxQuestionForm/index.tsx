@@ -15,7 +15,7 @@ export function CheckBoxQuestionForm({
       <S.Title
         placeholder="선택 질문 제목을 입력해주세요. ex) 해당하는 항목에 체크해주세요"
         value={질문제목}
-        onChange={질문제목수정}
+        onChange={(event) => 질문제목수정(event, 질문순서)}
       ></S.Title>
       <S.AnswerGroupWrapper>
         {선택지목록.map((선택지, index) => (

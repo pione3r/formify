@@ -1,24 +1,26 @@
-interface SimpleTextQuestionFormType {
+interface ITextQuestion {
   questionId: string;
-  questionType: "simple-text";
+  questionType: "text";
   questionTitle: string;
 }
 
-interface RadioButtonQuestionFormType {
+interface IRadioButtonQuestion {
   questionId: string;
   questionType: "radio-button";
   questionTitle: string;
-  radioButtonOptions: string[];
+  options: string[];
 }
 
-interface CheckBoxQuestionFormType {
+interface ICheckBoxQuestion {
   questionId: string;
   questionType: "check-box";
   questionTitle: string;
-  checkBoxOptions: string[];
+  options: string[];
 }
 
 export type QuestionType =
-  | SimpleTextQuestionFormType
-  | RadioButtonQuestionFormType
-  | CheckBoxQuestionFormType;
+  | ITextQuestion
+  | IRadioButtonQuestion
+  | ICheckBoxQuestion;
+
+  

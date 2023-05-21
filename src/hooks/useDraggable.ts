@@ -1,6 +1,6 @@
 export function useDraggable(질문추가: (questionType: string) => void) {
   return {
-    onMouseDownHandler: (mouseDownEvent: React.MouseEvent) => {
+    요소추가: (mouseDownEvent: React.MouseEvent) => {
       const element = mouseDownEvent.currentTarget as HTMLElement;
 
       const elementPos = element.getBoundingClientRect();
@@ -38,7 +38,7 @@ export function useDraggable(질문추가: (questionType: string) => void) {
 
         const droppableItem = document
           .elementFromPoint(copiedElementCenterX, copiedElementCenterY)
-          ?.closest<HTMLElement>(".section");
+          ?.closest<HTMLElement>(".drop-zone");
 
         if (droppableItem) {
           const droppableItemPos = droppableItem.getBoundingClientRect();
