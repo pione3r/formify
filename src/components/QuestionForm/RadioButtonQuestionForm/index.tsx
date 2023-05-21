@@ -15,7 +15,7 @@ export function RadioButtonQuestionForm({
       <S.Title
         placeholder="선택 질문 제목을 입력해주세요. ex) 타입을 선택해주세요"
         value={질문제목}
-        onChange={질문제목수정}
+        onChange={(event) => 질문제목수정(event, 질문순서)}
       />
       <S.AnswerGroupWrapper>
         {선택지목록.map((선택지, index) => (

@@ -19,7 +19,11 @@ export function DraggableItem({
       {요소삭제 && (
         <S.DeleteButton
           id="delete-button"
-          onClick={요소삭제}
+          onClick={(event) =>
+            요소삭제(
+              Number(event.currentTarget.parentElement?.dataset["index"]!)
+            )
+          }
           onMouseDown={(event) => event.stopPropagation()}
         >
           <S.DeleteButtonIcon

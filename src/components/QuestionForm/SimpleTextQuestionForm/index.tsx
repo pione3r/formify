@@ -12,7 +12,7 @@ export function SimpleTextQuestionForm({
       <S.Title
         placeholder="질문 제목을 입력해주세요. ex) 생년월일을 답변해주세요"
         value={질문제목}
-        onChange={질문제목수정}
+        onChange={(event) =>질문제목수정(event, 질문순서)}
       />
     </S.Wrapper>
   );
