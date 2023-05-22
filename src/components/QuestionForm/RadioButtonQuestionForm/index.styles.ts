@@ -44,6 +44,8 @@ export const Title = styled.input`
   resize: none;
   outline: none;
   border: none;
+
+  width: 45rem;
 `;
 
 export const AnswerGroupWrapper = styled.div`
@@ -85,3 +87,9 @@ export const RadioLabelInput = styled.input`
 `;
 
 export const AddAnswerButton = styled.button``;
+
+export const NextQuestionSelect = styled.select`
+  & option[value=""][disabled] {
+    display: none;
+  }
+`;

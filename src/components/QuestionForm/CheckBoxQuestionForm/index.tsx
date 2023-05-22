@@ -2,21 +2,27 @@ import * as S from "./index.styles";
 import { CheckBoxQuestionFormProps } from "./index.types";
 
 export function CheckBoxQuestionForm({
+  질문아이디리스트,
   질문순서,
   질문제목,
   질문제목수정,
   선택지목록,
   선택지추가,
   선택지내용수정,
+  다음질문,
+  다음질문으로이동,
 }: CheckBoxQuestionFormProps) {
   return (
     <S.Wrapper onMouseDown={(event) => event.stopPropagation()}>
       <S.Index>{`${질문순서 + 1}번 째 질문`}</S.Index>
       <S.Title
-        placeholder="선택 질문 제목을 입력해주세요. ex) 해당하는 항목에 체크해주세요"
+        placeholder="다중 선택형 질문 제목을 입력해주세요."
         value={질문제목}
         onChange={(event) => 질문제목수정(event, 질문순서)}
       ></S.Title>
+      <S.AddAnswerButton onClick={() => 선택지추가(질문순서)}>
+        답변 추가 버튼
+      </S.AddAnswerButton>
       <S.AnswerGroupWrapper>
         {선택지목록.map((선택지, index) => (
           <S.AnswerWrapper key={index}>
@@ -29,10 +35,23 @@ export function CheckBoxQuestionForm({
             />
           </S.AnswerWrapper>
         ))}
-        <S.AddAnswerButton onClick={() => 선택지추가(질문순서)}>
-          답변 추가 버튼
-        </S.AddAnswerButton>
       </S.AnswerGroupWrapper>
+      <S.NextQuestionSelect
+        onMouseDown={(event) => event.stopPropagation()}
+        onChange={(event) => 다음질문으로이동(event, 질문순서)}
+        defaultValue=""
+        value={다음질문}
+      >
+        <option value="" disabled>
+          몇 번째 질문으로 이동할까요?
+        </option>
+        {질문아이디리스트.map((questionId) => (
+          <option key={questionId} value={questionId}>
+            {questionId}
+          </option>
+        ))}
+        <option value="submit">제출</option>
+      </S.NextQuestionSelect>
     </S.Wrapper>
   );
 }

@@ -4,6 +4,7 @@ interface ITextQuestion {
   questionId: string;
   questionType: "text";
   questionTitle: string;
+  nextQuestionId: string;
 }
 
 interface IRadioButtonQuestion {
@@ -11,6 +12,7 @@ interface IRadioButtonQuestion {
   questionType: "radio-button";
   questionTitle: string;
   options: string[];
+  nextQuestionIds: string[];
 }
 
 interface ICheckBoxQuestion {
@@ -18,12 +20,10 @@ interface ICheckBoxQuestion {
   questionType: "check-box";
   questionTitle: string;
   options: string[];
+  nextQuestionId: string;
 }
 
-export type QuestionType =
-  | ITextQuestion
-  | IRadioButtonQuestion
-  | ICheckBoxQuestion;
+type QuestionType = ITextQuestion | IRadioButtonQuestion | ICheckBoxQuestion;
 
 export function useQuestions() {
   const [질문리스트, set질문리스트] = useState<QuestionType[]>([]);
@@ -33,13 +33,19 @@ export function useQuestions() {
       Math.max(0, ...질문리스트.map((질문) => +질문.questionId)) + 1
     );
 
-    if (questionType === "text")
+    if (questionType === "text") {
       set질문리스트((prev) => [
         ...prev,
-        { questionId: newId, questionType: questionType, questionTitle: "" },
+        {
+          questionId: newId,
+          questionType: questionType,
+          questionTitle: "",
+          nextQuestionId: "",
+        },
       ]);
+    }
 
-    if (questionType === "radio-button" || questionType === "check-box")
+    if (questionType === "check-box")
       set질문리스트((prev) => [
         ...prev,
         {
@@ -47,6 +53,19 @@ export function useQuestions() {
           questionType: questionType,
           questionTitle: "",
           options: [],
+          nextQuestionId: "",
+        },
+      ]);
+
+    if (questionType === "radio-button")
+      set질문리스트((prev) => [
+        ...prev,
+        {
+          questionId: newId,
+          questionType: questionType,
+          questionTitle: "",
+          options: [],
+          nextQuestionIds: [],
         },
       ]);
   };
@@ -66,9 +85,13 @@ export function useQuestions() {
   };
 
   const 질문삭제 = (questionIndex: number) => {
-    const 삭제된질문 = [...질문리스트];
-    삭제된질문.splice(questionIndex, 1);
-    set질문리스트(삭제된질문);
+    const copied질문리스트 = [...질문리스트];
+    copied질문리스트.splice(questionIndex, 1);
+    const new질문리스트 = copied질문리스트.map((질문, index) => ({
+      ...질문,
+      questionId: String(index + 1),
+    }));
+    set질문리스트(new질문리스트);
   };
 
   const 질문순서바꾸기 = (sourceIdx: number, destinationIdx: number) => {
@@ -76,7 +99,11 @@ export function useQuestions() {
     const moving질문 = copied질문리스트[sourceIdx];
     copied질문리스트.splice(sourceIdx, 1);
     copied질문리스트.splice(destinationIdx, 0, moving질문);
-    set질문리스트(copied질문리스트);
+    const new질문리스트 = copied질문리스트.map((질문, index) => ({
+      ...질문,
+      questionId: String(index + 1),
+    }));
+    set질문리스트(new질문리스트);
   };
 
   const 선택지추가 = (질문Index: number) => {
@@ -86,7 +113,8 @@ export function useQuestions() {
           if (질문Index === idx) {
             return {
               ...질문,
-              options: [...질문.options!, ""],
+              options: [...질문.options, ""],
+              nextQuestionIds: [...질문.nextQuestionIds, ""],
             };
           }
           return 질문;
@@ -110,30 +138,47 @@ export function useQuestions() {
     옵션Index: number
   ) => {
     set질문리스트((prev) =>
-      prev.map((질문, idx) => {
-        if (질문.questionType === "radio-button") {
-          if (질문Index === idx) {
+      prev.map((question, questionIdx) => {
+        if (
+          question.questionType === "radio-button" ||
+          question.questionType === "check-box"
+        ) {
+          if (질문Index === questionIdx) {
             return {
-              ...질문,
-              options: 질문.options.map((option, 옵션Idx) =>
-                옵션Index === 옵션Idx ? event.target.value : option
+              ...question,
+              options: question.options.map((option, optionIdx) =>
+                옵션Index === optionIdx ? event.target.value : option
               ),
             };
           }
-          return 질문;
+          return question;
         }
-        if (질문.questionType === "check-box") {
-          if (질문Index === idx) {
+
+        return question;
+      })
+    );
+  };
+
+  const 다음질문으로이동 = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+    질문Index: number,
+    옵션Index?: number
+  ) => {
+    set질문리스트((prev) =>
+      prev.map((question, questionIdx) => {
+        if (질문Index === questionIdx) {
+          if (question.questionType === "radio-button") {
             return {
-              ...질문,
-              options: 질문.options.map((option, 옵션Idx) =>
-                옵션Index === 옵션Idx ? event.target.value : option
+              ...question,
+              nextQuestionIds: question.nextQuestionIds.map(
+                (nextQuestionId, optionIdx) =>
+                  옵션Index === optionIdx ? event.target.value : nextQuestionId
               ),
             };
           }
-          return 질문;
+          return { ...question, nextQuestionId: event.target.value };
         }
-        return 질문;
+        return question;
       })
     );
   };
@@ -146,5 +191,6 @@ export function useQuestions() {
     질문순서바꾸기,
     선택지추가,
     선택지내용수정,
+    다음질문으로이동,
   };
 }
