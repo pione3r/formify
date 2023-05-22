@@ -18,8 +18,8 @@ export function Header() {
         <S.NavWrapper>
           {status === "authenticated" ? (
             <>
-              <S.NavItem href="/ask-form">폼 생성하기</S.NavItem>
-              <S.NavItem href={`/ask-forms/${session.user?.email}`}>
+              <S.NavItem href="/survey/edit">폼 생성하기</S.NavItem>
+              <S.NavItem href={`/surveys/${session.user?.email}`}>
                 내가 만든 폼 보기
               </S.NavItem>
               <SignInButton onClick={() => signOut()}>로그아웃</SignInButton>

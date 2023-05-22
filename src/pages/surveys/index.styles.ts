@@ -28,7 +28,17 @@ export const Body = styled.div`
   gap: 10px;
 `;
 
-export const FormWrapper = styled.div`
+export const SurveyLink = styled(Link)`
+  color: #000000;
+
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+`;
+
+export const SurveyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -48,42 +58,18 @@ export const FormWrapper = styled.div`
   }
 `;
 
-export const FormSubWrapper = styled(Link)`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  color: #000000;
-
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: none;
-  }
-`;
-
-export const FormHeader = styled.div``;
-
 export const Created = styled.div`
   font-size: 1.3rem;
 `;
 
-export const FormMaker = styled.div`
+export const SurveyMaker = styled.div`
   font-size: 2rem;
   font-weight: 600;
 `;
 
-export const QuestionsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+export const SurveyTitle = styled.div`
+  font-size: 2rem;
+  font-weight: 600;
 `;
 
-export const QuestionWrapper = styled.div``;
-
-export const QuestionTitle = styled.div`
-  font-size: 1.6rem;
-  font-weight: 400;
-`;
-
-export const LinkCopyButton = styled.button``;
+export const ClipBoardCopyButton = styled.button``;

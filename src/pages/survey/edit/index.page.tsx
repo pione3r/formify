@@ -18,9 +18,12 @@ import { DraggableItem } from "@/components/DraggableItem";
 import { SimpleTextQuestionForm } from "@/components/QuestionForm/SimpleTextQuestionForm";
 import { RadioButtonQuestionForm } from "@/components/QuestionForm/RadioButtonQuestionForm";
 import { CheckBoxQuestionForm } from "@/components/QuestionForm/CheckBoxQuestionForm";
+import { useState } from "react";
 
-export default function AskForm() {
+export default function SurveyEditPage() {
   const router = useRouter();
+
+  const [설문제목, set설문제목] = useState("");
 
   const {
     질문리스트,
@@ -44,6 +47,11 @@ export default function AskForm() {
       </Head>
       <S.Wrapper>
         <S.HeaderWrapper>
+          <S.SurveyTitle
+            placeholder="설문 제목을 입력하세요."
+            value={설문제목}
+            onChange={(event) => set설문제목(event.target.value)}
+          />
           <S.HeaderTitle>질문 유형 선택하기</S.HeaderTitle>
           <S.HeaderSubTitle>
             아래 동그라미들을 드래그 앤 드롭하세요.
@@ -132,9 +140,12 @@ export default function AskForm() {
         <S.FooterWrapper>
           <S.SubmitButton
             onClick={async () => {
-              const { status } = await fetch(`${Backend_API_URL}/ask-form`, {
+              const { status } = await fetch(`${Backend_API_URL}/survey`, {
                 method: "POST",
-                body: JSON.stringify(질문리스트),
+                body: JSON.stringify({
+                  surveyTitle: 설문제목,
+                  survey: 질문리스트,
+                }),
               });
               if (status === 201) {
                 alert("질문폼 생성 성공");
@@ -143,8 +154,6 @@ export default function AskForm() {
               if (status === 401) {
                 alert("질문폼 생성 실패");
               }
-
-              console.log(질문리스트);
             }}
           >
             폼 제출

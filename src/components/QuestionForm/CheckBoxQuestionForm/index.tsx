@@ -39,7 +39,6 @@ export function CheckBoxQuestionForm({
       <S.NextQuestionSelect
         onMouseDown={(event) => event.stopPropagation()}
         onChange={(event) => 다음질문으로이동(event, 질문순서)}
-        defaultValue=""
         value={다음질문}
       >
         <option value="" disabled>
