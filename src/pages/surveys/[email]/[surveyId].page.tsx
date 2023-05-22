@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import * as S from "./index.styles";
-import { AnswerFormType, AnswersForAskFormProps } from "./index.types";
+import { SurveyResultPageProps, SurveyResultType } from "./index.types";
 
 import { useMemo } from "react";
 
@@ -10,14 +10,14 @@ import { authOptions } from "@/pages/api/auth/[...nextauth].api";
 import { db } from "@/utils/db";
 import { doc, getDoc } from "firebase/firestore";
 
-export default function AnswersForAskForm({ forms }: AnswersForAskFormProps) {
+export default function SurveyResultPage({ results }: SurveyResultPageProps) {
   const 질문모아보기 = useMemo(() => {
     const questionsHash: {
       [questionTitle: string]: string[];
     } = {};
 
-    forms
-      .map((form) => form.answers)
+    results
+      .map((result) => result.response)
       .forEach((answer) =>
         answer.forEach((question) => {
           if (!questionsHash[question.questionTitle])
@@ -27,17 +27,17 @@ export default function AnswersForAskForm({ forms }: AnswersForAskFormProps) {
       );
 
     return questionsHash;
-  }, [forms]);
+  }, [results]);
 
   return (
     <S.Wrapper>
       <S.Columm>
         <S.Title>응답들</S.Title>
         <S.Body>
-          {forms.map((응답, index) => (
+          {results.map((응답, index) => (
             <S.AnswerWrapper key={index}>
-              <S.Respondent>{응답.respondent}</S.Respondent>
-              {응답.answers.map((question, idx) => (
+              <S.Respondent>{`응답자 : ${응답.respondent}`}</S.Respondent>
+              {응답.response.map((question, idx) => (
                 <S.QuestionWrapper key={idx}>
                   <S.QuestionTitle>{`질문 ${idx + 1} : ${
                     question.questionTitle
@@ -67,16 +67,16 @@ export default function AnswersForAskForm({ forms }: AnswersForAskFormProps) {
 }
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  let forms: AnswerFormType[] = [];
+  let results: SurveyResultType[] = [];
 
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
 
   if (session?.user?.email === ctx.query.email) {
-    const docRef = doc(db, "answerForms", ctx.query.askFormId as string);
+    const docRef = doc(db, "responses", ctx.query.surveyId as string);
     const docSnap = await getDoc(docRef);
 
     for (const data in docSnap.data()!) {
-      forms.push(docSnap.data()![data]);
+      results.push(docSnap.data()![data]);
     }
   } else {
     return {
@@ -88,7 +88,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   return {
     props: {
-      forms: forms,
+      results: results,
     },
   };
 }

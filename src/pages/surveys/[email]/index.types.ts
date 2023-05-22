@@ -1,13 +1,13 @@
-export type AnswerFormType = {
-  answers: {
-    answer: string;
+export type SurveyResultType = {
+  response: {
     questionId: string;
-    questionTitle: string;
     questionType: string;
+    questionTitle: string;
+    answer: string;
   }[];
   respondent: string;
 };
 
-export interface AnswersForAskFormProps {
-  forms: AnswerFormType[];
+export interface SurveyResultPageProps {
+  results: SurveyResultType[];
 }
