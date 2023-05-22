@@ -16,8 +16,6 @@ export const HeaderWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
-
-  border: 1px solid limegreen;
 `;
 
 export const SurveyTitle = styled.input`
@@ -60,9 +58,7 @@ export const QuestionTypeChoiceButton = styled.div`
   cursor: pointer;
 `;
 
-export const BodyWrapper = styled.div`
-  border: 1px solid limegreen;
-`;
+export const BodyWrapper = styled.div``;
 
 export const BodyTitle = styled.div`
   font-size: 3rem;

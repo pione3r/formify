@@ -29,8 +29,6 @@ export const BodyWrapper = styled.div`
 
 export const QuestionWrapper = styled.div<{ isCurrentQuestion: boolean }>`
   display: ${(props) => (props.isCurrentQuestion ? "block" : "none")};
-
-  border: 1px solid limegreen;
 `;
 
 export const QuestionHeaderWrapper = styled.div``;
