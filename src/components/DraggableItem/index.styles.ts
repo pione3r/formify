@@ -2,9 +2,9 @@ import styled from "styled-components";
 import Image from "next/image";
 
 export const Wrapper = styled.div`
-  position: relative;
+  border: 1px solid limegreen;
 
-  min-width: 50rem;
+  position: relative;
 
   background-color: #ffffff;
 

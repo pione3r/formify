@@ -44,4 +44,12 @@ export const Title = styled.input`
   resize: none;
   outline: none;
   border: none;
+
+  width: 45rem;
+`;
+
+export const NextQuestionSelect = styled.select`
+  & option[value=""][disabled] {
+    display: none;
+  }
 `;
