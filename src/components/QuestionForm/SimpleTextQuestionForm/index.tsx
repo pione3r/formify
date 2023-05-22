@@ -21,7 +21,6 @@ export function SimpleTextQuestionForm({
         onMouseDown={(event) => event.stopPropagation()}
         onChange={(event) => 다음질문으로이동(event, 질문순서)}
         value={다음질문}
-        defaultValue=""
       >
         <option value="" disabled>
           몇 번째 질문으로 이동할까요?

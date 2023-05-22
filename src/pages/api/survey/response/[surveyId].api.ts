@@ -1,5 +1,5 @@
 import { db } from "@/utils/db";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { v4 } from "uuid";
@@ -8,12 +8,12 @@ type Data = {
   status: string;
 };
 
-export default async function answerFormHandler(
+export default async function surveyResponseHandler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
   if (req.method === "POST") {
-    const docRef = doc(db, "answerForms", req.query.askFormId as string);
+    const docRef = doc(db, "responses", req.query.surveyId as string);
 
     const uuid = v4();
 

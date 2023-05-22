@@ -15,8 +15,17 @@ export const HeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 20px;
 
   border: 1px solid limegreen;
+`;
+
+export const SurveyTitle = styled.input`
+  font-size: 3rem;
+
+  outline: none;
+  background: none;
+  border: none;
 `;
 
 export const HeaderTitle = styled.div`

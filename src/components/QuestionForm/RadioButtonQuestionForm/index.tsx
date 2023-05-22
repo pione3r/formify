@@ -38,7 +38,6 @@ export function RadioButtonQuestionForm({
               onChange={(event) =>
                 다음질문으로이동(event, 질문순서, 선택지Index)
               }
-              defaultValue=""
               value={다음질문[선택지Index]}
             >
               <option value="" disabled>
