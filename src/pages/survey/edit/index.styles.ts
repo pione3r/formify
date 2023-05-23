@@ -2,40 +2,19 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   display: flex;
+  gap: 30px;
+
+  max-width: 100rem;
+
+  padding-top: 100px;
+
+  margin: 0 auto;
 `;
 
 export const ColumnLeft = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 30px;
-
-  position: relative;
-
-  min-width: 80rem;
-
-  padding-top: 300px;
-  padding-left: 200px;
-  padding-right: 200px;
-
-  &::after {
-    content: "";
-
-    display: block;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-
-    height: 100%;
-    margin-top: 60px;
-
-    border: 1px dashed black;
-  }
-`;
-
-export const ColumnLeftHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 `;
 
 export const SurveyTitleInputWrapper = styled.div`
@@ -49,6 +28,8 @@ export const SurveyTitleInputWrapper = styled.div`
 `;
 
 export const SurveyTitleInput = styled.input`
+  width: 100%;
+
   font-size: 3rem;
 
   outline: none;
@@ -56,12 +37,29 @@ export const SurveyTitleInput = styled.input`
   border: none;
 `;
 
-export const ColumnLeftDescription = styled.div`
-  font-size: 2rem;
-  font-weight: 700;
+export const DropZone = styled.div`
+  display: flex;
+  gap: 20px;
+
+  width: 80rem;
+  height: 50rem;
+
+  padding: 20px;
+
+  overflow: scroll;
+
+  border: 1px dashed black;
+  border-radius: 16px;
 `;
 
-export const ColumnLeftBody = styled.div`
+export const ColumnRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+`;
+
+export const QuestionPickBoard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,39 +93,6 @@ export const QuestionTypeButton = styled.div`
   user-select: none;
 
   cursor: pointer;
-`;
-
-export const ColummRight = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-
-  margin-top: 200px;
-
-  width: 100%;
-`;
-
-export const ColumnRightHeader = styled.div``;
-
-export const ColumnRightDescription = styled.div`
-  font-size: 2rem;
-  font-weight: 700;
-`;
-
-export const ColumnRightBody = styled.div`
-  display: flex;
-  gap: 20px;
-
-  width: 100rem;
-  height: 50rem;
-
-  padding: 20px;
-
-  overflow: scroll;
-
-  border: 1px dashed black;
-  border-radius: 16px;
 `;
 
 export const SubmitButton = styled.button`

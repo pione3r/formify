@@ -47,50 +47,14 @@ export default function SurveyEditPage() {
       </Head>
       <S.Wrapper>
         <S.ColumnLeft>
-          <S.ColumnLeftHeader>
-            <S.SurveyTitleInputWrapper>
-              <S.SurveyTitleInput
-                placeholder="설문 제목을 입력하세요."
-                value={설문제목}
-                onChange={(event) => set설문제목(event.target.value)}
-              />
-            </S.SurveyTitleInputWrapper>
-            <S.ColumnLeftDescription>
-              {`아래 질문유형을 클릭하거나, 드래그 앤 드롭하세요`}
-            </S.ColumnLeftDescription>
-          </S.ColumnLeftHeader>
-          <S.ColumnLeftBody>
-            <S.QuestionTypeButton
-              data-question-type="text"
-              onMouseDown={요소추가}
-              onClick={() => 질문추가("text")}
-            >
-              단답형
-            </S.QuestionTypeButton>
-            <S.QuestionTypeButton
-              data-question-type="radio-button"
-              onMouseDown={요소추가}
-              onClick={() => 질문추가("radio-button")}
-            >
-              단일선택형
-            </S.QuestionTypeButton>
-
-            <S.QuestionTypeButton
-              data-question-type="check-box"
-              onMouseDown={요소추가}
-              onClick={() => 질문추가("check-box")}
-            >
-              다중선택형
-            </S.QuestionTypeButton>
-          </S.ColumnLeftBody>
-        </S.ColumnLeft>
-        <S.ColummRight>
-          <S.ColumnRightHeader>
-            <S.ColumnRightDescription>
-              질문의 제목과 답변을 작성하고, 질문 흐름을 연결해주세요
-            </S.ColumnRightDescription>
-          </S.ColumnRightHeader>
-          <S.ColumnRightBody className="drop-zone">
+          <S.SurveyTitleInputWrapper>
+            <S.SurveyTitleInput
+              placeholder="설문 제목을 입력하세요."
+              value={설문제목}
+              onChange={(event) => set설문제목(event.target.value)}
+            />
+          </S.SurveyTitleInputWrapper>
+          <S.DropZone className="drop-zone">
             {질문리스트.map((질문, questionIndex, origin) => (
               <DraggableItem
                 key={질문.questionId}
@@ -143,7 +107,34 @@ export default function SurveyEditPage() {
                 )}
               </DraggableItem>
             ))}
-          </S.ColumnRightBody>
+          </S.DropZone>
+        </S.ColumnLeft>
+
+        <S.ColumnRight>
+          <S.QuestionPickBoard>
+            <S.QuestionTypeButton
+              data-question-type="text"
+              onMouseDown={요소추가}
+              onClick={() => 질문추가("text")}
+            >
+              단답형
+            </S.QuestionTypeButton>
+            <S.QuestionTypeButton
+              data-question-type="radio-button"
+              onMouseDown={요소추가}
+              onClick={() => 질문추가("radio-button")}
+            >
+              단일선택형
+            </S.QuestionTypeButton>
+
+            <S.QuestionTypeButton
+              data-question-type="check-box"
+              onMouseDown={요소추가}
+              onClick={() => 질문추가("check-box")}
+            >
+              다중선택형
+            </S.QuestionTypeButton>
+          </S.QuestionPickBoard>
           <S.SubmitButton
             onClick={async () => {
               const { status } = await fetch(`${Backend_API_URL}/survey`, {
@@ -164,7 +155,7 @@ export default function SurveyEditPage() {
           >
             폼 제출
           </S.SubmitButton>
-        </S.ColummRight>
+        </S.ColumnRight>
       </S.Wrapper>
     </>
   );
