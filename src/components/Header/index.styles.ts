@@ -26,8 +26,8 @@ export const SubWrapper = styled.div`
 `;
 
 export const HeaderLogo = styled(Link)`
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 2.5rem;
+  font-weight: 700;
   color: #000000;
 
   text-decoration: none;
@@ -40,12 +40,11 @@ export const HeaderLogo = styled(Link)`
 export const NavWrapper = styled.nav`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
 `;
 
 export const NavItem = styled(Link)`
-  font-size: 1.6rem;
-  font-weight: 500;
+  font-size: 2rem;
   color: #000000;
 
   text-decoration: none;
@@ -53,4 +52,45 @@ export const NavItem = styled(Link)`
   &:hover {
     text-decoration: none;
   }
+
+  &:hover::after {
+    content: "";
+
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #000000;
+  }
+`;
+
+export const SignOutButton = styled.div`
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+
+  background-color: #000000;
+
+  padding: 10px 16px;
+
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
+`;
+
+export const SignInButton = styled.div`
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+
+  background-color: #000000;
+
+  padding: 10px 16px;
+
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 `;

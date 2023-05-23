@@ -1,9 +1,8 @@
 import * as S from "./index.styles";
 
-import { SignInButton } from "../SigninButton";
-
 import { signInModalOpen } from "@/stores/signInModalSlice";
 import { useAppDispatch } from "@/stores/hooks";
+
 import { signOut, useSession } from "next-auth/react";
 
 export function Header() {
@@ -18,16 +17,18 @@ export function Header() {
         <S.NavWrapper>
           {status === "authenticated" ? (
             <>
-              <S.NavItem href="/survey/edit">폼 생성하기</S.NavItem>
+              <S.NavItem href="/survey/edit">폼 생성</S.NavItem>
               <S.NavItem href={`/surveys/${session.user?.email}`}>
-                내가 만든 폼 보기
+                내가 만든 폼
               </S.NavItem>
-              <SignInButton onClick={() => signOut()}>로그아웃</SignInButton>
+              <S.SignOutButton onClick={() => signOut()}>
+                로그아웃
+              </S.SignOutButton>
             </>
           ) : (
-            <SignInButton onClick={() => dispatch(signInModalOpen())}>
+            <S.SignInButton onClick={() => dispatch(signInModalOpen())}>
               로그인
-            </SignInButton>
+            </S.SignInButton>
           )}
         </S.NavWrapper>
       </S.SubWrapper>

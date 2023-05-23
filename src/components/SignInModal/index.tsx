@@ -1,10 +1,11 @@
 import * as S from "./index.styles";
 
-import { Portal } from "../Portal";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { signInModalClose } from "@/stores/signInModalSlice";
-import { SignInButton } from "../SigninButton";
+
 import { signIn } from "next-auth/react";
+
+import { Portal } from "@/components/Portal";
 
 export function SignInModal() {
   const dispatch = useAppDispatch();
@@ -14,9 +15,15 @@ export function SignInModal() {
       {isOpen && (
         <S.Overlay onClick={() => dispatch(signInModalClose())}>
           <S.Wrapper onClick={(event) => event.stopPropagation()}>
-            <SignInButton onClick={() => signIn("google")}>
-              구글 로그인
-            </SignInButton>
+            <S.GoogleLoginButtonWrapper onClick={() => signIn("google")}>
+              <S.GoogleLogo
+                src="/images/google-logo.png"
+                alt="google-logo"
+                width={20}
+                height={20}
+              />
+              <S.ButtonLabel>Continue with Google</S.ButtonLabel>
+            </S.GoogleLoginButtonWrapper>
           </S.Wrapper>
         </S.Overlay>
       )}
