@@ -27,6 +27,11 @@ export const Wrapper = styled.div`
   }
 `;
 
+export const ChildrenWrapper = styled.div`
+  height: 40rem;
+  overflow: scroll;
+`;
+
 export const DragHandle = styled(Image)`
   display: flex;
   justify-content: center;

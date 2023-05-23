@@ -46,42 +46,51 @@ export default function SurveyEditPage() {
         <title>폼 만들기</title>
       </Head>
       <S.Wrapper>
-        <S.HeaderWrapper>
-          <S.SurveyTitle
-            placeholder="설문 제목을 입력하세요."
-            value={설문제목}
-            onChange={(event) => set설문제목(event.target.value)}
-          />
-          <S.HeaderTitle>질문 유형 선택하기</S.HeaderTitle>
-          <S.HeaderSubTitle>
-            아래 동그라미들을 드래그 앤 드롭하세요.
-          </S.HeaderSubTitle>
-          <S.HeaderContentWrapper>
-            <S.QuestionTypeChoiceButton
+        <S.ColumnLeft>
+          <S.ColumnLeftHeader>
+            <S.SurveyTitleInputWrapper>
+              <S.SurveyTitleInput
+                placeholder="설문 제목을 입력하세요."
+                value={설문제목}
+                onChange={(event) => set설문제목(event.target.value)}
+              />
+            </S.SurveyTitleInputWrapper>
+            <S.ColumnLeftDescription>
+              {`아래 질문유형을 클릭하거나, 드래그 앤 드롭하세요`}
+            </S.ColumnLeftDescription>
+          </S.ColumnLeftHeader>
+          <S.ColumnLeftBody>
+            <S.QuestionTypeButton
               data-question-type="text"
               onMouseDown={요소추가}
+              onClick={() => 질문추가("text")}
             >
               단답형
-            </S.QuestionTypeChoiceButton>
-            <S.QuestionTypeChoiceButton
+            </S.QuestionTypeButton>
+            <S.QuestionTypeButton
               data-question-type="radio-button"
               onMouseDown={요소추가}
+              onClick={() => 질문추가("radio-button")}
             >
               단일선택형
-            </S.QuestionTypeChoiceButton>
+            </S.QuestionTypeButton>
 
-            <S.QuestionTypeChoiceButton
+            <S.QuestionTypeButton
               data-question-type="check-box"
               onMouseDown={요소추가}
+              onClick={() => 질문추가("check-box")}
             >
               다중선택형
-            </S.QuestionTypeChoiceButton>
-          </S.HeaderContentWrapper>
-        </S.HeaderWrapper>
-
-        <S.BodyWrapper>
-          <S.BodyTitle>질문 작성 및 흐름도 구성</S.BodyTitle>
-          <S.BodyContentWrapper className="drop-zone">
+            </S.QuestionTypeButton>
+          </S.ColumnLeftBody>
+        </S.ColumnLeft>
+        <S.ColummRight>
+          <S.ColumnRightHeader>
+            <S.ColumnRightDescription>
+              질문의 제목과 답변을 작성하고, 질문 흐름을 연결해주세요
+            </S.ColumnRightDescription>
+          </S.ColumnRightHeader>
+          <S.ColumnRightBody className="drop-zone">
             {질문리스트.map((질문, questionIndex, origin) => (
               <DraggableItem
                 key={질문.questionId}
@@ -134,10 +143,7 @@ export default function SurveyEditPage() {
                 )}
               </DraggableItem>
             ))}
-          </S.BodyContentWrapper>
-        </S.BodyWrapper>
-
-        <S.FooterWrapper>
+          </S.ColumnRightBody>
           <S.SubmitButton
             onClick={async () => {
               const { status } = await fetch(`${Backend_API_URL}/survey`, {
@@ -158,7 +164,7 @@ export default function SurveyEditPage() {
           >
             폼 제출
           </S.SubmitButton>
-        </S.FooterWrapper>
+        </S.ColummRight>
       </S.Wrapper>
     </>
   );

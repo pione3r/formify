@@ -15,7 +15,7 @@ export function DraggableItem({
         height={20}
         draggable={false}
       />
-      {children}
+      <S.ChildrenWrapper>{children}</S.ChildrenWrapper>
       {요소삭제 && (
         <S.DeleteButton
           id="delete-button"

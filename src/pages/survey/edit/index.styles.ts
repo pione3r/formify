@@ -1,24 +1,54 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.main`
+export const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  margin: 0 auto;
-  padding: 20px;
-
-  background-color: rgb(245, 245, 247);
 `;
 
-export const HeaderWrapper = styled.div`
+export const ColumnLeft = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  gap: 30px;
+
+  position: relative;
+
+  min-width: 80rem;
+
+  padding-top: 300px;
+  padding-left: 200px;
+  padding-right: 200px;
+
+  &::after {
+    content: "";
+
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+
+    height: 100%;
+    margin-top: 60px;
+
+    border: 1px dashed black;
+  }
 `;
 
-export const SurveyTitle = styled.input`
+export const ColumnLeftHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const SurveyTitleInputWrapper = styled.div`
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #777777;
+  }
+`;
+
+export const SurveyTitleInput = styled.input`
   font-size: 3rem;
 
   outline: none;
@@ -26,61 +56,92 @@ export const SurveyTitle = styled.input`
   border: none;
 `;
 
-export const HeaderTitle = styled.div`
-  font-size: 3rem;
+export const ColumnLeftDescription = styled.div`
+  font-size: 2rem;
   font-weight: 700;
 `;
 
-export const HeaderSubTitle = styled.div`
-  font-size: 2rem;
-  font-weight: 400;
-`;
-
-export const HeaderContentWrapper = styled.div`
+export const ColumnLeftBody = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
+
+  padding: 20px 40px;
+
+  background-color: #ffffff;
+
+  box-shadow: 4px 4px 50px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
 `;
 
-export const QuestionTypeChoiceButton = styled.div`
+export const QuestionTypeButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 50px;
-  height: 50px;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #ffffff;
 
-  border-radius: 50%;
+  background-color: #000000;
 
-  background-color: #ffffff;
+  width: 160px;
+  padding: 10px 16px;
+
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
 
   user-select: none;
 
   cursor: pointer;
 `;
 
-export const BodyWrapper = styled.div``;
+export const ColummRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
 
-export const BodyTitle = styled.div`
-  font-size: 3rem;
+  margin-top: 200px;
+
+  width: 100%;
+`;
+
+export const ColumnRightHeader = styled.div``;
+
+export const ColumnRightDescription = styled.div`
+  font-size: 2rem;
   font-weight: 700;
 `;
 
-export const BodyContentWrapper = styled.div`
-  padding: 20px;
-
+export const ColumnRightBody = styled.div`
   display: flex;
   gap: 20px;
 
-  min-height: 30rem;
+  width: 100rem;
+  height: 50rem;
+
+  padding: 20px;
 
   overflow: scroll;
-`;
 
-export const FooterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
+  border: 1px dashed black;
+  border-radius: 16px;
 `;
 
 export const SubmitButton = styled.button`
   font-size: 3rem;
+  font-weight: 700;
+  color: #ffffff;
+
+  background-color: #000000;
+
+  padding: 10px 16px;
+
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 `;

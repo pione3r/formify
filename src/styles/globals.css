@@ -8,6 +8,7 @@ body {
 
 body {
   min-height: 100vh;
+  background-color: rgb(245, 245, 247);
 }
 
 *,
@@ -34,3 +35,12 @@ video {
   display: block;
   max-width: 100%;
 }
+
+/* html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+  height: 100%;
+  overflow: hidden;
+} */
