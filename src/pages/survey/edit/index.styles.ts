@@ -2,11 +2,11 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   display: flex;
-  gap: 30px;
+  gap: 50px;
 
-  max-width: 100rem;
+  max-width: 120rem;
 
-  padding-top: 100px;
+  padding-top: 140px;
 
   margin: 0 auto;
 `;
@@ -14,7 +14,7 @@ export const Wrapper = styled.div`
 export const ColumnLeft = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 `;
 
 export const SurveyTitleInputWrapper = styled.div`
@@ -41,8 +41,8 @@ export const DropZone = styled.div`
   display: flex;
   gap: 20px;
 
-  width: 80rem;
-  height: 50rem;
+  width: 90rem;
+  height: 40rem;
 
   padding: 20px;
 
@@ -55,22 +55,50 @@ export const DropZone = styled.div`
 export const ColumnRight = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 30px;
+  align-items: center; 
+  gap: 50px;
+
+  margin-top: 100px;
 `;
 
-export const QuestionPickBoard = styled.div`
+export const QuestionTypeButtonBoard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
 
-  padding: 20px 40px;
+  padding: 20px 20px;
 
   background-color: #ffffff;
 
   box-shadow: 4px 4px 50px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
+
+  position: relative;
+
+  &:before {
+    content: "클릭 or 드래그 앤 드롭";
+
+    display: block;
+    position: absolute;
+    top: -40px;
+    left: 0px;
+
+    font-size: 2rem;
+    font-weight: 700;
+
+    padding-left: 9px;
+
+    width: 100%;
+
+    opacity: 0;
+
+    transition: all 0.5s ease-in-out;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
 `;
 
 export const QuestionTypeButton = styled.div`
@@ -100,13 +128,15 @@ export const SubmitButton = styled.button`
   font-weight: 700;
   color: #ffffff;
 
-  background-color: #000000;
+  background-color: #2b44ff;
 
   padding: 10px 16px;
 
   border-radius: 16px;
 
   cursor: pointer;
+
+  width: 100%;
 
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 `;

@@ -6,7 +6,7 @@ export const Wrapper = styled.header`
   align-items: center;
   justify-content: space-between;
 
-  padding: 20px 40px;
+  padding: 10px 40px;
 
   position: sticky;
   top: 0px;
@@ -44,7 +44,7 @@ export const NavWrapper = styled.nav`
 `;
 
 export const NavItem = styled(Link)`
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #000000;
 
   text-decoration: none;
@@ -64,13 +64,13 @@ export const NavItem = styled(Link)`
 `;
 
 export const SignOutButton = styled.div`
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #ffffff;
 
   background-color: #000000;
 
-  padding: 10px 16px;
+  padding: 8px 16px;
 
   border-radius: 16px;
 
@@ -80,13 +80,13 @@ export const SignOutButton = styled.div`
 `;
 
 export const SignInButton = styled.div`
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #ffffff;
 
   background-color: #000000;
 
-  padding: 10px 16px;
+  padding: 8px 16px;
 
   border-radius: 16px;
 

@@ -26,7 +26,8 @@ export const Wrapper = styled.div`
 `;
 
 export const ChildrenWrapper = styled.div`
-  height: 40rem;
+  width: 40rem;
+  height: 30rem;
   overflow: scroll;
 `;
 

@@ -18,7 +18,7 @@ import { DraggableItem } from "@/components/DraggableItem";
 import { SimpleTextQuestionForm } from "@/components/QuestionForm/SimpleTextQuestionForm";
 import { RadioButtonQuestionForm } from "@/components/QuestionForm/RadioButtonQuestionForm";
 import { CheckBoxQuestionForm } from "@/components/QuestionForm/CheckBoxQuestionForm";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function SurveyEditPage() {
   const router = useRouter();
@@ -34,11 +34,25 @@ export default function SurveyEditPage() {
     선택지추가,
     선택지내용수정,
     다음질문으로이동,
+    이전질문리스트길이,
   } = useQuestions();
 
   const { 요소추가 } = useDraggable(질문추가);
 
   const { 폼순서바꾸기 } = usePickedFormPosSwitch(질문순서바꾸기);
+
+  const dropZoneRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!dropZoneRef) return;
+
+    if (!dropZoneRef.current) return;
+
+    const scrollWidth = dropZoneRef.current?.scrollWidth || 0;
+
+    if (이전질문리스트길이! < 질문리스트.length)
+      dropZoneRef.current.scrollTo({ left: scrollWidth, behavior: "smooth" });
+  }, [이전질문리스트길이, 질문리스트]);
 
   return (
     <>
@@ -52,9 +66,10 @@ export default function SurveyEditPage() {
               placeholder="설문 제목을 입력하세요."
               value={설문제목}
               onChange={(event) => set설문제목(event.target.value)}
+              spellCheck={false}
             />
           </S.SurveyTitleInputWrapper>
-          <S.DropZone className="drop-zone">
+          <S.DropZone className="drop-zone" ref={dropZoneRef}>
             {질문리스트.map((질문, questionIndex, origin) => (
               <DraggableItem
                 key={질문.questionId}
@@ -111,7 +126,7 @@ export default function SurveyEditPage() {
         </S.ColumnLeft>
 
         <S.ColumnRight>
-          <S.QuestionPickBoard>
+          <S.QuestionTypeButtonBoard>
             <S.QuestionTypeButton
               data-question-type="text"
               onMouseDown={요소추가}
@@ -134,7 +149,7 @@ export default function SurveyEditPage() {
             >
               다중선택형
             </S.QuestionTypeButton>
-          </S.QuestionPickBoard>
+          </S.QuestionTypeButtonBoard>
           <S.SubmitButton
             onClick={async () => {
               const { status } = await fetch(`${Backend_API_URL}/survey`, {

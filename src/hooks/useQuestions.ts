@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ITextQuestion {
   questionId: string;
@@ -25,8 +25,20 @@ interface ICheckBoxQuestion {
 
 type QuestionType = ITextQuestion | IRadioButtonQuestion | ICheckBoxQuestion;
 
+function usePreviousQuestionsLength(length: number) {
+  const ref = useRef<number>();
+
+  useEffect(() => {
+    ref.current = length;
+  });
+
+  return ref.current;
+}
+
 export function useQuestions() {
   const [질문리스트, set질문리스트] = useState<QuestionType[]>([]);
+
+  const 이전질문리스트길이 = usePreviousQuestionsLength(질문리스트.length);
 
   const 질문추가 = (questionType: string) => {
     const newId = String(
@@ -192,5 +204,6 @@ export function useQuestions() {
     선택지추가,
     선택지내용수정,
     다음질문으로이동,
+    이전질문리스트길이,
   };
 }
