@@ -8,24 +8,33 @@ import { authOptions } from "../api/auth/[...nextauth].api";
 
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/utils/db";
+import { useCallback } from "react";
 
 export default function SurveysPage({ surveys }: SurveysPageProps) {
+  const getYYYYMMDD = useCallback((date: string) => {
+    const copiedDate = new Date(date);
+
+    return `${copiedDate.getFullYear()}. ${
+      copiedDate.getMonth() + 1
+    }. ${copiedDate.getDate()}`;
+  }, []);
+
   return (
     <>
       <Head>
-        <title>내가 만든 설문 모아보기</title>
+        <title>내가 만든 설문</title>
       </Head>
       <S.Wrapper>
-        <S.Title>내가 만든 설문리스트</S.Title>
-        <S.Body>
+        <S.Title>최근 설문들</S.Title>
+        <S.SurveysWrapper>
           {surveys.map((survey) => (
             <S.SurveyLink
-              key={survey.created}
+              key={survey.surveyId}
               href={`/surveys/${survey.surveyMaker}/${survey.surveyId}`}
             >
               <S.SurveyWrapper>
-                <S.Created>{`작성일 : ${survey.created}`}</S.Created>
-                <S.SurveyTitle>{`설문제목 : ${survey.surveyTitle}`}</S.SurveyTitle>
+                <S.Created>{getYYYYMMDD(survey.created)}</S.Created>
+                <S.SurveyTitle>{survey.surveyTitle}</S.SurveyTitle>
                 <S.ClipBoardCopyButton
                   onClick={(event) => {
                     event.preventDefault();
@@ -41,7 +50,7 @@ export default function SurveysPage({ surveys }: SurveysPageProps) {
               </S.SurveyWrapper>
             </S.SurveyLink>
           ))}
-        </S.Body>
+        </S.SurveysWrapper>
       </S.Wrapper>
     </>
   );

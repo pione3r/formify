@@ -19,6 +19,7 @@ export function RadioButtonQuestionForm({
         placeholder="단일 선택형 질문 제목을 입력해주세요."
         value={질문제목}
         onChange={(event) => 질문제목수정(event, 질문순서)}
+        spellCheck={false}
       />
       <S.AddAnswerButton onClick={() => 선택지추가(질문순서)}>
         답변 추가 버튼

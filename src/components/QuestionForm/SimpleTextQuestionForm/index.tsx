@@ -16,6 +16,7 @@ export function SimpleTextQuestionForm({
         placeholder="단답형 질문 제목을 입력해주세요."
         value={질문제목}
         onChange={(event) => 질문제목수정(event, 질문순서)}
+        spellCheck={false}
       />
       <S.NextQuestionSelect
         onMouseDown={(event) => event.stopPropagation()}
