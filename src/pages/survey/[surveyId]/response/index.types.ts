@@ -37,29 +37,15 @@ export interface ResponsePageProps {
   respondent: string;
 }
 
-interface ITextAnswer {
-  questionId: string;
-  questionType: "text";
-  questionTitle: string;
-  nextQuestionId: string;
+interface ITextAnswer extends ITextQuestion {
   answer: string;
 }
 
-interface IRadioButtonAnswer {
-  questionId: string;
-  questionType: "radio-button";
-  questionTitle: string;
-  options: string[];
-  nextQuestionIds: string[];
+interface IRadioButtonAnswer extends IRadioButtonQuestion {
   answer: string;
 }
 
-interface ICheckBoxAnswer {
-  questionId: string;
-  questionType: "check-box";
-  questionTitle: string;
-  options: string[];
-  nextQuestionId: string;
+interface ICheckBoxAnswer extends ICheckBoxQuestion {
   answer: string[];
 }
 

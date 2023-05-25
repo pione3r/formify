@@ -26,31 +26,35 @@ export default function SurveysPage({ surveys }: SurveysPageProps) {
       </Head>
       <S.Wrapper>
         <S.Title>최근 설문들</S.Title>
-        <S.SurveysWrapper>
-          {surveys.map((survey) => (
-            <S.SurveyLink
-              key={survey.surveyId}
-              href={`/surveys/${survey.surveyMaker}/${survey.surveyId}`}
-            >
-              <S.SurveyWrapper>
-                <S.Created>{getYYYYMMDD(survey.created)}</S.Created>
-                <S.SurveyTitle>{survey.surveyTitle}</S.SurveyTitle>
-                <S.ClipBoardCopyButton
-                  onClick={(event) => {
-                    event.preventDefault();
-                    window.navigator.clipboard
-                      .writeText(survey.responseFormLink)
-                      .then(() =>
-                        alert("클립보드에 응답 링크가 복사되었습니다.")
-                      );
-                  }}
-                >
-                  응답 링크 복사하기
-                </S.ClipBoardCopyButton>
-              </S.SurveyWrapper>
-            </S.SurveyLink>
-          ))}
-        </S.SurveysWrapper>
+        {surveys.length ? (
+          <S.SurveysWrapper>
+            {surveys.map((survey) => (
+              <S.SurveyLink
+                key={survey.surveyId}
+                href={`/surveys/${survey.surveyMaker}/${survey.surveyId}`}
+              >
+                <S.SurveyWrapper>
+                  <S.Created>{getYYYYMMDD(survey.created)}</S.Created>
+                  <S.SurveyTitle>{survey.surveyTitle}</S.SurveyTitle>
+                  <S.ClipBoardCopyButton
+                    onClick={(event) => {
+                      event.preventDefault();
+                      window.navigator.clipboard
+                        .writeText(survey.responseFormLink)
+                        .then(() =>
+                          alert("클립보드에 응답 링크가 복사되었습니다.")
+                        );
+                    }}
+                  >
+                    응답 링크 복사하기
+                  </S.ClipBoardCopyButton>
+                </S.SurveyWrapper>
+              </S.SurveyLink>
+            ))}
+          </S.SurveysWrapper>
+        ) : (
+          <S.NoSurveys>최근 생성한 설문이 없습니다.</S.NoSurveys>
+        )}
       </S.Wrapper>
     </>
   );

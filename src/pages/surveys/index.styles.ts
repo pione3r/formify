@@ -12,8 +12,12 @@ export const Wrapper = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: 2.4rem;
+  font-size: 3rem;
   font-weight: 700;
+`;
+
+export const NoSurveys = styled.div`
+  font-size: 2.5rem;
 `;
 
 export const SurveysWrapper = styled.div`

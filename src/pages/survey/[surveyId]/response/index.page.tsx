@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import * as S from "./index.styles";
-import { AnswerType, QuestionType, ResponsePageProps } from "./index.types";
+import { AnswerType, ResponsePageProps } from "./index.types";
 
 import { db } from "@/utils/db";
 import { doc, getDoc } from "firebase/firestore";
@@ -37,9 +37,9 @@ export default function ResponsePage({
         <title>응답 폼</title>
       </Head>
       <S.Wrapper>
-        <S.HeaderWrapper>
-          <S.HeaderTitle>{`설문제목 : ${survey.surveyTitle}`}</S.HeaderTitle>
-        </S.HeaderWrapper>
+        <S.TitleWrapper>
+          <S.Title>{survey.surveyTitle}</S.Title>
+        </S.TitleWrapper>
 
         <S.BodyWrapper>
           {응답리스트.map((질문) => {
@@ -50,29 +50,32 @@ export default function ResponsePage({
                   isCurrentQuestion={질문.questionId === idStack[stackPointer]}
                 >
                   <S.QuestionHeaderWrapper>
-                    <S.QuestionTitle>{`${질문.questionId}번 질문 : ${질문.questionTitle}`}</S.QuestionTitle>
+                    <S.QuestionIndex>{`${질문.questionId}번 질문 (단답형)`}</S.QuestionIndex>
+                    <S.QuestionTitle>{질문.questionTitle}</S.QuestionTitle>
                   </S.QuestionHeaderWrapper>
                   <S.QuestionBodyWrapper>
-                    <S.InputLabel>답변 : </S.InputLabel>
-                    <S.TextInput
-                      placeholder="답변을 입력해주세요"
-                      value={질문.answer}
-                      onChange={(event) =>
-                        set응답리스트((prev) =>
-                          prev.map((응답) => {
-                            if (응답.questionId === 질문.questionId) {
-                              if (응답.questionType === "text") {
-                                return {
-                                  ...응답,
-                                  answer: event.target.value,
-                                };
-                              } else return 응답;
-                            }
-                            return 응답;
-                          })
-                        )
-                      }
-                    />
+                    <S.TextInputWrapper>
+                      <S.TextInput
+                        placeholder="내 답변"
+                        value={질문.answer}
+                        onChange={(event) =>
+                          set응답리스트((prev) =>
+                            prev.map((응답) => {
+                              if (응답.questionId === 질문.questionId) {
+                                if (응답.questionType === "text") {
+                                  return {
+                                    ...응답,
+                                    answer: event.target.value,
+                                  };
+                                } else return 응답;
+                              }
+                              return 응답;
+                            })
+                          )
+                        }
+                        spellCheck={false}
+                      />
+                    </S.TextInputWrapper>
                   </S.QuestionBodyWrapper>
                   <S.QuestionFooterWrapper>
                     {stackPointer !== 0 && (
@@ -93,6 +96,8 @@ export default function ResponsePage({
                           alert("응답을 입력해주세요");
                           return;
                         }
+                        if (idStack.includes(질문.nextQuestionId)) return;
+
                         setIdStack((prev) => [...prev, 질문.nextQuestionId]);
                       }}
                     >
@@ -108,15 +113,16 @@ export default function ResponsePage({
                   isCurrentQuestion={질문.questionId === idStack[stackPointer]}
                 >
                   <S.QuestionHeaderWrapper>
-                    <S.QuestionTitle>{`${질문.questionId}번 질문 : ${질문.questionTitle}`}</S.QuestionTitle>
+                    <S.QuestionIndex>{`${질문.questionId}번 질문 (다중선택형)`}</S.QuestionIndex>
+                    <S.QuestionTitle>{질문.questionTitle}</S.QuestionTitle>
                   </S.QuestionHeaderWrapper>
                   <S.QuestionBodyWrapper>
-                    <S.InputLabel>답변 : </S.InputLabel>
                     <S.OptionsWrapper>
                       {질문.options.map((option, optionIndex) => (
                         <S.OptionWrapper key={optionIndex}>
                           <S.OptionLabel>
-                            <S.OptionInput
+                            <S.CheckBoxMark />
+                            <S.OptionCheckBoxInput
                               type="checkbox"
                               value={option}
                               onChange={(event) => {
@@ -185,6 +191,8 @@ export default function ResponsePage({
                           alert("응답을 입력해주세요");
                           return;
                         }
+                        if (idStack.includes(질문.nextQuestionId)) return;
+
                         setIdStack((prev) => [...prev, 질문.nextQuestionId]);
                       }}
                     >
@@ -200,15 +208,15 @@ export default function ResponsePage({
                   isCurrentQuestion={질문.questionId === idStack[stackPointer]}
                 >
                   <S.QuestionHeaderWrapper>
-                    <S.QuestionTitle>{`${질문.questionId}번 질문 : ${질문.questionTitle}`}</S.QuestionTitle>
+                    <S.QuestionIndex>{`${질문.questionId}번 질문 (단일선택형)`}</S.QuestionIndex>
+                    <S.QuestionTitle>{질문.questionTitle}</S.QuestionTitle>{" "}
                   </S.QuestionHeaderWrapper>
                   <S.QuestionBodyWrapper>
-                    <S.InputLabel>답변 : </S.InputLabel>
                     <S.OptionsWrapper>
                       {질문.options.map((option, optionIndex) => (
                         <S.OptionWrapper key={optionIndex}>
                           <S.OptionLabel>
-                            <S.OptionInput
+                            <S.OptionRadioButtonInput
                               type="radio"
                               name={질문.questionId}
                               value={option}
@@ -255,6 +263,17 @@ export default function ResponsePage({
                           alert("응답을 입력해주세요");
                           return;
                         }
+                        if (
+                          idStack.includes(
+                            질문.nextQuestionIds[
+                              질문.options.findIndex(
+                                (option) => option === 질문.answer
+                              )
+                            ]
+                          )
+                        )
+                          return;
+
                         setIdStack((prev) => [
                           ...prev,
                           질문.nextQuestionIds[
