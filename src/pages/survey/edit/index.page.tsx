@@ -192,6 +192,18 @@ export default function SurveyEditPage() {
           </S.QuestionTypeButtonBoard>
           <S.SubmitButton
             onClick={async () => {
+              if (설문제목 === "") {
+                alert("설문 제목을 입력해주세요");
+                return;
+              }
+
+              for (const 질문 of 질문리스트) {
+                if (질문.questionTitle === "") {
+                  alert("비어 있는 질문 제목이 있습니다.");
+                  return;
+                }
+              }
+
               const { status } = await fetch(`${Backend_API_URL}/survey`, {
                 method: "POST",
                 body: JSON.stringify({
