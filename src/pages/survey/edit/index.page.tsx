@@ -69,7 +69,47 @@ export default function SurveyEditPage() {
               spellCheck={false}
             />
           </S.SurveyTitleInputWrapper>
-          <S.DropZone className="drop-zone" ref={dropZoneRef}>
+          <S.DropZone
+            className="drop-zone"
+            ref={dropZoneRef}
+            onMouseDown={(mouseDownEvent) => {
+              let isScrolling = true;
+
+              const element = mouseDownEvent.currentTarget;
+
+              const elementPos = element.getBoundingClientRect();
+
+              const onMouseMoveHandler = (mouseMoveEvent: MouseEvent) => {
+                const scrollLeft = dropZoneRef.current?.scrollLeft || 0;
+
+                const dX = (mouseMoveEvent.pageX - mouseDownEvent.pageX) * 0.01;
+
+                function keepScroll() {
+                  if (
+                    mouseMoveEvent.clientX < elementPos.left ||
+                    mouseMoveEvent.clientX >
+                      elementPos.left + element.offsetWidth
+                  )
+                    dropZoneRef.current?.scrollTo({
+                      left: scrollLeft + dX,
+                    });
+                }
+
+                if (isScrolling) keepScroll();
+              };
+
+              const onMouseUpHandler = () => {
+                isScrolling = false;
+                document.removeEventListener("mousemove", onMouseMoveHandler);
+                document.onmouseup = null;
+              };
+
+              document.addEventListener("mousemove", onMouseMoveHandler);
+              document.addEventListener("mouseup", onMouseUpHandler, {
+                once: true,
+              });
+            }}
+          >
             {질문리스트.map((질문, questionIndex, origin) => (
               <DraggableItem
                 key={질문.questionId}

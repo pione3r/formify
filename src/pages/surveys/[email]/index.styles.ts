@@ -83,6 +83,8 @@ export const ViewWayButton = styled.div<{ isClicked: boolean }>`
 
   &:hover {
     cursor: pointer;
+
+    background-color: #575757d4;
   }
 
   ${(props) =>

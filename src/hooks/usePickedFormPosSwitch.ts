@@ -66,6 +66,9 @@ export function usePickedFormPosSwitch(
 
       const onMouseUpHandler = () => {
         document.body.removeAttribute("style");
+            이동할질문폼.removeAttribute("style");
+            document.body.removeAttribute("style");
+            이동할질문폼복사본.remove();
 
         const 이동할질문폼Pos = 이동할질문폼.getBoundingClientRect();
         이동할질문폼복사본.style.left = `${이동할질문폼Pos.left}px`;
@@ -76,15 +79,15 @@ export function usePickedFormPosSwitch(
         이동할질문폼복사본.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.15)";
         이동할질문폼복사본.style.transition = "all 200ms ease";
 
-        이동할질문폼복사본.addEventListener(
-          "transitionend",
-          () => {
-            이동할질문폼.removeAttribute("style");
-            document.body.removeAttribute("style");
-            이동할질문폼복사본.remove();
-          },
-          { once: true }
-        );
+        // 이동할질문폼복사본.addEventListener(
+        //   "transitionend",
+        //   () => {
+        //     이동할질문폼.removeAttribute("style");
+        //     document.body.removeAttribute("style");
+        //     이동할질문폼복사본.remove();
+        //   },
+        //   { once: true }
+        // );
 
         document.removeEventListener("mousemove", onMouseMoveHandler);
       };
