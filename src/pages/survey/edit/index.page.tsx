@@ -57,7 +57,7 @@ export default function SurveyEditPage() {
   return (
     <>
       <Head>
-        <title>폼 만들기</title>
+        <title>{`작성중 ${설문제목 === "" ? "" : `| ${설문제목}`}`}</title>
       </Head>
       <S.Wrapper>
         <S.ColumnLeft>

@@ -7,8 +7,7 @@ export const Wrapper = styled.div`
 
   max-width: 640px;
 
-  margin: 0 auto;
-  padding: 20px;
+  margin: 100px auto;
 `;
 
 export const TitleWrapper = styled.div`
@@ -380,6 +379,8 @@ export const FooterHeaderWrapper = styled.div``;
 export const FooterTitle = styled.div`
   font-size: 2.5rem;
   font-weight: 700;
+
+  padding-left: 10px;
 `;
 
 export const FooterBodyWrapper = styled.div`

@@ -34,7 +34,7 @@ export default function ResponsePage({
   return (
     <>
       <Head>
-        <title>응답 폼</title>
+        <title>{survey.surveyTitle}</title>
       </Head>
       <S.Wrapper>
         <S.TitleWrapper>

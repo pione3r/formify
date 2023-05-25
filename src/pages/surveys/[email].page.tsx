@@ -22,7 +22,7 @@ export default function SurveysPage({ surveys }: SurveysPageProps) {
   return (
     <>
       <Head>
-        <title>내가 만든 설문</title>
+        <title>내가 만든 폼</title>
       </Head>
       <S.Wrapper>
         <S.Title>최근 설문들</S.Title>
