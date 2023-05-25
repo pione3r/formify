@@ -1,36 +1,114 @@
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export const Wrapper = styled.div`
   display: flex;
-  gap: 40px;
+  flex-direction: column;
+  gap: 20px;
 
-  max-width: 100rem;
+  max-width: 60rem;
 
-  margin: 0 auto;
-  padding: 20px;
+  margin: 100px auto;
 
   border-radius: 12px;
 
   background-color: rgb(245, 245, 247);
 `;
 
-export const Columm = styled.div`
+export const HeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
 
-  width: 100%;
+  background-color: #000000;
+
+  padding: 20px;
+
+  border-radius: 16px;
 `;
 
-export const Title = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 600;
+export const TitleWrapper = styled.div``;
+
+export const Title = styled.div`
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #ffffff;
+
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0px;
+
+    width: 100%;
+    height: 0.5px;
+
+    margin-top: 3px;
+
+    background-color: #8f8f8f;
+  }
+`;
+
+export const ViewWaysNavBar = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const viewWayButtonAnimation = keyframes`
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+`;
+
+export const ViewWayButton = styled.div<{ isClicked: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #dddddd;
+
+  position: relative;
+  width: 100%;
+
+  padding: 10px 20px;
+
+  border-radius: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  ${(props) =>
+    props.isClicked &&
+    css`
+      color: #ffffff;
+
+      &::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 2px;
+
+        background-color: #ffffff;
+
+        margin-top: 6px;
+
+        animation: ${viewWayButtonAnimation} 0.2s ease-in;
+      }
+    `}
 `;
 
 export const Body = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 `;
 
 export const AnswerWrapper = styled.div`
@@ -52,7 +130,7 @@ export const Respondent = styled.div`
 export const QuestionWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 
   padding: 20px;
 
@@ -60,6 +138,51 @@ export const QuestionWrapper = styled.div`
 
   background-color: rgb(245, 245, 247);
 `;
+
+export const QuestionHeaderWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const QuestionIndex = styled.div`
+  font-size: 1.4rem;
+
+  color: #555555;
+
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0px;
+
+    width: 100%;
+    height: 0.5px;
+
+    margin-top: 3px;
+
+    background-color: #8f8f8f;
+  }
+`;
+
+export const QuestionTitle = styled.div`
+  font-size: 2rem;
+  font-weight: 500;
+`;
+
+export const Answer = styled.div`
+  font-size: 1.4rem;
+
+  background-color: #ffffff;
+
+  padding: 14px;
+
+  border-radius: 12px;
+`;
+
+export const SummaryWrapper = styled.div``;
 
 export const CollectBody = styled.div`
   display: flex;
@@ -73,11 +196,6 @@ export const CollectBody = styled.div`
   background-color: #ffffff;
 `;
 
-export const QuestionTitle = styled.div`
-  font-size: 1.6rem;
-  font-weight: 500;
-`;
-
-export const Answer = styled.div`
-  font-size: 1.4rem;
+export const AnswersCount = styled.div`
+  font-size: 1.3rem;
 `;

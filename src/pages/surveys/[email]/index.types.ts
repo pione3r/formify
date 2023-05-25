@@ -9,5 +9,6 @@ export type SurveyResultType = {
 };
 
 export interface SurveyResultPageProps {
+  surveyTitle: string;
   results: SurveyResultType[];
 }
