@@ -2,6 +2,8 @@ import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+import { useEffect, useRef, useState } from "react";
+
 import * as S from "./index.styles";
 
 import { useQuestions } from "@/hooks/useQuestions";
@@ -18,7 +20,6 @@ import { DraggableItem } from "@/components/DraggableItem";
 import { SimpleTextQuestionForm } from "@/components/QuestionForm/SimpleTextQuestionForm";
 import { RadioButtonQuestionForm } from "@/components/QuestionForm/RadioButtonQuestionForm";
 import { CheckBoxQuestionForm } from "@/components/QuestionForm/CheckBoxQuestionForm";
-import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 export default function SurveyEditPage() {
