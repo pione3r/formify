@@ -19,6 +19,7 @@ import { SimpleTextQuestionForm } from "@/components/QuestionForm/SimpleTextQues
 import { RadioButtonQuestionForm } from "@/components/QuestionForm/RadioButtonQuestionForm";
 import { CheckBoxQuestionForm } from "@/components/QuestionForm/CheckBoxQuestionForm";
 import { useEffect, useRef, useState } from "react";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 export default function SurveyEditPage() {
   const router = useRouter();
@@ -41,6 +42,8 @@ export default function SurveyEditPage() {
 
   const { 폼순서바꾸기 } = usePickedFormPosSwitch(질문순서바꾸기);
 
+  const [현재보이는질문Index, set현재보이는질문Index] = useState("");
+
   const dropZoneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,11 +51,22 @@ export default function SurveyEditPage() {
 
     if (!dropZoneRef.current) return;
 
-    const scrollWidth = dropZoneRef.current?.scrollWidth || 0;
+    const scrollHeight = dropZoneRef.current?.scrollHeight || 0;
 
     if (이전질문리스트길이! < 질문리스트.length)
-      dropZoneRef.current.scrollTo({ left: scrollWidth, behavior: "smooth" });
+      dropZoneRef.current.scrollTo({ top: scrollHeight, behavior: "smooth" });
   }, [이전질문리스트길이, 질문리스트]);
+
+  const { target: draggableItemRef } = useIntersectionObserver({
+    onIntersect: (entries) => {
+      entries.forEach((entry) => {
+        if (entry.intersectionRatio >= 0.5)
+          set현재보이는질문Index(
+            (entry.target as HTMLElement).dataset["index"] || ""
+          );
+      });
+    },
+  });
 
   return (
     <>
@@ -60,6 +74,16 @@ export default function SurveyEditPage() {
         <title>{`작성중 ${설문제목 === "" ? "" : `| ${설문제목}`}`}</title>
       </Head>
       <S.Wrapper>
+        <S.PaginationBar>
+          {질문리스트.map((질문, 질문Index) => (
+            <S.Dot
+              key={질문.questionId}
+              isCurrent={현재보이는질문Index === "" + 질문Index}
+            >
+              {질문.questionId}
+            </S.Dot>
+          ))}
+        </S.PaginationBar>
         <S.ColumnLeft>
           <S.SurveyTitleInputWrapper>
             <S.SurveyTitleInput
@@ -73,33 +97,69 @@ export default function SurveyEditPage() {
             className="drop-zone"
             ref={dropZoneRef}
             onMouseDown={(mouseDownEvent) => {
-              let isScrolling = true;
-
               const element = mouseDownEvent.currentTarget;
 
               const elementPos = element.getBoundingClientRect();
 
-              const onMouseMoveHandler = (mouseMoveEvent: MouseEvent) => {
-                const scrollLeft = dropZoneRef.current?.scrollLeft || 0;
+              let intervalId: string | number | NodeJS.Timer | undefined;
 
-                const dX = (mouseMoveEvent.pageX - mouseDownEvent.pageX) * 0.01;
+              const onMouseMoveHandler = (mouseMoveEvent: MouseEvent) => {
+                const scrollTop = dropZoneRef.current?.scrollTop || 0;
+
+                const dY = (mouseMoveEvent.pageY - mouseDownEvent.pageY) * 0.01;
 
                 function keepScroll() {
                   if (
-                    mouseMoveEvent.clientX < elementPos.left ||
-                    mouseMoveEvent.clientX >
-                      elementPos.left + element.offsetWidth
+                    mouseMoveEvent.clientY < elementPos.top ||
+                    mouseMoveEvent.clientY >
+                      elementPos.top + element.offsetHeight
                   )
                     dropZoneRef.current?.scrollTo({
-                      left: scrollLeft + dX,
+                      top: scrollTop + dY,
                     });
                 }
 
-                if (isScrolling) keepScroll();
+                let isUp = mouseMoveEvent.pageY < elementPos.top;
+
+                let isDown = mouseMoveEvent.pageY > elementPos.bottom;
+
+                let isOnTop = false;
+
+                let isOnDown = false;
+
+                if (isUp) {
+                  if (!intervalId) {
+                    isOnTop = true;
+                    intervalId = setInterval(() => {
+                      if (isOnTop) {
+                        dropZoneRef.current?.scrollBy({
+                          top: -5,
+                        });
+                      }
+                    }, 10);
+                  }
+                } else if (isDown) {
+                  if (!intervalId) {
+                    isOnDown = true;
+                    intervalId = setInterval(() => {
+                      if (isOnDown) {
+                        dropZoneRef.current?.scrollBy({
+                          top: 5,
+                        });
+                      }
+                    }, 10);
+                  }
+                } else {
+                  clearInterval(intervalId);
+                  isOnDown = false;
+                  intervalId = undefined;
+                }
               };
 
               const onMouseUpHandler = () => {
-                isScrolling = false;
+                clearInterval(intervalId);
+                intervalId = undefined;
+
                 document.removeEventListener("mousemove", onMouseMoveHandler);
                 document.onmouseup = null;
               };
@@ -117,6 +177,7 @@ export default function SurveyEditPage() {
                 data-index={questionIndex}
                 onMouseDown={폼순서바꾸기}
                 요소삭제={질문삭제}
+                ref={draggableItemRef}
               >
                 {질문.questionType === "text" && (
                   <SimpleTextQuestionForm

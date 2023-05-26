@@ -4,11 +4,29 @@ export const Wrapper = styled.div`
   display: flex;
   gap: 50px;
 
-  max-width: 120rem;
+  width: 80rem;
 
-  padding-top: 140px;
+  margin: 100px auto;
+`;
 
-  margin: 0 auto;
+export const PaginationBar = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  margin-top: 100px;
+
+  min-width: 5rem;
+`;
+
+export const Dot = styled.div<{ isCurrent: boolean }>`
+  width: 24px;
+  height: 24px;
+  background-color: ${(props) => (props.isCurrent ? "#000000" : "#a8a8a8")};
+
+  border-radius: 50%;
+
+  transition: all 0.3s;
 `;
 
 export const ColumnLeft = styled.div`
@@ -39,10 +57,11 @@ export const SurveyTitleInput = styled.input`
 
 export const DropZone = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 20px;
 
-  width: 90rem;
-  height: 40rem;
+  min-width: 50rem;
+  height: 38rem;
 
   padding: 20px;
 
@@ -55,7 +74,7 @@ export const DropZone = styled.div`
 export const ColumnRight = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   gap: 50px;
 
   margin-top: 100px;

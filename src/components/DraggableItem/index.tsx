@@ -1,13 +1,13 @@
+import { ForwardedRef, forwardRef } from "react";
 import * as S from "./index.styles";
 import { DraggableItemProps } from "./index.types";
 
-export function DraggableItem({
-  요소삭제,
-  children,
-  ...rest
-}: DraggableItemProps) {
+export const DraggableItem = forwardRef(function DraggableItem(
+  { 요소삭제, children, ...rest }: DraggableItemProps,
+  ref: ForwardedRef<HTMLDivElement>
+) {
   return (
-    <S.Wrapper {...rest}>
+    <S.Wrapper ref={ref} {...rest}>
       <S.DragHandle
         src="/images/drag-handle.svg"
         alt="drag-handle"
@@ -36,4 +36,4 @@ export function DraggableItem({
       )}
     </S.Wrapper>
   );
-}
+});
