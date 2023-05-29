@@ -77,12 +77,15 @@ export default function SurveyEditPage() {
       <S.Wrapper>
         <S.PaginationBar>
           {질문리스트.map((질문, 질문Index) => (
-            <S.Dot
-              key={질문.questionId}
-              isCurrent={현재보이는질문Index === "" + 질문Index}
-            >
-              {질문.questionId}
-            </S.Dot>
+            <S.DotWrapper key={질문.questionId}>
+              <S.Dot isCurrent={현재보이는질문Index === "" + 질문Index}></S.Dot>
+              <S.SubDotsWrapper>
+                {질문.questionType === "radio-button" &&
+                  질문.nextQuestionIds.map((option, optionIndex) => (
+                    <S.SubDot key={optionIndex}></S.SubDot>
+                  ))}
+              </S.SubDotsWrapper>
+            </S.DotWrapper>
           ))}
         </S.PaginationBar>
         <S.ColumnLeft>

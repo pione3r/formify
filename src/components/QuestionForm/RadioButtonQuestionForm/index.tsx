@@ -46,7 +46,7 @@ export function RadioButtonQuestionForm({
               </option>
               {질문아이디리스트.map((questionId) => (
                 <option key={questionId} value={questionId}>
-                  {questionId}
+                  {`${questionId}번 질문으로 이동`}
                 </option>
               ))}
               <option value="submit">제출</option>

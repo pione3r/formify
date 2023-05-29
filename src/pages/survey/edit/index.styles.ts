@@ -19,10 +19,33 @@ export const PaginationBar = styled.div`
   min-width: 5rem;
 `;
 
+export const DotWrapper = styled.div`
+  display: flex;
+  gap: 20px;
+
+  min-width: fit-content;
+`;
+
 export const Dot = styled.div<{ isCurrent: boolean }>`
   width: 24px;
   height: 24px;
   background-color: ${(props) => (props.isCurrent ? "#000000" : "#a8a8a8")};
+
+  border-radius: 50%;
+
+  transition: all 0.3s;
+`;
+
+export const SubDotsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const SubDot = styled.div`
+  width: 16px;
+  height: 16px;
+  background-color: #a8a8a8;
 
   border-radius: 50%;
 
@@ -61,7 +84,7 @@ export const DropZone = styled.div`
   gap: 20px;
 
   min-width: 50rem;
-  height: 38rem;
+  height: 50rem;
 
   padding: 20px;
 
