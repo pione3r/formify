@@ -12,17 +12,20 @@ const getId = () => `${id++}`;
 
 const initialQuestionNodes = [
   {
-    questionId: "0",
-    questionType: "short-answer",
+    questionId: "start",
     data: { questionTitle: "질문 시작" },
-    position: { top: 0, left: 0 },
+    position: { top: 250, left: 200 },
+  },
+  {
+    questionId: "end",
+    data: { questionTitle: "마지막 질문" },
+    position: { top: 250, left: 1000 },
   },
 ];
 
 type QuestionNode = {
   questionId: string;
-  questionType: string;
-  data: { questionTitle: string };
+  data: { questionTitle: string; options?: string[] };
   position: { top: number; left: number };
 };
 
@@ -30,6 +33,14 @@ type QuestionEdge = {
   edgeId: string;
   source: string;
   target: string;
+};
+
+type CurrentQuestion = QuestionNode & {
+  answer: string;
+};
+
+type Answer = QuestionNode & {
+  answer: string;
 };
 
 export default function TestPage() {
@@ -45,41 +56,55 @@ export default function TestPage() {
 
     const source = mouseDownEvent.currentTarget as HTMLElement;
 
-    if (!source) {
-      return;
+    if (source) {
+      sourceId.current = source.dataset["id"];
     }
-
-    sourceId.current = source.dataset["id"];
   };
 
   const onConnectEnd = (mouseUpEvent: React.MouseEvent) => {
-    const dropZone = mouseUpEvent.currentTarget;
-
-    if (!dropZone.classList.contains("drop-zone")) return;
+    const target = mouseUpEvent.currentTarget;
 
     const copiedSourceId = sourceId.current;
 
     if (!copiedSourceId) return;
 
-    sourceId.current = undefined;
+    if (target.classList.contains("flow-wrapper")) {
+      if (questionEdges.find((edge) => edge.source === copiedSourceId)) {
+        sourceId.current = undefined;
+        return;
+      }
 
-    const newId = getId();
+      sourceId.current = undefined;
 
-    const newNode = {
-      questionId: newId,
-      questionType: "short-answer",
-      data: { questionTitle: `타이틀 ${newId}` },
-      position: { top: mouseUpEvent.pageY, left: mouseUpEvent.pageX },
-    };
+      const newId = getId();
 
-    setQuestionNodes((prev) => prev.concat(newNode));
-    setQuestionEdges((prev) =>
-      prev.concat({
-        edgeId: `${copiedSourceId}-${newId}`,
-        source: copiedSourceId,
-        target: newId,
-      })
-    );
+      const newNode = {
+        questionId: newId,
+        data: { questionTitle: `타이틀 ${newId}` },
+        position: { top: mouseUpEvent.pageY, left: mouseUpEvent.pageX },
+      };
+
+      setQuestionNodes((prev) => prev.concat(newNode));
+      setQuestionEdges((prev) =>
+        prev.concat({
+          edgeId: `${copiedSourceId}-${newId}`,
+          source: copiedSourceId,
+          target: newId,
+        })
+      );
+    }
+
+    if (target.classList.contains("end")) {
+      sourceId.current = undefined;
+
+      setQuestionEdges((prev) =>
+        prev.concat({
+          edgeId: `${copiedSourceId}-end`,
+          source: copiedSourceId,
+          target: "end",
+        })
+      );
+    }
   };
 
   const onDrag = (mouseDownEvent: React.MouseEvent, node: QuestionNode) => {
@@ -116,11 +141,18 @@ export default function TestPage() {
     });
   };
 
-  const [currentQuestion, setCurrentQuestion] = useState(questionNodes[0]);
+  const [currentQuestion, setCurrentQuestion] = useState<CurrentQuestion>({
+    ...questionNodes[0],
+    answer: "",
+  });
+
+  const [answerStack, setAnswerStack] = useState<Answer[]>([]);
+
+  console.log(currentQuestion, questionNodes, questionEdges, answerStack);
 
   return (
     <>
-      <S.Wrapper className="drop-zone" onMouseUp={onConnectEnd}>
+      <S.Wrapper className="flow-wrapper" onMouseUp={onConnectEnd}>
         {questionNodes.map((node) => (
           <S.QuestionNodeWrapper
             key={node.questionId}
@@ -129,7 +161,65 @@ export default function TestPage() {
               left: `${node.position.left}px`,
             }}
             onMouseDown={(event) => onDrag(event, node)}
+            className={node.questionId === "end" ? node.questionId : ""}
+            onMouseUp={onConnectEnd}
           >
+            {node.questionId !== "start" && node.questionId !== "end" && (
+              <button
+                onClick={() => {
+                  const willDeletedQuestionId = node.questionId;
+
+                  const copiedQuestionNodes = [...questionNodes];
+
+                  setQuestionNodes(
+                    copiedQuestionNodes.filter(
+                      (question) =>
+                        question.questionId !== willDeletedQuestionId
+                    )
+                  );
+
+                  const copiedQuestionEdges = [...questionEdges];
+
+                  setQuestionEdges(
+                    copiedQuestionEdges.filter(
+                      (edge) =>
+                        edge.source !== willDeletedQuestionId &&
+                        edge.target !== willDeletedQuestionId
+                    )
+                  );
+
+                  setAnswerStack([]);
+                  setCurrentQuestion({ ...questionNodes[0], answer: "" });
+                }}
+              >
+                질문 삭제
+              </button>
+            )}
+            {node.questionId !== "end" && (
+              <button
+                onClick={() => {
+                  const copiedQuestionNodes = [...questionNodes];
+
+                  const index = copiedQuestionNodes.findIndex(
+                    (question) => question.questionId === node.questionId
+                  );
+
+                  if (copiedQuestionNodes[index].data.options) {
+                    copiedQuestionNodes[index].data.options = [
+                      ...copiedQuestionNodes[index].data.options!,
+                      "",
+                    ];
+                  } else {
+                    copiedQuestionNodes[index].data.options = [""];
+                  }
+
+                  setQuestionNodes(copiedQuestionNodes);
+                }}
+              >
+                옵션추가
+              </button>
+            )}
+
             <S.QuestionTitleInput
               value={node.data.questionTitle}
               onChange={(event) => {
@@ -145,49 +235,173 @@ export default function TestPage() {
                 setQuestionNodes(copiedQuestionNodes);
               }}
             />
-            <S.DragStartHandle
-              data-id={node.questionId}
-              onMouseDown={onConnectStart}
-            />
+            {node.questionId !== "end" && (
+              <S.DragStartHandle
+                data-id={node.questionId}
+                onMouseDown={onConnectStart}
+              />
+            )}
+
+            <S.OptionsWrapper>
+              {node.data.options?.map((option, optionIndex) => (
+                <S.OptionWrapper key={optionIndex}>
+                  <S.OptionTitle>{optionIndex}</S.OptionTitle>
+                  <S.OptionDragStartHandler
+                    data-id={`${node.questionId}.${optionIndex}`}
+                    onMouseDown={onConnectStart}
+                  />
+                </S.OptionWrapper>
+              ))}
+            </S.OptionsWrapper>
           </S.QuestionNodeWrapper>
         ))}
-        {questionEdges.map((edge) => {
-          const source = questionNodes.find(
-            (node) => node.questionId === edge.source
-          );
 
-          const target = questionNodes.find(
-            (node) => node.questionId === edge.target
-          );
-          return (
-            <Arrow
-              key={edge.edgeId}
-              startPoint={{
-                x: source?.position.left!,
-                y: source?.position.top!,
-              }}
-              endPoint={{ x: target?.position.left!, y: target?.position.top! }}
-            />
-          );
+        {/* ///////////////////////////////////////////////// */}
+
+        {questionEdges.map((edge) => {
+          if (edge.edgeId.includes(".")) {
+            const [sourceNodeId, optionIndex] = edge.source.split(".");
+            const sourceNode = questionNodes.find(
+              (node) => node.questionId === sourceNodeId
+            );
+
+            const target = questionNodes.find(
+              (node) => node.questionId === edge.target
+            );
+
+            return (
+              <Arrow
+                key={edge.edgeId}
+                startPoint={{
+                  x: sourceNode?.position.left! + 214,
+                  y: sourceNode?.position.top! + 171 + Number(optionIndex) * 20,
+                }}
+                endPoint={{
+                  x: target?.position.left!,
+                  y: target?.position.top! + 40,
+                }}
+                optionTitle={optionIndex}
+              />
+            );
+          } else {
+            const source = questionNodes.find(
+              (node) => node.questionId === edge.source
+            );
+
+            const target = questionNodes.find(
+              (node) => node.questionId === edge.target
+            );
+
+            return (
+              <Arrow
+                key={edge.edgeId}
+                startPoint={{
+                  x: source?.position.left! + 230,
+                  y: source?.position.top! + 40,
+                }}
+                endPoint={{
+                  x: target?.position.left!,
+                  y: target?.position.top! + 40,
+                }}
+              />
+            );
+          }
         })}
       </S.Wrapper>
-      <S.AnswerPageWrapper>
-        <button
-          onClick={() => {
-            const nextQuestionId = questionEdges.find(
-              (edge) => edge.edgeId.split("-")[0] === currentQuestion.questionId
-            )?.target!;
 
-            setCurrentQuestion(
-              questionNodes.find((node) => node.questionId === nextQuestionId)!
-            );
-          }}
-        >
-          다음 질문
-        </button>
-        {currentQuestion
-          ? currentQuestion.data.questionTitle
-          : "다음 질문은 없다"}
+      <S.AnswerPageWrapper>
+        <div>{`현재질문 ${currentQuestion.data.questionTitle}`}</div>
+        {!currentQuestion.data.options && (
+          <input
+            value={currentQuestion.answer}
+            onChange={(event) => {
+              setCurrentQuestion((q) => ({ ...q, answer: event.target.value }));
+            }}
+          />
+        )}
+
+        {!(answerStack.length <= 0) && (
+          <button
+            onClick={() => {
+              if (answerStack.length <= 0) return;
+
+              const copiedAnswerStack = [...answerStack];
+
+              setCurrentQuestion({ ...copiedAnswerStack.pop()! });
+              setAnswerStack(copiedAnswerStack);
+            }}
+          >
+            이전 질문
+          </button>
+        )}
+
+        {currentQuestion.data.options?.map((option, optionIndex) => (
+          <div
+            style={{ cursor: "pointer" }}
+            key={optionIndex}
+            onClick={() => {
+              const nextQuestionId = questionEdges.find((edge) =>
+                edge.edgeId.includes(
+                  `${currentQuestion.questionId}.${optionIndex}`
+                )
+              )?.target;
+
+              if (nextQuestionId) {
+                const nextQuestionNode = questionNodes.find(
+                  (node) => node.questionId === nextQuestionId
+                )!;
+
+                // const copiedAnswerStack = [...answerStack];
+                // copiedAnswerStack[stackPointer].answer = String(optionIndex);
+                // setAnswerStack(copiedAnswerStack);
+
+                setAnswerStack((prev) =>
+                  prev.concat({
+                    ...currentQuestion,
+                    answer: String(optionIndex),
+                  })
+                );
+
+                const nextQuestion = { ...nextQuestionNode, answer: "" };
+
+                setCurrentQuestion(nextQuestion);
+              }
+            }}
+          >
+            {optionIndex}
+          </div>
+        )) ||
+          (currentQuestion.questionId !== "end" && (
+            <button
+              onClick={() => {
+                const nextQuestionId = questionEdges.find(
+                  (edge) =>
+                    edge.edgeId.split("-")[0] === currentQuestion.questionId
+                )?.target!;
+
+                if (nextQuestionId) {
+                  setAnswerStack((prev) => prev.concat(currentQuestion));
+
+                  const nextQuestionNode = questionNodes.find(
+                    (node) => node.questionId === nextQuestionId
+                  )!;
+
+                  setCurrentQuestion({ ...nextQuestionNode, answer: "" });
+                }
+              }}
+            >
+              다음 질문
+            </button>
+          ))}
+        {currentQuestion.questionId === "end" && (
+          <button
+            onClick={() => {
+              setAnswerStack((prev) => prev.concat(currentQuestion));
+            }}
+          >
+            제출
+          </button>
+        )}
       </S.AnswerPageWrapper>
     </>
   );
@@ -201,9 +415,10 @@ type Point = {
 type ArrowProps = {
   startPoint: Point;
   endPoint: Point;
+  optionTitle?: string;
 };
 
-const Arrow = ({ startPoint, endPoint }: ArrowProps) => {
+const Arrow = ({ startPoint, endPoint, optionTitle }: ArrowProps) => {
   // Getting info about SVG canvas
 
   const strokeWidth = 1;
@@ -256,7 +471,6 @@ const Arrow = ({ startPoint, endPoint }: ArrowProps) => {
           ${p4.x - STRAIGHT_LINE_BEFORE_ARROW_HEAD} ${p4.y}
           L ${p4.x} ${p4.y}`}
       />
-      ¸
       <path
         d={`
           M ${(arrowHeadEndingSize / 5) * 2} 0
@@ -278,6 +492,14 @@ const Arrow = ({ startPoint, endPoint }: ArrowProps) => {
         strokeWidth={1}
         fill="white"
       />
+      <text
+        x={canvasWidth / 2}
+        y={canvasHeight / 2}
+        fill="white"
+        fontSize={"5em"}
+      >
+        {optionTitle}
+      </text>
     </svg>
   );
 };

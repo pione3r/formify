@@ -6,21 +6,23 @@ export const Wrapper = styled.div`
 `;
 
 export const QuestionNodeWrapper = styled.div`
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
 
-  background-color: yellow;
+  border: 1px solid limegreen;
+  border-radius: 16px;
+
+  background-color: #ffffff;
 
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 
   position: fixed;
 
-  user-select: none;
-
   z-index: 1000;
+
+  user-select: none;
 `;
 
 export const QuestionTitleInput = styled.input`
@@ -28,10 +30,56 @@ export const QuestionTitleInput = styled.input`
 `;
 
 export const DragStartHandle = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
 
-  background-color: salmon;
+  background-color: #ffffff;
+
+  border: 1px solid limegreen;
+  border-radius: 50%;
+
+  position: absolute;
+  right: -50px;
+
+  cursor: pointer;
+`;
+
+export const OptionsWrapper = styled.div`
+  position: absolute;
+  top: 220px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  width: 100%;
+`;
+
+export const OptionWrapper = styled.div`
+  background-color: #ffffff;
+
+  border: 1px solid limegreen;
+  border: 12px;
+
+  display: flex;
+  align-items: center;
+`;
+
+export const OptionTitle = styled.div``;
+
+export const OptionDragStartHandler = styled.div`
+  width: 10px;
+  height: 10px;
+
+  background-color: #ffffff;
+
+  border: 1px solid limegreen;
+  border-radius: 50%;
+
+  position: absolute;
+  right: -20px;
+
+  cursor: pointer;
 `;
 
 export const AnswerPageWrapper = styled.div`
