@@ -1,15 +1,18 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  width: 100%;
   min-height: 50rem;
+
   background-color: tomato;
+
+  position: relative;
 `;
 
-export const QuestionNodeWrapper = styled.div`
+export const QuestionNodeWrapper = styled.div<{ style: any }>`
   width: 200px;
   height: 200px;
 
-  border: 1px solid limegreen;
   border-radius: 16px;
 
   background-color: #ffffff;
@@ -18,7 +21,9 @@ export const QuestionNodeWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  position: fixed;
+  position: absolute;
+
+  margin: 20px;
 
   z-index: 1000;
 
@@ -29,7 +34,7 @@ export const QuestionTitleInput = styled.input`
   background-color: white;
 `;
 
-export const DragStartHandle = styled.div`
+export const ConnectStartHandle = styled.div`
   width: 30px;
   height: 30px;
 
@@ -65,9 +70,9 @@ export const OptionWrapper = styled.div`
   align-items: center;
 `;
 
-export const OptionTitle = styled.div``;
+export const OptionTitleInput = styled.input``;
 
-export const OptionDragStartHandler = styled.div`
+export const OptionConnectStartHandle = styled.div`
   width: 10px;
   height: 10px;
 
@@ -82,9 +87,17 @@ export const OptionDragStartHandler = styled.div`
   cursor: pointer;
 `;
 
-export const AnswerPageWrapper = styled.div`
+export const PreviewWrapper = styled.div`
   min-height: 50rem;
   background-color: green;
 
   font-size: 3rem;
 `;
+
+export const CurrentQuestionWrapper = styled.div``;
+
+export const CurrentQuestionTitle = styled.div``;
+
+export const CurrentQuestionAnswerInput = styled.input``;
+
+export const PreviousQuestionButton = styled.button``;
