@@ -13,12 +13,12 @@ const getId = () => `${id++}`;
 const initialQuestionNodes = [
   {
     questionId: "start",
-    data: { questionTitle: "질문 시작" },
+    data: { questionTitle: "" },
     position: { top: 0, left: 0 },
   },
   {
     questionId: "end",
-    data: { questionTitle: "마지막 질문" },
+    data: { questionTitle: "" },
     position: { top: 250, left: 1000 },
   },
 ];
@@ -77,7 +77,7 @@ export default function TestPage() {
       const newNode = {
         questionId: newId,
         data: { questionTitle: "" },
-        position: { top: mouseUpEvent.pageY, left: mouseUpEvent.pageX },
+        position: { top: mouseUpEvent.pageY - 150, left: mouseUpEvent.pageX },
       };
 
       const newEdge = {
@@ -288,19 +288,22 @@ export default function TestPage() {
                     onNodeDragStart(event, node.questionId)
                   }
                 >
-                  <button
+                  <S.QuestionHeader>
+                    <S.QuestionIndex>시작 질문</S.QuestionIndex>
+                    <S.QuestionTitleInput
+                      placeholder="질문 제목을 입력해주세요"
+                      value={node.data.questionTitle}
+                      onChange={(event) =>
+                        onQuestionTitleChange(event, node.questionId)
+                      }
+                    />
+                  </S.QuestionHeader>
+
+                  <S.OptionAddButton
                     onClick={() => onAddNewQuestionOption(node.questionId)}
                   >
                     옵션추가
-                  </button>
-
-                  <S.QuestionTitleInput
-                    placeholder="질문 제목을 입력해주세요"
-                    value={node.data.questionTitle}
-                    onChange={(event) =>
-                      onQuestionTitleChange(event, node.questionId)
-                    }
-                  />
+                  </S.OptionAddButton>
 
                   {node.data.options ? (
                     <S.OptionsWrapper>
@@ -347,19 +350,22 @@ export default function TestPage() {
                   }
                   onMouseUp={onConnectToEndNode}
                 >
-                  <button
+                  <S.QuestionHeader>
+                    <S.QuestionIndex>마지막 질문</S.QuestionIndex>
+                    <S.QuestionTitleInput
+                      placeholder="질문 제목을 입력해주세요"
+                      value={node.data.questionTitle}
+                      onChange={(event) =>
+                        onQuestionTitleChange(event, node.questionId)
+                      }
+                    />
+                  </S.QuestionHeader>
+
+                  <S.OptionAddButton
                     onClick={() => onAddNewQuestionOption(node.questionId)}
                   >
                     옵션추가
-                  </button>
-
-                  <S.QuestionTitleInput
-                    placeholder="질문 제목을 입력해주세요"
-                    value={node.data.questionTitle}
-                    onChange={(event) =>
-                      onQuestionTitleChange(event, node.questionId)
-                    }
-                  />
+                  </S.OptionAddButton>
 
                   {node.data.options ? (
                     <S.OptionsWrapper>
@@ -398,22 +404,34 @@ export default function TestPage() {
                   }
                   onMouseUp={onConnectToExistNode}
                 >
-                  <button onClick={() => onDeleteNode(node.questionId)}>
-                    질문 삭제
-                  </button>
-                  <button
+                  <S.QuestionHeader>
+                    <S.QuestionIndex>
+                      {`${node.questionId}번 질문`}
+                    </S.QuestionIndex>
+                    <S.QuestionTitleInput
+                      placeholder="질문 제목을 입력해주세요"
+                      value={node.data.questionTitle}
+                      onChange={(event) =>
+                        onQuestionTitleChange(event, node.questionId)
+                      }
+                    />
+                    <S.QuestionDeleteButton
+                      onClick={() => onDeleteNode(node.questionId)}
+                    >
+                      <S.DeleteButtonIcon
+                        src="/images/delete-button.svg"
+                        alt="delete-button"
+                        width={20}
+                        height={20}
+                      />
+                    </S.QuestionDeleteButton>
+                  </S.QuestionHeader>
+
+                  <S.OptionAddButton
                     onClick={() => onAddNewQuestionOption(node.questionId)}
                   >
                     옵션추가
-                  </button>
-
-                  <S.QuestionTitleInput
-                    placeholder="질문 제목을 입력해주세요"
-                    value={node.data.questionTitle}
-                    onChange={(event) =>
-                      onQuestionTitleChange(event, node.questionId)
-                    }
-                  />
+                  </S.OptionAddButton>
 
                   {node.data.options ? (
                     <S.OptionsWrapper>
@@ -466,7 +484,7 @@ function DrawEdges({
   questionEdges: QuestionEdge[];
 }) {
   return (
-    <>
+    <S.DrawEdgesWrapper>
       {questionEdges.map((edge) => {
         if (edge.edgeId.includes(".")) {
           const [sourceNodeId, optionIndex] = edge.source.split(".");
@@ -482,14 +500,13 @@ function DrawEdges({
             <Arrow
               key={edge.edgeId}
               startPoint={{
-                x: sourceNode?.position.left! + 214,
-                y: sourceNode?.position.top! + 171 + Number(optionIndex) * 20,
+                x: sourceNode?.position.left! + 300,
+                y: sourceNode?.position.top! + 242 + Number(optionIndex) * 53,
               }}
               endPoint={{
                 x: target?.position.left!,
-                y: target?.position.top! + 40,
+                y: target?.position.top! + 100,
               }}
-              optionTitle={optionIndex}
             />
           );
         } else {
@@ -505,18 +522,18 @@ function DrawEdges({
             <Arrow
               key={edge.edgeId}
               startPoint={{
-                x: source?.position.left! + 230,
-                y: source?.position.top! + 40,
+                x: source?.position.left! + 300,
+                y: source?.position.top! + 100,
               }}
               endPoint={{
                 x: target?.position.left!,
-                y: target?.position.top! + 40,
+                y: target?.position.top! + 100,
               }}
             />
           );
         }
       })}
-    </>
+    </S.DrawEdgesWrapper>
   );
 }
 
@@ -815,18 +832,15 @@ type Point = {
 type ArrowProps = {
   startPoint: Point;
   endPoint: Point;
-  optionTitle?: string;
 };
 
-const Arrow = ({ startPoint, endPoint, optionTitle }: ArrowProps) => {
-  // Getting info about SVG canvas
+const Arrow = ({ startPoint, endPoint }: ArrowProps) => {
+  const strokeWidth = 4;
 
-  const strokeWidth = 1;
-
-  const arrowHeadEndingSize = 10;
+  const arrowHeadEndingSize = 20;
   const boundingBoxElementsBuffer = strokeWidth + arrowHeadEndingSize;
 
-  const dotEndingRadius = 3;
+  const dotEndingRadius = 1;
 
   const STRAIGHT_LINE_BEFORE_ARROW_HEAD = 5;
 
@@ -857,11 +871,11 @@ const Arrow = ({ startPoint, endPoint, optionTitle }: ArrowProps) => {
       height={canvasHeight}
       style={{
         transform: `translate(${canvasXOffset}px, ${canvasYOffset}px)`,
-        position: "fixed",
+        position: "absolute",
       }}
     >
       <path
-        stroke="black"
+        stroke="#b1b1b7"
         strokeWidth={strokeWidth}
         fill="none"
         d={`
@@ -877,7 +891,8 @@ const Arrow = ({ startPoint, endPoint, optionTitle }: ArrowProps) => {
           L ${arrowHeadEndingSize} ${arrowHeadEndingSize / 2}
           L ${(arrowHeadEndingSize / 5) * 2} ${arrowHeadEndingSize}`}
         fill="none"
-        stroke="black"
+        stroke="#b1b1b7"
+        strokeWidth={3}
         style={{
           transform: `translate(${p4.x - arrowHeadEndingSize}px, ${
             p4.y - arrowHeadEndingSize / 2
@@ -892,14 +907,6 @@ const Arrow = ({ startPoint, endPoint, optionTitle }: ArrowProps) => {
         strokeWidth={1}
         fill="white"
       />
-      <text
-        x={canvasWidth / 2}
-        y={canvasHeight / 2}
-        fill="white"
-        fontSize={"5em"}
-      >
-        {optionTitle}
-      </text>
     </svg>
   );
 };

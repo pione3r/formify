@@ -1,16 +1,19 @@
+import Image from "next/image";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
   width: 100%;
-  min-height: 50rem;
-
-  background-color: tomato;
+  min-height: 60rem;
 
   position: relative;
+
+  border: 4px solid blue;
+
+  overflow: hidden;
 `;
 
 export const QuestionNodeWrapper = styled.div<{ style: any }>`
-  width: 200px;
+  width: 300px;
   height: 200px;
 
   border-radius: 16px;
@@ -18,38 +21,120 @@ export const QuestionNodeWrapper = styled.div<{ style: any }>`
   background-color: #ffffff;
 
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
 
   position: absolute;
 
   z-index: 1000;
 
   user-select: none;
+
+  padding: 20px;
+
+  transition: box-shadow, transform 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: rgb(0 0 0 / 12%) 6px 8px 16px;
+    cursor: pointer;
+  }
+`;
+
+export const QuestionHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const QuestionIndex = styled.div`
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: rgb(152 152 152);
+
+  &::after {
+    content: "";
+
+    display: block;
+    width: 100%;
+    height: 2px;
+
+    margin-top: 4px;
+
+    border: 1px solid rgb(245, 245, 247);
+  }
 `;
 
 export const QuestionTitleInput = styled.input`
-  background-color: white;
+  border: none;
+  outline: none;
+
+  font-size: 1.6rem;
+`;
+
+export const QuestionDeleteButton = styled.button`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  padding: 6px;
+
+  border-radius: 50%;
+
+  background-color: rgb(191 191 191);
+
+  border: none;
+
+  &:hover {
+    background-color: rgb(207 203 203);
+
+    cursor: pointer;
+  }
+`;
+
+export const DeleteButtonIcon = styled(Image)`
+  object-fit: contain;
+`;
+
+export const OptionAddButton = styled.button`
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+
+  background-color: #000000;
+
+  outline: none;
+  border: none;
+
+  border-radius: 16px;
+
+  padding: 10px 20px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const ConnectStartHandle = styled.div`
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
 
-  background-color: #ffffff;
+  background-color: #000000;
 
-  border: 1px solid limegreen;
-  border-radius: 50%;
+  border-radius: 4px;
 
   position: absolute;
-  right: -50px;
+  top: 90px;
+  right: -10px;
 
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const OptionsWrapper = styled.div`
   position: absolute;
   top: 220px;
+  left: 0px;
 
   display: flex;
   flex-direction: column;
@@ -61,29 +146,43 @@ export const OptionsWrapper = styled.div`
 export const OptionWrapper = styled.div`
   background-color: #ffffff;
 
-  border: 1px solid limegreen;
-  border: 12px;
+  border-radius: 20px;
 
   display: flex;
   align-items: center;
+
+  padding: 12px 16px;
+
+  position: relative;
 `;
 
-export const OptionTitleInput = styled.input``;
+export const OptionTitleInput = styled.input`
+  width: 100%;
+
+  outline: none;
+  border: none;
+
+  font-size: 1.6rem;
+`;
 
 export const OptionConnectStartHandle = styled.div`
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
 
-  background-color: #ffffff;
+  background-color: #000000;
 
-  border: 1px solid limegreen;
-  border-radius: 50%;
+  border-radius: 4px;
 
   position: absolute;
-  right: -20px;
+  top: 12px;
+  right: -8px;
 
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+  }
 `;
+
+export const DrawEdgesWrapper = styled.div``;
 
 export const PreviewWrapper = styled.div`
   min-height: 50rem;

@@ -14,7 +14,7 @@ export const Wrapper = styled.header`
 
   background-color: rgba(255, 255, 255, 0.72);
 
-  z-index: 100;
+  z-index: 2000;
 `;
 
 export const SubWrapper = styled.div`
