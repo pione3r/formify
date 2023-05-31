@@ -23,8 +23,6 @@ export const QuestionNodeWrapper = styled.div<{ style: any }>`
 
   position: absolute;
 
-  margin: 20px;
-
   z-index: 1000;
 
   user-select: none;

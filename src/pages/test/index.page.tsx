@@ -147,6 +147,9 @@ export default function TestPage() {
 
     const elementPos = element.getBoundingClientRect();
 
+    let shiftX = mouseDownEvent.pageX - elementPos.left;
+    let shiftY = mouseDownEvent.pageY - elementPos.top + 60;
+
     const inrange = (v: number, min: number, max: number) => {
       if (v < min) return min;
       if (v > max) return max;
@@ -154,14 +157,13 @@ export default function TestPage() {
     };
 
     const onNodeDragMove = (moveEvent: MouseEvent) => {
-      const newLeft = elementPos.left + moveEvent.pageX - mouseDownEvent.pageX;
-      const newTop = elementPos.top + moveEvent.pageY - mouseDownEvent.pageY;
+      const newLeft = moveEvent.pageX - shiftX;
+      const newTop = moveEvent.pageY - shiftY;
 
       const maxTop =
-        element.parentElement?.offsetHeight! - element.offsetHeight - 40;
+        element.parentElement?.offsetHeight! - element.offsetHeight;
 
-      const maxLeft =
-        element.parentElement?.offsetWidth! - element.offsetWidth - 40;
+      const maxLeft = element.parentElement?.offsetWidth! - element.offsetWidth;
 
       const copiedQuestionNodes = [...questionNodes];
       const newQuestionNodes = copiedQuestionNodes.map((questionNode) =>
