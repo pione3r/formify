@@ -1,15 +1,28 @@
 import Image from "next/image";
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
+export const ViewFrame = styled.div`
   width: 100%;
-  min-height: 60rem;
+  height: 50rem;
 
-  position: relative;
-
-  border: 4px solid blue;
+  border: 4px solid yellow;
 
   overflow: hidden;
+
+  position: relative;
+`;
+
+export const Wrapper = styled.div`
+  border: 4px solid blue;
+
+  position: relative;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  transform-origin: 0 0;
 `;
 
 export const QuestionNodeWrapper = styled.div<{ style: any }>`

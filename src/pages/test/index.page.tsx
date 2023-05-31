@@ -14,12 +14,12 @@ const initialQuestionNodes = [
   {
     questionId: "start",
     data: { questionTitle: "" },
-    position: { top: 0, left: 0 },
+    position: { top: 100, left: 300 },
   },
   {
     questionId: "end",
     data: { questionTitle: "" },
-    position: { top: 250, left: 1000 },
+    position: { top: 200, left: 1200 },
   },
 ];
 
@@ -44,6 +44,12 @@ type Answer = QuestionNode & {
 };
 
 export default function TestPage() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const [ratio, setRatio] = useState(1);
+
+  const [screenPos, setScreenPos] = useState({ x: 0, y: 0 });
+
   const [questionNodes, setQuestionNodes] =
     useState<QuestionNode[]>(initialQuestionNodes);
 
@@ -77,7 +83,35 @@ export default function TestPage() {
       const newNode = {
         questionId: newId,
         data: { questionTitle: "" },
-        position: { top: mouseUpEvent.pageY - 150, left: mouseUpEvent.pageX },
+        position: {
+          top: mouseUpEvent.nativeEvent.offsetY - 100,
+          left: mouseUpEvent.nativeEvent.offsetX,
+        },
+      };
+
+      const newEdge = {
+        edgeId: `${copiedSourceId}-${newId}`,
+        source: copiedSourceId,
+        target: newId,
+      };
+
+      setQuestionNodes((prev) => prev.concat(newNode));
+      setQuestionEdges((prev) => prev.concat(newEdge));
+    }
+
+    if (target.classList.contains("view-frame")) {
+      let newLeft = (mouseUpEvent.pageX - screenPos.x) / ratio;
+      let newTop = (mouseUpEvent.pageY - screenPos.y) / ratio - 250;
+
+      const newId = getId();
+
+      const newNode = {
+        questionId: newId,
+        data: { questionTitle: "" },
+        position: {
+          top: newTop,
+          left: newLeft,
+        },
       };
 
       const newEdge = {
@@ -143,27 +177,18 @@ export default function TestPage() {
     mouseDownEvent: React.MouseEvent,
     nodeId: string
   ) => {
+    mouseDownEvent.stopPropagation();
+
     const element = mouseDownEvent.currentTarget as HTMLElement;
 
-    const elementPos = element.getBoundingClientRect();
-
-    let shiftX = mouseDownEvent.pageX - elementPos.left;
-    let shiftY = mouseDownEvent.pageY - elementPos.top + 60;
-
-    const inrange = (v: number, min: number, max: number) => {
-      if (v < min) return min;
-      if (v > max) return max;
-      return v;
-    };
+    const startLeft = Number.parseInt(element.style.left);
+    const startRight = Number.parseInt(element.style.top);
 
     const onNodeDragMove = (moveEvent: MouseEvent) => {
-      const newLeft = moveEvent.pageX - shiftX;
-      const newTop = moveEvent.pageY - shiftY;
-
-      const maxTop =
-        element.parentElement?.offsetHeight! - element.offsetHeight;
-
-      const maxLeft = element.parentElement?.offsetWidth! - element.offsetWidth;
+      const newLeft =
+        startLeft + (moveEvent.pageX - mouseDownEvent.pageX) / ratio;
+      const newTop =
+        startRight + (moveEvent.pageY - mouseDownEvent.pageY) / ratio;
 
       const copiedQuestionNodes = [...questionNodes];
       const newQuestionNodes = copiedQuestionNodes.map((questionNode) =>
@@ -171,8 +196,8 @@ export default function TestPage() {
           ? {
               ...questionNode,
               position: {
-                top: inrange(newTop, 0, maxTop),
-                left: inrange(newLeft, 0, maxLeft),
+                top: newTop,
+                left: newLeft,
               },
             }
           : questionNode
@@ -272,205 +297,245 @@ export default function TestPage() {
 
   return (
     <>
-      <S.Wrapper className="flow-wrapper" onMouseUp={onConnectToNewNode}>
-        {questionNodes.map((node) => {
-          switch (node.questionId) {
-            case "start":
-              return (
-                <S.QuestionNodeWrapper
-                  key={node.questionId}
-                  style={{
-                    top: `${node.position.top}px`,
-                    left: `${node.position.left}px`,
-                  }}
-                  className="start"
-                  onMouseDown={(event) =>
-                    onNodeDragStart(event, node.questionId)
-                  }
-                >
-                  <S.QuestionHeader>
-                    <S.QuestionIndex>시작 질문</S.QuestionIndex>
-                    <S.QuestionTitleInput
-                      placeholder="질문 제목을 입력해주세요"
-                      value={node.data.questionTitle}
-                      onChange={(event) =>
-                        onQuestionTitleChange(event, node.questionId)
-                      }
-                    />
-                  </S.QuestionHeader>
+      <S.ViewFrame
+        className="view-frame"
+        onMouseUp={onConnectToNewNode}
+        onWheel={(wheelEvent) => {
+          setRatio(
+            Math.min(Math.max(0.5, ratio + wheelEvent.deltaY * -0.001), 2)
+          );
+        }}
+        onMouseDown={(mouseDownEvent) => {
+          const viewFrameElement = mouseDownEvent.currentTarget;
+          viewFrameElement.style.cursor = "grabbing";
 
-                  <S.OptionAddButton
-                    onClick={() => onAddNewQuestionOption(node.questionId)}
+          const onMouseMoveHandler = (mouseMoveEvent: MouseEvent) => {
+            const dX =
+              screenPos.x + mouseMoveEvent.pageX - mouseDownEvent.pageX;
+            const dY =
+              screenPos.y + mouseMoveEvent.pageY - mouseDownEvent.pageY;
+
+            setScreenPos({ x: dX, y: dY });
+          };
+
+          const onMouseUpHandler = () => {
+            viewFrameElement.removeAttribute("style");
+
+            document.removeEventListener("mousemove", onMouseMoveHandler);
+            document.removeEventListener("mouseup", onMouseUpHandler);
+          };
+          document.addEventListener("mousemove", onMouseMoveHandler);
+          document.addEventListener("mouseup", onMouseUpHandler, {
+            once: true,
+          });
+        }}
+      >
+        <S.Wrapper
+          ref={wrapperRef}
+          style={{
+            transform: ` translate(${screenPos.x}px, ${screenPos.y}px) scale(${ratio})`,
+          }}
+          className="flow-wrapper"
+          onMouseUp={onConnectToNewNode}
+        >
+          {questionNodes.map((node) => {
+            switch (node.questionId) {
+              case "start":
+                return (
+                  <S.QuestionNodeWrapper
+                    key={node.questionId}
+                    style={{
+                      top: `${node.position.top}px`,
+                      left: `${node.position.left}px`,
+                    }}
+                    className="start"
+                    onMouseDown={(event) =>
+                      onNodeDragStart(event, node.questionId)
+                    }
                   >
-                    옵션추가
-                  </S.OptionAddButton>
-
-                  {node.data.options ? (
-                    <S.OptionsWrapper>
-                      {node.data.options.map((option, optionIndex) => (
-                        <S.OptionWrapper key={optionIndex}>
-                          <S.OptionTitleInput
-                            placeholder="답변을 입력해주세요"
-                            value={option}
-                            onChange={(event) =>
-                              onQuestionOptionTitleChange(
-                                event,
-                                node.questionId,
-                                optionIndex
-                              )
-                            }
-                          />
-                          <S.OptionConnectStartHandle
-                            data-id={`${node.questionId}.${optionIndex}`}
-                            onMouseDown={onConnectStart}
-                          />
-                        </S.OptionWrapper>
-                      ))}
-                    </S.OptionsWrapper>
-                  ) : (
-                    <S.ConnectStartHandle
-                      data-id={node.questionId}
-                      onMouseDown={onConnectStart}
-                    />
-                  )}
-                </S.QuestionNodeWrapper>
-              );
-
-            case "end":
-              return (
-                <S.QuestionNodeWrapper
-                  key={node.questionId}
-                  style={{
-                    top: `${node.position.top}px`,
-                    left: `${node.position.left}px`,
-                  }}
-                  className="end"
-                  onMouseDown={(event) =>
-                    onNodeDragStart(event, node.questionId)
-                  }
-                  onMouseUp={onConnectToEndNode}
-                >
-                  <S.QuestionHeader>
-                    <S.QuestionIndex>마지막 질문</S.QuestionIndex>
-                    <S.QuestionTitleInput
-                      placeholder="질문 제목을 입력해주세요"
-                      value={node.data.questionTitle}
-                      onChange={(event) =>
-                        onQuestionTitleChange(event, node.questionId)
-                      }
-                    />
-                  </S.QuestionHeader>
-
-                  <S.OptionAddButton
-                    onClick={() => onAddNewQuestionOption(node.questionId)}
-                  >
-                    옵션추가
-                  </S.OptionAddButton>
-
-                  {node.data.options ? (
-                    <S.OptionsWrapper>
-                      {node.data.options.map((option, optionIndex) => (
-                        <S.OptionWrapper key={optionIndex}>
-                          <S.OptionTitleInput
-                            placeholder="답변을 입력해주세요"
-                            value={option}
-                            onChange={(event) =>
-                              onQuestionOptionTitleChange(
-                                event,
-                                node.questionId,
-                                optionIndex
-                              )
-                            }
-                          />
-                        </S.OptionWrapper>
-                      ))}
-                    </S.OptionsWrapper>
-                  ) : null}
-                </S.QuestionNodeWrapper>
-              );
-
-            default:
-              return (
-                <S.QuestionNodeWrapper
-                  key={node.questionId}
-                  style={{
-                    top: `${node.position.top}px`,
-                    left: `${node.position.left}px`,
-                  }}
-                  data-id={node.questionId}
-                  className="question"
-                  onMouseDown={(event) =>
-                    onNodeDragStart(event, node.questionId)
-                  }
-                  onMouseUp={onConnectToExistNode}
-                >
-                  <S.QuestionHeader>
-                    <S.QuestionIndex>
-                      {`${node.questionId}번 질문`}
-                    </S.QuestionIndex>
-                    <S.QuestionTitleInput
-                      placeholder="질문 제목을 입력해주세요"
-                      value={node.data.questionTitle}
-                      onChange={(event) =>
-                        onQuestionTitleChange(event, node.questionId)
-                      }
-                    />
-                    <S.QuestionDeleteButton
-                      onClick={() => onDeleteNode(node.questionId)}
-                    >
-                      <S.DeleteButtonIcon
-                        src="/images/delete-button.svg"
-                        alt="delete-button"
-                        width={20}
-                        height={20}
+                    <S.QuestionHeader>
+                      <S.QuestionIndex>시작 질문</S.QuestionIndex>
+                      <S.QuestionTitleInput
+                        placeholder="질문 제목을 입력해주세요"
+                        value={node.data.questionTitle}
+                        onChange={(event) =>
+                          onQuestionTitleChange(event, node.questionId)
+                        }
                       />
-                    </S.QuestionDeleteButton>
-                  </S.QuestionHeader>
+                    </S.QuestionHeader>
 
-                  <S.OptionAddButton
-                    onClick={() => onAddNewQuestionOption(node.questionId)}
+                    <S.OptionAddButton
+                      onClick={() => onAddNewQuestionOption(node.questionId)}
+                    >
+                      옵션추가
+                    </S.OptionAddButton>
+
+                    {node.data.options ? (
+                      <S.OptionsWrapper>
+                        {node.data.options.map((option, optionIndex) => (
+                          <S.OptionWrapper key={optionIndex}>
+                            <S.OptionTitleInput
+                              placeholder="답변을 입력해주세요"
+                              value={option}
+                              onChange={(event) =>
+                                onQuestionOptionTitleChange(
+                                  event,
+                                  node.questionId,
+                                  optionIndex
+                                )
+                              }
+                            />
+                            <S.OptionConnectStartHandle
+                              data-id={`${node.questionId}.${optionIndex}`}
+                              onMouseDown={onConnectStart}
+                            />
+                          </S.OptionWrapper>
+                        ))}
+                      </S.OptionsWrapper>
+                    ) : (
+                      <S.ConnectStartHandle
+                        data-id={node.questionId}
+                        onMouseDown={onConnectStart}
+                      />
+                    )}
+                  </S.QuestionNodeWrapper>
+                );
+
+              case "end":
+                return (
+                  <S.QuestionNodeWrapper
+                    key={node.questionId}
+                    style={{
+                      top: `${node.position.top}px`,
+                      left: `${node.position.left}px`,
+                    }}
+                    className="end"
+                    onMouseDown={(event) =>
+                      onNodeDragStart(event, node.questionId)
+                    }
+                    onMouseUp={onConnectToEndNode}
                   >
-                    옵션추가
-                  </S.OptionAddButton>
+                    <S.QuestionHeader>
+                      <S.QuestionIndex>마지막 질문</S.QuestionIndex>
+                      <S.QuestionTitleInput
+                        placeholder="질문 제목을 입력해주세요"
+                        value={node.data.questionTitle}
+                        onChange={(event) =>
+                          onQuestionTitleChange(event, node.questionId)
+                        }
+                      />
+                    </S.QuestionHeader>
 
-                  {node.data.options ? (
-                    <S.OptionsWrapper>
-                      {node.data.options.map((option, optionIndex) => (
-                        <S.OptionWrapper key={optionIndex}>
-                          <S.OptionTitleInput
-                            placeholder="답변을 입력해주세요"
-                            value={option}
-                            onChange={(event) =>
-                              onQuestionOptionTitleChange(
-                                event,
-                                node.questionId,
-                                optionIndex
-                              )
-                            }
-                          />
-                          <S.OptionConnectStartHandle
-                            data-id={`${node.questionId}.${optionIndex}`}
-                            onMouseDown={onConnectStart}
-                          />
-                        </S.OptionWrapper>
-                      ))}
-                    </S.OptionsWrapper>
-                  ) : (
-                    <S.ConnectStartHandle
-                      data-id={node.questionId}
-                      onMouseDown={onConnectStart}
-                    />
-                  )}
-                </S.QuestionNodeWrapper>
-              );
-          }
-        })}
-        <DrawEdges
-          questionNodes={questionNodes}
-          questionEdges={questionEdges}
-        />
-      </S.Wrapper>
+                    <S.OptionAddButton
+                      onClick={() => onAddNewQuestionOption(node.questionId)}
+                    >
+                      옵션추가
+                    </S.OptionAddButton>
 
+                    {node.data.options ? (
+                      <S.OptionsWrapper>
+                        {node.data.options.map((option, optionIndex) => (
+                          <S.OptionWrapper key={optionIndex}>
+                            <S.OptionTitleInput
+                              placeholder="답변을 입력해주세요"
+                              value={option}
+                              onChange={(event) =>
+                                onQuestionOptionTitleChange(
+                                  event,
+                                  node.questionId,
+                                  optionIndex
+                                )
+                              }
+                            />
+                          </S.OptionWrapper>
+                        ))}
+                      </S.OptionsWrapper>
+                    ) : null}
+                  </S.QuestionNodeWrapper>
+                );
+
+              default:
+                return (
+                  <S.QuestionNodeWrapper
+                    key={node.questionId}
+                    style={{
+                      top: `${node.position.top}px`,
+                      left: `${node.position.left}px`,
+                    }}
+                    data-id={node.questionId}
+                    className="question"
+                    onMouseDown={(event) =>
+                      onNodeDragStart(event, node.questionId)
+                    }
+                    onMouseUp={onConnectToExistNode}
+                  >
+                    <S.QuestionHeader>
+                      <S.QuestionIndex>
+                        {`${node.questionId}번 질문`}
+                      </S.QuestionIndex>
+                      <S.QuestionTitleInput
+                        placeholder="질문 제목을 입력해주세요"
+                        value={node.data.questionTitle}
+                        onChange={(event) =>
+                          onQuestionTitleChange(event, node.questionId)
+                        }
+                      />
+                      <S.QuestionDeleteButton
+                        onClick={() => onDeleteNode(node.questionId)}
+                      >
+                        <S.DeleteButtonIcon
+                          src="/images/delete-button.svg"
+                          alt="delete-button"
+                          width={20}
+                          height={20}
+                        />
+                      </S.QuestionDeleteButton>
+                    </S.QuestionHeader>
+
+                    <S.OptionAddButton
+                      onClick={() => onAddNewQuestionOption(node.questionId)}
+                    >
+                      옵션추가
+                    </S.OptionAddButton>
+
+                    {node.data.options ? (
+                      <S.OptionsWrapper>
+                        {node.data.options.map((option, optionIndex) => (
+                          <S.OptionWrapper key={optionIndex}>
+                            <S.OptionTitleInput
+                              placeholder="답변을 입력해주세요"
+                              value={option}
+                              onChange={(event) =>
+                                onQuestionOptionTitleChange(
+                                  event,
+                                  node.questionId,
+                                  optionIndex
+                                )
+                              }
+                            />
+                            <S.OptionConnectStartHandle
+                              data-id={`${node.questionId}.${optionIndex}`}
+                              onMouseDown={onConnectStart}
+                            />
+                          </S.OptionWrapper>
+                        ))}
+                      </S.OptionsWrapper>
+                    ) : (
+                      <S.ConnectStartHandle
+                        data-id={node.questionId}
+                        onMouseDown={onConnectStart}
+                      />
+                    )}
+                  </S.QuestionNodeWrapper>
+                );
+            }
+          })}
+          <DrawEdges
+            questionNodes={questionNodes}
+            questionEdges={questionEdges}
+          />
+        </S.Wrapper>
+      </S.ViewFrame>
       <Preview questionNodes={questionNodes} questionEdges={questionEdges} />
     </>
   );
