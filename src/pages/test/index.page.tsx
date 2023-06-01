@@ -14,12 +14,12 @@ const initialQuestionNodes = [
   {
     questionId: "start",
     data: { questionTitle: "" },
-    position: { top: 100, left: 300 },
+    position: { top: 100, left: 200 },
   },
   {
     questionId: "end",
     data: { questionTitle: "" },
-    position: { top: 200, left: 1200 },
+    position: { top: 150, left: 1200 },
   },
 ];
 
@@ -301,6 +301,7 @@ export default function TestPage() {
         className="view-frame"
         onMouseUp={onConnectToNewNode}
         onWheel={(wheelEvent) => {
+          wheelEvent.stopPropagation();
           setRatio(
             Math.min(Math.max(0.5, ratio + wheelEvent.deltaY * -0.001), 2)
           );
@@ -623,18 +624,130 @@ function Preview({
 
   return (
     <S.PreviewWrapper>
-      <S.CurrentQuestionWrapper>
-        <S.CurrentQuestionTitle>
-          {currentQuestion.data.questionTitle}
-        </S.CurrentQuestionTitle>
-        {(() => {
-          switch (currentQuestion.questionId) {
-            case "start":
-              return (
+      <S.PreviewTitle>미리보기</S.PreviewTitle>
+      {(() => {
+        switch (currentQuestion.questionId) {
+          case "start":
+            return (
+              <S.CurrentQuestionWrapper>
+                <S.CurrentQuestionHeaderWrapper>
+                  <S.CurrentQuestionIndex>시작 질문</S.CurrentQuestionIndex>
+                  <S.CurrentQuestionTitle>
+                    {currentQuestion.data.questionTitle}
+                  </S.CurrentQuestionTitle>
+                </S.CurrentQuestionHeaderWrapper>
+                {!currentQuestion.data.options ? (
+                  <S.CurrentQuestionTextInputWrapper>
+                    <S.CurrentQuestionTextInput
+                      placeholder="내 답변"
+                      value={currentQuestion.answer}
+                      onChange={(event) => {
+                        setCurrentQuestion((q) => ({
+                          ...q,
+                          answer: event.target.value,
+                        }));
+                      }}
+                    />
+                  </S.CurrentQuestionTextInputWrapper>
+                ) : (
+                  <S.CurrentQuestionOptionsWrapper>
+                    {currentQuestion.data.options.map((option, optionIndex) => (
+                      <S.CurrentQuestionOptionWrapper key={optionIndex}>
+                        <S.CurrentQuestionOptionLabel>
+                          <S.CurrentQuestionOptionRadioButtonInput
+                            type="radio"
+                            name={currentQuestion.questionId}
+                            checked={
+                              currentQuestion.answer !== "" &&
+                              currentQuestion.answer === option
+                            }
+                            value={option}
+                            onChange={(event) => {
+                              setCurrentQuestion((q) => ({
+                                ...q,
+                                answer: event.target.value,
+                              }));
+                            }}
+                          />
+                          {option}
+                        </S.CurrentQuestionOptionLabel>
+                      </S.CurrentQuestionOptionWrapper>
+                    ))}
+                  </S.CurrentQuestionOptionsWrapper>
+                )}
+                <S.CurrentQuestionNextButton
+                  onClick={() => {
+                    if (!currentQuestion.data.options) {
+                      const edgeToNextQuestion = questionEdges.find(
+                        (edge) =>
+                          edge.edgeId.split("-")[0] ===
+                          currentQuestion.questionId
+                      );
+
+                      if (!edgeToNextQuestion) return;
+
+                      const nextQuestionId = edgeToNextQuestion.target;
+
+                      if (nextQuestionId) {
+                        setAnswerStack((prev) => prev.concat(currentQuestion));
+
+                        const nextQuestion = questionNodes.find(
+                          (node) => node.questionId === nextQuestionId
+                        )!;
+
+                        setCurrentQuestion({
+                          ...nextQuestion,
+                          answer: "",
+                        });
+                      }
+                    } else {
+                      const edgeToNextQuestion = questionEdges.find((edge) =>
+                        edge.edgeId.includes(
+                          `${
+                            currentQuestion.questionId
+                          }.${currentQuestion.data.options?.findIndex(
+                            (option) => option === currentQuestion.answer
+                          )}`
+                        )
+                      );
+
+                      if (!edgeToNextQuestion) return;
+
+                      const nextQuestionId = edgeToNextQuestion.target;
+
+                      if (nextQuestionId) {
+                        const nextQuestion = questionNodes.find(
+                          (node) => node.questionId === nextQuestionId
+                        )!;
+
+                        setAnswerStack((prev) => prev.concat(currentQuestion));
+
+                        setCurrentQuestion({
+                          ...nextQuestion,
+                          answer: "",
+                        });
+                      }
+                    }
+                  }}
+                >
+                  다음 질문
+                </S.CurrentQuestionNextButton>
+              </S.CurrentQuestionWrapper>
+            );
+          case "end":
+            return (
+              <S.CurrentQuestionWrapper>
+                <S.CurrentQuestionHeaderWrapper>
+                  <S.CurrentQuestionIndex>마지막 질문</S.CurrentQuestionIndex>
+                  <S.CurrentQuestionTitle>
+                    {currentQuestion.data.questionTitle}
+                  </S.CurrentQuestionTitle>
+                </S.CurrentQuestionHeaderWrapper>
                 <>
                   {!currentQuestion.data.options ? (
-                    <>
-                      <S.CurrentQuestionAnswerInput
+                    <S.CurrentQuestionTextInputWrapper>
+                      <S.CurrentQuestionTextInput
+                        placeholder="내 답변"
                         value={currentQuestion.answer}
                         onChange={(event) => {
                           setCurrentQuestion((q) => ({
@@ -643,87 +756,38 @@ function Preview({
                           }));
                         }}
                       />
-                      <button
-                        onClick={() => {
-                          const edgeToNextQuestion = questionEdges.find(
-                            (edge) =>
-                              edge.edgeId.split("-")[0] ===
-                              currentQuestion.questionId
-                          );
-
-                          if (!edgeToNextQuestion) return;
-
-                          const nextQuestionId = edgeToNextQuestion.target;
-
-                          if (nextQuestionId) {
-                            setAnswerStack((prev) =>
-                              prev.concat(currentQuestion)
-                            );
-
-                            const nextQuestion = questionNodes.find(
-                              (node) => node.questionId === nextQuestionId
-                            )!;
-
-                            setCurrentQuestion({
-                              ...nextQuestion,
-                              answer: "",
-                            });
-                          }
-                        }}
-                      >
-                        다음 질문
-                      </button>
-                    </>
+                    </S.CurrentQuestionTextInputWrapper>
                   ) : (
-                    <>
+                    <S.CurrentQuestionOptionsWrapper>
                       {currentQuestion.data.options.map(
                         (option, optionIndex) => (
-                          <div
-                            style={{ cursor: "pointer" }}
-                            key={optionIndex}
-                            onClick={() => {
-                              const edgeToNextQuestion = questionEdges.find(
-                                (edge) =>
-                                  edge.edgeId.includes(
-                                    `${currentQuestion.questionId}.${optionIndex}`
-                                  )
-                              );
-
-                              if (!edgeToNextQuestion) return;
-
-                              const nextQuestionId = edgeToNextQuestion.target;
-
-                              if (nextQuestionId) {
-                                const nextQuestion = questionNodes.find(
-                                  (node) => node.questionId === nextQuestionId
-                                )!;
-
-                                setAnswerStack((prev) =>
-                                  prev.concat({
-                                    ...currentQuestion,
-                                    answer: option,
-                                  })
-                                );
-
-                                setCurrentQuestion({
-                                  ...nextQuestion,
-                                  answer: "",
-                                });
-                              }
-                            }}
-                          >
-                            {option}
-                          </div>
+                          <S.CurrentQuestionOptionWrapper key={optionIndex}>
+                            <S.CurrentQuestionOptionLabel>
+                              <S.CurrentQuestionOptionRadioButtonInput
+                                type="radio"
+                                name={currentQuestion.questionId}
+                                checked={
+                                  currentQuestion.answer !== "" &&
+                                  currentQuestion.answer === option
+                                }
+                                value={option}
+                                onChange={(event) => {
+                                  setCurrentQuestion((q) => ({
+                                    ...q,
+                                    answer: event.target.value,
+                                  }));
+                                }}
+                              />
+                              {option}
+                            </S.CurrentQuestionOptionLabel>
+                          </S.CurrentQuestionOptionWrapper>
                         )
                       )}
-                    </>
+                    </S.CurrentQuestionOptionsWrapper>
                   )}
                 </>
-              );
-            case "end":
-              return (
-                <>
-                  <S.PreviousQuestionButton
+                <S.CurrentQuestionFooterWrapper>
+                  <S.CurrentQuestionPreviousButton
                     onClick={() => {
                       if (answerStack.length <= 0) return;
 
@@ -734,55 +798,69 @@ function Preview({
                     }}
                   >
                     이전 질문
-                  </S.PreviousQuestionButton>
-                  <>
-                    {!currentQuestion.data.options ? (
-                      <>
-                        <S.CurrentQuestionAnswerInput
-                          value={currentQuestion.answer}
-                          onChange={(event) => {
-                            setCurrentQuestion((q) => ({
-                              ...q,
-                              answer: event.target.value,
-                            }));
-                          }}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        {currentQuestion.data.options.map(
-                          (option, optionIndex) => (
-                            <div
-                              style={{ cursor: "pointer" }}
-                              key={optionIndex}
-                              onClick={() => {
-                                setCurrentQuestion((prev) => ({
-                                  ...prev,
-                                  answer: String(optionIndex),
-                                }));
-                              }}
-                            >
-                              {option}
-                            </div>
-                          )
-                        )}
-                      </>
-                    )}
-                  </>
-                  <button
+                  </S.CurrentQuestionPreviousButton>
+                  <S.CurrentQuestionSubmitButton
                     onClick={() => {
+                      setAnswerStack((prev) => prev.concat(currentQuestion));
                       setCurrentQuestion({ ...questionNodes[0], answer: "" });
                       setAnswerStack([]);
                     }}
                   >
                     제출
-                  </button>
-                </>
-              );
-            default:
-              return (
-                <>
-                  <S.PreviousQuestionButton
+                  </S.CurrentQuestionSubmitButton>
+                </S.CurrentQuestionFooterWrapper>
+              </S.CurrentQuestionWrapper>
+            );
+          default:
+            return (
+              <S.CurrentQuestionWrapper>
+                <S.CurrentQuestionHeaderWrapper>
+                  <S.CurrentQuestionIndex>{`${currentQuestion.questionId}번 질문`}</S.CurrentQuestionIndex>
+                  <S.CurrentQuestionTitle>
+                    {currentQuestion.data.questionTitle}
+                  </S.CurrentQuestionTitle>
+                </S.CurrentQuestionHeaderWrapper>
+                {!currentQuestion.data.options ? (
+                  <S.CurrentQuestionTextInputWrapper>
+                    <S.CurrentQuestionTextInput
+                      placeholder="내 답변"
+                      value={currentQuestion.answer}
+                      onChange={(event) => {
+                        setCurrentQuestion((q) => ({
+                          ...q,
+                          answer: event.target.value,
+                        }));
+                      }}
+                    />
+                  </S.CurrentQuestionTextInputWrapper>
+                ) : (
+                  <S.CurrentQuestionOptionsWrapper>
+                    {currentQuestion.data.options.map((option, optionIndex) => (
+                      <S.CurrentQuestionOptionWrapper key={optionIndex}>
+                        <S.CurrentQuestionOptionLabel>
+                          <S.CurrentQuestionOptionRadioButtonInput
+                            type="radio"
+                            name={currentQuestion.questionId}
+                            checked={
+                              currentQuestion.answer !== "" &&
+                              currentQuestion.answer === option
+                            }
+                            value={option}
+                            onChange={(event) => {
+                              setCurrentQuestion((q) => ({
+                                ...q,
+                                answer: event.target.value,
+                              }));
+                            }}
+                          />
+                          {option}
+                        </S.CurrentQuestionOptionLabel>
+                      </S.CurrentQuestionOptionWrapper>
+                    ))}
+                  </S.CurrentQuestionOptionsWrapper>
+                )}
+                <S.CurrentQuestionFooterWrapper>
+                  <S.CurrentQuestionPreviousButton
                     onClick={() => {
                       if (answerStack.length <= 0) return;
 
@@ -793,98 +871,73 @@ function Preview({
                     }}
                   >
                     이전 질문
-                  </S.PreviousQuestionButton>
-                  {!currentQuestion.data.options ? (
-                    <>
-                      <S.CurrentQuestionAnswerInput
-                        value={currentQuestion.answer}
-                        onChange={(event) => {
-                          setCurrentQuestion((q) => ({
-                            ...q,
-                            answer: event.target.value,
-                          }));
-                        }}
-                      />
-                      <button
-                        onClick={() => {
-                          const edgeToNextQuestion = questionEdges.find(
-                            (edge) =>
-                              edge.edgeId.split("-")[0] ===
-                              currentQuestion.questionId
+                  </S.CurrentQuestionPreviousButton>
+                  <S.CurrentQuestionNextButton
+                    onClick={() => {
+                      if (!currentQuestion.data.options) {
+                        const edgeToNextQuestion = questionEdges.find(
+                          (edge) =>
+                            edge.edgeId.split("-")[0] ===
+                            currentQuestion.questionId
+                        );
+
+                        if (!edgeToNextQuestion) return;
+
+                        const nextQuestionId = edgeToNextQuestion.target;
+
+                        if (nextQuestionId) {
+                          setAnswerStack((prev) =>
+                            prev.concat(currentQuestion)
                           );
 
-                          if (!edgeToNextQuestion) return;
+                          const nextQuestion = questionNodes.find(
+                            (node) => node.questionId === nextQuestionId
+                          )!;
 
-                          const nextQuestionId = edgeToNextQuestion.target;
+                          setCurrentQuestion({
+                            ...nextQuestion,
+                            answer: "",
+                          });
+                        }
+                      } else {
+                        const edgeToNextQuestion = questionEdges.find((edge) =>
+                          edge.edgeId.includes(
+                            `${
+                              currentQuestion.questionId
+                            }.${currentQuestion.data.options?.findIndex(
+                              (option) => option === currentQuestion.answer
+                            )}`
+                          )
+                        );
 
-                          if (nextQuestionId) {
-                            setAnswerStack((prev) =>
-                              prev.concat(currentQuestion)
-                            );
+                        if (!edgeToNextQuestion) return;
 
-                            const nextQuestion = questionNodes.find(
-                              (node) => node.questionId === nextQuestionId
-                            )!;
+                        const nextQuestionId = edgeToNextQuestion.target;
 
-                            setCurrentQuestion({
-                              ...nextQuestion,
-                              answer: "",
-                            });
-                          }
-                        }}
-                      >
-                        다음 질문
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      {currentQuestion.data.options.map(
-                        (option, optionIndex) => (
-                          <div
-                            style={{ cursor: "pointer" }}
-                            key={optionIndex}
-                            onClick={() => {
-                              const edgeToNextQuestion = questionEdges.find(
-                                (edge) =>
-                                  edge.edgeId.includes(
-                                    `${currentQuestion.questionId}.${optionIndex}`
-                                  )
-                              );
+                        if (nextQuestionId) {
+                          const nextQuestion = questionNodes.find(
+                            (node) => node.questionId === nextQuestionId
+                          )!;
 
-                              if (!edgeToNextQuestion) return;
+                          setAnswerStack((prev) =>
+                            prev.concat(currentQuestion)
+                          );
 
-                              const nextQuestionId = edgeToNextQuestion.target;
-
-                              if (nextQuestionId) {
-                                const nextQuestion = questionNodes.find(
-                                  (node) => node.questionId === nextQuestionId
-                                )!;
-
-                                setAnswerStack((prev) =>
-                                  prev.concat({
-                                    ...currentQuestion,
-                                    answer: option,
-                                  })
-                                );
-
-                                setCurrentQuestion({
-                                  ...nextQuestion,
-                                  answer: "",
-                                });
-                              }
-                            }}
-                          >
-                            {option}
-                          </div>
-                        )
-                      )}
-                    </>
-                  )}
-                </>
-              );
-          }
-        })()}
-      </S.CurrentQuestionWrapper>
+                          setCurrentQuestion({
+                            ...nextQuestion,
+                            answer: "",
+                          });
+                        }
+                      }
+                    }}
+                  >
+                    다음 질문
+                  </S.CurrentQuestionNextButton>
+                </S.CurrentQuestionFooterWrapper>
+              </S.CurrentQuestionWrapper>
+            );
+        }
+      })()}
     </S.PreviewWrapper>
   );
 }
