@@ -486,7 +486,7 @@ export default function SurveyEditPage() {
                         }
                       }}
                     >
-                      폼 제출
+                      폼 생성하기
                     </S.SubmitButton>
 
                     {node.data.options ? (
@@ -864,12 +864,11 @@ function Preview({
                   </S.CurrentQuestionPreviousButton>
                   <S.CurrentQuestionSubmitButton
                     onClick={() => {
-                      setAnswerStack((prev) => prev.concat(currentQuestion));
                       setCurrentQuestion({ ...questionNodes[0], answer: "" });
                       setAnswerStack([]);
                     }}
                   >
-                    제출
+                    처음으로 돌아가기
                   </S.CurrentQuestionSubmitButton>
                 </S.CurrentQuestionFooterWrapper>
               </S.CurrentQuestionWrapper>
@@ -878,7 +877,6 @@ function Preview({
             return (
               <S.CurrentQuestionWrapper>
                 <S.CurrentQuestionHeaderWrapper>
-                  <S.CurrentQuestionIndex>{`${currentQuestion.questionId}번 질문`}</S.CurrentQuestionIndex>
                   <S.CurrentQuestionTitle>
                     {currentQuestion.data.questionTitle}
                   </S.CurrentQuestionTitle>

@@ -14,7 +14,9 @@ export default function Home() {
       </Head>
       <S.Wrapper>
         <S.HeaderWrapper>
-          <S.SubTitle>설문 조사, 응답이 필요한 경우 쉽게 만드세요</S.SubTitle>
+          <S.SubTitle>
+            간단한 퀴즈부터, 설문 조사 등 응답이 필요한 경우 쉽게 만드세요
+          </S.SubTitle>
           <S.Title>Formify</S.Title>
         </S.HeaderWrapper>
         <S.Video
