@@ -1,6 +1,56 @@
 import Image from "next/image";
 import styled, { keyframes } from "styled-components";
 
+export const TitleWrapper = styled.div`
+  background-color: #000000;
+
+  padding: 12px 20px;
+
+  border-radius: 16px;
+`;
+
+export const Title = styled.div`
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #ffffff;
+
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0px;
+
+    width: 100%;
+    height: 0.5px;
+
+    margin-top: 3px;
+
+    background-color: #8f8f8f;
+  }
+`;
+
+export const SurveyTitleInputWrapper = styled.div`
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #777777;
+  }
+`;
+
+export const SurveyTitleInput = styled.input`
+  width: 100%;
+
+  font-size: 1.6rem;
+
+  outline: none;
+  background: none;
+  border: none;
+`;
+
 export const ViewFrame = styled.div`
   width: 100%;
   height: 40rem;
@@ -213,7 +263,6 @@ export const SubmitButton = styled.button`
 
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 `;
-
 
 export const DrawEdgesWrapper = styled.div``;
 

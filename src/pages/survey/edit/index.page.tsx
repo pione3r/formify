@@ -55,6 +55,8 @@ type Answer = QuestionNode & {
 export default function TestPage() {
   const router = useRouter();
 
+  const [설문제목, set설문제목] = useState("");
+
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [ratio, setRatio] = useState(1);
@@ -112,7 +114,7 @@ export default function TestPage() {
 
     if (target.classList.contains("view-frame")) {
       let newLeft = (mouseUpEvent.pageX - screenPos.x) / ratio;
-      let newTop = (mouseUpEvent.pageY - screenPos.y) / ratio - 250;
+      let newTop = (mouseUpEvent.pageY - screenPos.y) / ratio - 230;
 
       const newId = getId();
 
@@ -370,6 +372,14 @@ export default function TestPage() {
                     }
                   >
                     <S.QuestionHeader>
+                      <S.SurveyTitleInputWrapper>
+                        <S.SurveyTitleInput
+                          placeholder="설문 제목을 입력하세요."
+                          value={설문제목}
+                          onChange={(event) => set설문제목(event.target.value)}
+                          spellCheck={false}
+                        />
+                      </S.SurveyTitleInputWrapper>
                       <S.QuestionIndex>시작 질문</S.QuestionIndex>
                       <S.QuestionTitleInput
                         placeholder="질문 제목을 입력해주세요"
@@ -578,7 +588,11 @@ export default function TestPage() {
           />
         </S.Wrapper>
       </S.ViewFrame>
-      <Preview questionNodes={questionNodes} questionEdges={questionEdges} />
+      <Preview
+        surveyTitle={설문제목}
+        questionNodes={questionNodes}
+        questionEdges={questionEdges}
+      />
     </>
   );
 }
@@ -645,9 +659,11 @@ function DrawEdges({
 }
 
 function Preview({
+  surveyTitle,
   questionNodes,
   questionEdges,
 }: {
+  surveyTitle: string;
   questionNodes: QuestionNode[];
   questionEdges: QuestionEdge[];
 }) {
@@ -666,6 +682,10 @@ function Preview({
   return (
     <S.PreviewWrapper>
       <S.PreviewTitle>미리보기</S.PreviewTitle>
+      <S.TitleWrapper>
+        <S.Title>{surveyTitle || "설문제목"}</S.Title>
+      </S.TitleWrapper>
+
       {(() => {
         switch (currentQuestion.questionId) {
           case "start":
