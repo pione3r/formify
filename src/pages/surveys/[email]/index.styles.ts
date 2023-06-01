@@ -147,28 +147,6 @@ export const QuestionHeaderWrapper = styled.div`
   gap: 20px;
 `;
 
-export const QuestionIndex = styled.div`
-  font-size: 1.4rem;
-
-  color: #555555;
-
-  position: relative;
-
-  &::after {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0px;
-
-    width: 100%;
-    height: 0.5px;
-
-    margin-top: 3px;
-
-    background-color: #8f8f8f;
-  }
-`;
-
 export const QuestionTitle = styled.div`
   font-size: 2rem;
   font-weight: 500;

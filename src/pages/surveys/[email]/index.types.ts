@@ -1,8 +1,7 @@
 export type SurveyResultType = {
   response: {
     questionId: string;
-    questionType: string;
-    questionTitle: string;
+    data: { questionTitle: string };
     answer: string;
   }[];
   respondent: string;

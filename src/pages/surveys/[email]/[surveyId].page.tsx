@@ -27,12 +27,14 @@ export default function SurveyResultPage({
       .map((result) => result.response)
       .forEach((answer) =>
         answer.forEach((question) => {
-          if (!questionsHash[question.questionTitle])
-            questionsHash[question.questionTitle] = {
+          if (!questionsHash[question.data.questionTitle])
+            questionsHash[question.data.questionTitle] = {
               questionId: question.questionId,
               answers: [],
             };
-          questionsHash[question.questionTitle].answers.push(question.answer);
+          questionsHash[question.data.questionTitle].answers.push(
+            question.answer
+          );
         })
       );
 
@@ -72,7 +74,6 @@ export default function SurveyResultPage({
               {Object.entries(질문모아보기).map(([질문, 답변들], 질문Index) => (
                 <S.QuestionWrapper key={질문Index}>
                   <S.QuestionHeaderWrapper>
-                    <S.QuestionIndex>{`${답변들.questionId}번 질문`}</S.QuestionIndex>
                     <S.QuestionTitle>{질문}</S.QuestionTitle>
                     <S.AnswersCount>{`응답 ${답변들.answers.length}개`}</S.AnswersCount>
                   </S.QuestionHeaderWrapper>
@@ -92,9 +93,8 @@ export default function SurveyResultPage({
                 {응답.response.map((question, idx) => (
                   <S.QuestionWrapper key={idx}>
                     <S.QuestionHeaderWrapper>
-                      <S.QuestionIndex>{`${question.questionId}번 질문`}</S.QuestionIndex>
                       <S.QuestionTitle>
-                        {question.questionTitle}
+                        {question.data.questionTitle}
                       </S.QuestionTitle>
                     </S.QuestionHeaderWrapper>
                     <S.Answer>{question.answer}</S.Answer>

@@ -6,20 +6,20 @@ import { useEffect, useRef, useState } from "react";
 
 import * as S from "./index.styles";
 
-import { useQuestions } from "@/hooks/useQuestions";
-import { useDraggable } from "@/hooks/useDraggable";
-import { usePickedFormPosSwitch } from "@/hooks/usePickedFormPosSwitch";
+import { useQuestions } from "@/hooks/temp/useQuestions";
+import { useDraggable } from "@/hooks/temp/useDraggable2";
+import { usePickedFormPosSwitch } from "@/hooks/temp/usePickedFormPosSwitch";
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth].api";
 
 import { Backend_API_URL } from "@/common/url";
 
-import { DraggableItem } from "@/components/DraggableItem";
+import { DraggableItem } from "@/components/temp/DraggableItem";
 
-import { SimpleTextQuestionForm } from "@/components/QuestionForm/SimpleTextQuestionForm";
-import { RadioButtonQuestionForm } from "@/components/QuestionForm/RadioButtonQuestionForm";
-import { CheckBoxQuestionForm } from "@/components/QuestionForm/CheckBoxQuestionForm";
+import { SimpleTextQuestionForm } from "@/components/temp/QuestionForm/SimpleTextQuestionForm";
+import { RadioButtonQuestionForm } from "@/components/temp/QuestionForm/RadioButtonQuestionForm";
+import { CheckBoxQuestionForm } from "@/components/temp/QuestionForm/CheckBoxQuestionForm";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 export default function SurveyEditPage() {
