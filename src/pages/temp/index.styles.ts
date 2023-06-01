@@ -200,7 +200,6 @@ export const DrawEdgesWrapper = styled.div``;
 
 export const PreviewWrapper = styled.div`
   max-width: 640px;
-  min-height: 50rem;
 
   display: flex;
   flex-direction: column;

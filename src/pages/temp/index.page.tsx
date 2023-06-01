@@ -300,12 +300,13 @@ export default function TestPage() {
       <S.ViewFrame
         className="view-frame"
         onMouseUp={onConnectToNewNode}
-        onWheel={(wheelEvent) => {
-          wheelEvent.stopPropagation();
+        onMouseEnter={() => (document.body.style.overflow = "hidden")}
+        onMouseLeave={() => document.body.removeAttribute("style")}
+        onWheel={(wheelEvent) =>
           setRatio(
             Math.min(Math.max(0.5, ratio + wheelEvent.deltaY * -0.001), 2)
-          );
-        }}
+          )
+        }
         onMouseDown={(mouseDownEvent) => {
           const viewFrameElement = mouseDownEvent.currentTarget;
           viewFrameElement.style.cursor = "grabbing";
