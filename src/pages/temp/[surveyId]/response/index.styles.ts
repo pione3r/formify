@@ -40,23 +40,13 @@ export const Title = styled.div`
   }
 `;
 
-export const PreviewWrapper = styled.div`
-  max-width: 640px;
-
+export const BodyWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  margin: 100px auto;
+  gap: 50px;
 `;
 
-export const PreviewTitle = styled.div`
-  font-size: 3rem;
-  font-weight: 700;
-`;
-
-export const CurrentQuestionWrapper = styled.div`
-  display: flex;
+export const QuestionWrapper = styled.div<{ isCurrentQuestion: boolean }>`
+  display: ${(props) => (props.isCurrentQuestion ? "flex" : "none")};
   flex-direction: column;
   gap: 30px;
 
@@ -64,15 +54,17 @@ export const CurrentQuestionWrapper = styled.div`
 
   padding: 20px;
   border-radius: 12px;
+
+  width: 100%;
 `;
 
-export const CurrentQuestionHeaderWrapper = styled.div`
+export const QuestionHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
 `;
 
-export const CurrentQuestionIndex = styled.div`
+export const QuestionIndex = styled.div`
   font-size: 1.4rem;
 
   color: #8f8f8f;
@@ -94,10 +86,12 @@ export const CurrentQuestionIndex = styled.div`
   }
 `;
 
-export const CurrentQuestionTitle = styled.div`
+export const QuestionTitle = styled.div`
   font-size: 2.5rem;
   font-weight: 700;
 `;
+
+export const QuestionBodyWrapper = styled.div``;
 
 const TextInputFocusAnimation = keyframes`
   0% {
@@ -109,7 +103,7 @@ const TextInputFocusAnimation = keyframes`
   }
 `;
 
-export const CurrentQuestionTextInputWrapper = styled.div`
+export const TextInputWrapper = styled.div`
   width: fit-content;
 
   position: relative;
@@ -136,7 +130,7 @@ export const CurrentQuestionTextInputWrapper = styled.div`
   }
 `;
 
-export const CurrentQuestionTextInput = styled.input`
+export const TextInput = styled.input`
   font-size: 1.6rem;
 
   min-width: 300px;
@@ -145,15 +139,15 @@ export const CurrentQuestionTextInput = styled.input`
   border: none;
 `;
 
-export const CurrentQuestionOptionsWrapper = styled.div`
+export const OptionsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
 `;
 
-export const CurrentQuestionOptionWrapper = styled.div``;
+export const OptionWrapper = styled.div``;
 
-export const CurrentQuestionOptionLabel = styled.label`
+export const OptionLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 10px;
@@ -169,6 +163,121 @@ export const CurrentQuestionOptionLabel = styled.label`
   }
 `;
 
+export const CheckBoxCheckedAnimation = keyframes`
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+`;
+
+export const CheckBoxUnCheckedAnimation = keyframes`
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+`;
+
+export const CheckBoxMark = styled.div`
+  width: 18px;
+  height: 18px;
+
+  position: absolute;
+  top: -1px;
+  left: 6px;
+
+  border-radius: 2px;
+
+  z-index: 1000;
+
+  transform: rotate(-45deg);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+
+    display: block;
+    width: 2px;
+    height: 6px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #fff;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+
+    display: block;
+    width: 12px;
+    height: 2px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #fff;
+  }
+`;
+
+export const OptionCheckBoxInput = styled.input`
+  appearance: none;
+
+  border: max(2px, 0.1em) solid gray;
+  border-radius: 2px;
+  width: 20px;
+  height: 20px;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    box-shadow: 0 0 0 max(4px, 0.2em) lightgray;
+    cursor: pointer;
+  }
+
+  &:checked {
+    border-color: #000000;
+  }
+
+  &:checked::after {
+    content: "";
+    display: block;
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #000000;
+
+    animation: ${CheckBoxCheckedAnimation} 0.3s ease-in;
+  }
+
+  &:not(:checked)::after {
+    transition-delay: 0.3s;
+
+    content: "";
+    display: block;
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #ffffff;
+
+    animation: ${CheckBoxUnCheckedAnimation} 0.3s ease-in;
+  }
+`;
+
 export const RadioButtonCheckedAnimation = keyframes`
   0% {
     transform: scale(0);
@@ -179,7 +288,7 @@ export const RadioButtonCheckedAnimation = keyframes`
   }
 `;
 
-export const CurrentQuestionOptionRadioButtonInput = styled.input`
+export const OptionRadioButtonInput = styled.input`
   appearance: none;
 
   border: max(2px, 0.1em) solid gray;
@@ -218,15 +327,13 @@ export const CurrentQuestionOptionRadioButtonInput = styled.input`
   }
 `;
 
-export const CurrentQuestionFooterWrapper = styled.div`
+export const QuestionFooterWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 10px;
 `;
 
-export const CurrentQuestionPreviousButton = styled.button`
-  width: 100%;
-
+export const PreviousButton = styled.button`
   font-size: 1.8rem;
   font-weight: 700;
   color: #ffffff;
@@ -237,9 +344,7 @@ export const CurrentQuestionPreviousButton = styled.button`
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 `;
 
-export const CurrentQuestionNextButton = styled.button`
-  width: 100%;
-
+export const NextButton = styled.button`
   font-size: 1.8rem;
   font-weight: 700;
   color: #ffffff;
@@ -250,15 +355,36 @@ export const CurrentQuestionNextButton = styled.button`
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 `;
 
-export const CurrentQuestionSubmitButton = styled.button`
-  width: 100%;
-
+export const SubmitButton = styled.button`
   font-size: 1.8rem;
   font-weight: 700;
   color: #ffffff;
-  background-color: #2b44ff;
+  background-color: #000000;
   padding: 8px 16px;
   border-radius: 16px;
   cursor: pointer;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
+`;
+
+export const FooterWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  width: 100%;
+`;
+
+export const FooterHeaderWrapper = styled.div``;
+
+export const FooterTitle = styled.div`
+  font-size: 2.5rem;
+  font-weight: 700;
+
+  padding-left: 10px;
+`;
+
+export const FooterBodyWrapper = styled.div`
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
 `;

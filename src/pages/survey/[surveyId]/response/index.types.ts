@@ -1,30 +1,22 @@
-interface ITextQuestion {
+type QuestionNode = {
   questionId: string;
-  questionType: "text";
-  questionTitle: string;
-  nextQuestionId: string;
-}
+  data: { questionTitle: string; options?: string[] };
+  position: { top: number; left: number };
+};
 
-interface IRadioButtonQuestion {
-  questionId: string;
-  questionType: "radio-button";
-  questionTitle: string;
-  options: string[];
-  nextQuestionIds: string[];
-}
+type QuestionEdge = {
+  edgeId: string;
+  source: string;
+  target: string;
+};
 
-interface ICheckBoxQuestion {
-  questionId: string;
-  questionType: "check-box";
-  questionTitle: string;
-  options: string[];
-  nextQuestionId: string;
-}
+export type CurrentQuestion = QuestionNode & {
+  answer: string;
+};
 
-export type QuestionType =
-  | ITextQuestion
-  | IRadioButtonQuestion
-  | ICheckBoxQuestion;
+export type Answer = QuestionNode & {
+  answer: string;
+};
 
 export interface ResponsePageProps {
   survey: {
@@ -32,21 +24,10 @@ export interface ResponsePageProps {
     created: string;
     surveyMaker: string;
     surveyTitle: string;
-    survey: QuestionType[];
+    survey: {
+      questionNodes: QuestionNode[];
+      questionEdges: QuestionEdge[];
+    };
   };
   respondent: string;
 }
-
-interface ITextAnswer extends ITextQuestion {
-  answer: string;
-}
-
-interface IRadioButtonAnswer extends IRadioButtonQuestion {
-  answer: string;
-}
-
-interface ICheckBoxAnswer extends ICheckBoxQuestion {
-  answer: string[];
-}
-
-export type AnswerType = ITextAnswer | IRadioButtonAnswer | ICheckBoxAnswer;

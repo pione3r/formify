@@ -52,7 +52,7 @@ type Answer = QuestionNode & {
   answer: string;
 };
 
-export default function TestPage() {
+export default function SurveyEditPage() {
   const router = useRouter();
 
   const [설문제목, set설문제목] = useState("");
@@ -311,7 +311,7 @@ export default function TestPage() {
   return (
     <>
       <Head>
-        {/* <title>{`작성중 ${설문제목 === "" ? "" : `| ${설문제목}`}`}</title> */}
+        <title>{`작성중 ${설문제목 === "" ? "" : `| ${설문제목}`}`}</title>
       </Head>
       <S.ViewFrame
         className="view-frame"
@@ -460,6 +460,11 @@ export default function TestPage() {
 
                     <S.SubmitButton
                       onClick={async () => {
+                        if (설문제목 === "") {
+                          alert("설문 제목을 입력하세요");
+                          return;
+                        }
+
                         const { status } = await fetch(
                           `${Backend_API_URL}/survey`,
                           {
@@ -522,9 +527,6 @@ export default function TestPage() {
                     onMouseUp={onConnectToExistNode}
                   >
                     <S.QuestionHeader>
-                      <S.QuestionIndex>
-                        {`${node.questionId}번 질문`}
-                      </S.QuestionIndex>
                       <S.QuestionTitleInput
                         placeholder="질문 제목을 입력해주세요"
                         value={node.data.questionTitle}

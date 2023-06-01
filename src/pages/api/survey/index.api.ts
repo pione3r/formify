@@ -25,7 +25,7 @@ export default async function surveyEditHandler(
         surveyId: uuid,
         created: new Date(),
         surveyMaker: session.user?.email,
-        // surveyTitle: surveyTitle,
+        surveyTitle: surveyTitle,
         survey: survey,
         responseFormLink:
           process.env.NODE_ENV === "production"
