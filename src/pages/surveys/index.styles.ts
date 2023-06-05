@@ -8,7 +8,10 @@ export const Wrapper = styled.div`
   align-items: center;
   gap: 30px;
 
-  margin: 100px auto;
+  margin: 0px auto;
+  padding: 50px;
+
+  overflow: auto;
 `;
 
 export const Title = styled.h1`

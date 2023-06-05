@@ -7,7 +7,8 @@ export const Wrapper = styled.div`
 
   max-width: 640px;
 
-  margin: 100px auto;
+  margin: 0px auto;
+  padding: 50px;
 `;
 
 export const TitleWrapper = styled.div`
