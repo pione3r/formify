@@ -8,7 +8,7 @@ export const Wrapper = styled.main`
   max-width: 1280px;
 
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 100px;
 `;
 
 export const HeaderWrapper = styled.div``;

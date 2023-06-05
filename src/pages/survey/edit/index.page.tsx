@@ -2,22 +2,22 @@ import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import * as S from "./index.styles";
+import type {
+  QuestionNode,
+  QuestionEdge,
+  SurveyEditPageProps,
+} from "./index.types";
 
-import {
-  calculateCanvasDimensions,
-  calculateControlPointsWithBuffer,
-  calculateDeltas,
-} from "@/utils/getBezierPath";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth].api";
 import { Backend_API_URL } from "@/common/url";
 
-let id = 1;
-
-const getId = () => `${id++}`;
+import { BezierArrow } from "@/components/BezierArrow";
+import { SurveyPreview } from "@/components/SurveyPreview";
+import { useConnect } from "@/hooks/useConnect";
 
 const initialQuestionNodes = [
   {
@@ -32,30 +32,8 @@ const initialQuestionNodes = [
   },
 ];
 
-type QuestionNode = {
-  questionId: string;
-  data: { questionTitle: string; options?: string[] };
-  position: { top: number; left: number };
-};
-
-type QuestionEdge = {
-  edgeId: string;
-  source: string;
-  target: string;
-};
-
-type CurrentQuestion = QuestionNode & {
-  answer: string;
-};
-
-type Answer = QuestionNode & {
-  answer: string;
-};
-
-export default function SurveyEditPage() {
+export default function SurveyEditPage({ userEmail }: SurveyEditPageProps) {
   const router = useRouter();
-
-  const [설문제목, set설문제목] = useState("");
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -63,128 +41,28 @@ export default function SurveyEditPage() {
 
   const [screenPos, setScreenPos] = useState({ x: 0, y: 0 });
 
+  const [설문제목, set설문제목] = useState("");
+
   const [questionNodes, setQuestionNodes] =
     useState<QuestionNode[]>(initialQuestionNodes);
 
   const [questionEdges, setQuestionEdges] = useState<QuestionEdge[]>([]);
 
-  const sourceId = useRef<string>();
+  const isEdgeAlreadyExist = (sourceId: string) =>
+    questionEdges.find((edge) => edge.source === sourceId) ? true : false;
 
-  const onConnectStart = (mouseDownEvent: React.MouseEvent) => {
-    mouseDownEvent.stopPropagation();
+  const 노드추가 = (newNode: QuestionNode) =>
+    setQuestionNodes((prev) => prev.concat(newNode));
 
-    const source = mouseDownEvent.currentTarget as HTMLElement;
+  const 엣지추가 = (newEdge: QuestionEdge) =>
+    setQuestionEdges((prev) => prev.concat(newEdge));
 
-    if (source) {
-      sourceId.current = source.dataset["id"];
-    }
-  };
-
-  const onConnectToNewNode = (mouseUpEvent: React.MouseEvent) => {
-    const target = mouseUpEvent.currentTarget;
-
-    const copiedSourceId = sourceId.current;
-
-    sourceId.current = undefined;
-
-    if (!copiedSourceId) return;
-    if (questionEdges.find((edge) => edge.source === copiedSourceId)) return;
-
-    if (target.classList.contains("flow-wrapper")) {
-      const newId = getId();
-
-      const newNode = {
-        questionId: newId,
-        data: { questionTitle: "" },
-        position: {
-          top: mouseUpEvent.nativeEvent.offsetY - 100,
-          left: mouseUpEvent.nativeEvent.offsetX,
-        },
-      };
-
-      const newEdge = {
-        edgeId: `${copiedSourceId}-${newId}`,
-        source: copiedSourceId,
-        target: newId,
-      };
-
-      setQuestionNodes((prev) => prev.concat(newNode));
-      setQuestionEdges((prev) => prev.concat(newEdge));
-    }
-
-    if (target.classList.contains("view-frame")) {
-      let newLeft = (mouseUpEvent.pageX - screenPos.x) / ratio;
-      let newTop = (mouseUpEvent.pageY - screenPos.y) / ratio - 230;
-
-      const newId = getId();
-
-      const newNode = {
-        questionId: newId,
-        data: { questionTitle: "" },
-        position: {
-          top: newTop,
-          left: newLeft,
-        },
-      };
-
-      const newEdge = {
-        edgeId: `${copiedSourceId}-${newId}`,
-        source: copiedSourceId,
-        target: newId,
-      };
-
-      setQuestionNodes((prev) => prev.concat(newNode));
-      setQuestionEdges((prev) => prev.concat(newEdge));
-    }
-  };
-
-  const onConnectToExistNode = (mouseUpEvent: React.MouseEvent) => {
-    const target = mouseUpEvent.currentTarget as HTMLElement;
-
-    const targetId = target.dataset["id"];
-
-    const copiedSourceId = sourceId.current;
-
-    sourceId.current = undefined;
-
-    if (!copiedSourceId) return;
-    if (!targetId) return;
-    if (questionEdges.find((edge) => edge.source === copiedSourceId)) return;
-
-    if (
-      !target.classList.contains("flow-wrapper") &&
-      !target.classList.contains("end")
-    ) {
-      const newEdge = {
-        edgeId: `${copiedSourceId}-${targetId}`,
-        source: copiedSourceId,
-        target: targetId,
-      };
-
-      setQuestionEdges((prev) => prev.concat(newEdge));
-    }
-  };
-
-  const onConnectToEndNode = (mouseUpEvent: React.MouseEvent) => {
-    const target = mouseUpEvent.currentTarget;
-
-    const copiedSourceId = sourceId.current;
-
-    sourceId.current = undefined;
-
-    if (!copiedSourceId) return;
-    if (questionEdges.find((edge) => edge.source === copiedSourceId)) return;
-
-    if (target.classList.contains("end")) {
-      const newEdge = {
-        edgeId: `${copiedSourceId}-end`,
-        source: copiedSourceId,
-        target: "end",
-      };
-
-      setQuestionEdges((prev) => prev.concat(newEdge));
-    }
-  };
+  const {
+    onConnectStart,
+    onConnectToNewNode,
+    onConnectToExistNode,
+    onConnectToEndNode,
+  } = useConnect(screenPos, ratio, isEdgeAlreadyExist, 노드추가, 엣지추가);
 
   const onNodeDragStart = (
     mouseDownEvent: React.MouseEvent,
@@ -465,11 +343,12 @@ export default function SurveyEditPage() {
                           return;
                         }
 
-                        const { status } = await fetch(
+                        const response = await fetch(
                           `${Backend_API_URL}/survey`,
                           {
                             method: "POST",
                             body: JSON.stringify({
+                              surveyTitle: 설문제목,
                               survey: {
                                 questionNodes,
                                 questionEdges,
@@ -477,11 +356,12 @@ export default function SurveyEditPage() {
                             }),
                           }
                         );
-                        if (status === 201) {
+
+                        if (response.status === 201) {
                           alert("질문폼 생성 성공");
-                          router.replace("/");
+                          router.replace(`/surveys/${userEmail}`);
                         }
-                        if (status === 401) {
+                        if (response.status === 401) {
                           alert("질문폼 생성 실패");
                         }
                       }}
@@ -590,7 +470,7 @@ export default function SurveyEditPage() {
           />
         </S.Wrapper>
       </S.ViewFrame>
-      <Preview
+      <SurveyPreview
         surveyTitle={설문제목}
         questionNodes={questionNodes}
         questionEdges={questionEdges}
@@ -620,7 +500,7 @@ function DrawEdges({
           );
 
           return (
-            <Arrow
+            <BezierArrow
               key={edge.edgeId}
               startPoint={{
                 x: sourceNode?.position.left! + 300,
@@ -642,7 +522,7 @@ function DrawEdges({
           );
 
           return (
-            <Arrow
+            <BezierArrow
               key={edge.edgeId}
               startPoint={{
                 x: source?.position.left! + 300,
@@ -660,436 +540,6 @@ function DrawEdges({
   );
 }
 
-function Preview({
-  surveyTitle,
-  questionNodes,
-  questionEdges,
-}: {
-  surveyTitle: string;
-  questionNodes: QuestionNode[];
-  questionEdges: QuestionEdge[];
-}) {
-  const [currentQuestion, setCurrentQuestion] = useState<CurrentQuestion>({
-    ...questionNodes[0],
-    answer: "",
-  });
-
-  const [answerStack, setAnswerStack] = useState<Answer[]>([]);
-
-  useEffect(() => {
-    setCurrentQuestion({ ...questionNodes[0], answer: "" });
-    setAnswerStack([]);
-  }, [questionNodes]);
-
-  return (
-    <S.PreviewWrapper>
-      <S.PreviewTitle>미리보기</S.PreviewTitle>
-      <S.TitleWrapper>
-        <S.Title>{surveyTitle || "설문제목"}</S.Title>
-      </S.TitleWrapper>
-
-      {(() => {
-        switch (currentQuestion.questionId) {
-          case "start":
-            return (
-              <S.CurrentQuestionWrapper>
-                <S.CurrentQuestionHeaderWrapper>
-                  <S.CurrentQuestionIndex>시작 질문</S.CurrentQuestionIndex>
-                  <S.CurrentQuestionTitle>
-                    {currentQuestion.data.questionTitle}
-                  </S.CurrentQuestionTitle>
-                </S.CurrentQuestionHeaderWrapper>
-                {!currentQuestion.data.options ? (
-                  <S.CurrentQuestionTextInputWrapper>
-                    <S.CurrentQuestionTextInput
-                      placeholder="내 답변"
-                      value={currentQuestion.answer}
-                      onChange={(event) => {
-                        setCurrentQuestion((q) => ({
-                          ...q,
-                          answer: event.target.value,
-                        }));
-                      }}
-                    />
-                  </S.CurrentQuestionTextInputWrapper>
-                ) : (
-                  <S.CurrentQuestionOptionsWrapper>
-                    {currentQuestion.data.options.map((option, optionIndex) => (
-                      <S.CurrentQuestionOptionWrapper key={optionIndex}>
-                        <S.CurrentQuestionOptionLabel>
-                          <S.CurrentQuestionOptionRadioButtonInput
-                            type="radio"
-                            name={currentQuestion.questionId}
-                            checked={
-                              currentQuestion.answer !== "" &&
-                              currentQuestion.answer === option
-                            }
-                            value={option}
-                            onChange={(event) => {
-                              setCurrentQuestion((q) => ({
-                                ...q,
-                                answer: event.target.value,
-                              }));
-                            }}
-                          />
-                          {option}
-                        </S.CurrentQuestionOptionLabel>
-                      </S.CurrentQuestionOptionWrapper>
-                    ))}
-                  </S.CurrentQuestionOptionsWrapper>
-                )}
-                <S.CurrentQuestionNextButton
-                  onClick={() => {
-                    if (!currentQuestion.data.options) {
-                      const edgeToNextQuestion = questionEdges.find(
-                        (edge) =>
-                          edge.edgeId.split("-")[0] ===
-                          currentQuestion.questionId
-                      );
-
-                      if (!edgeToNextQuestion) return;
-
-                      const nextQuestionId = edgeToNextQuestion.target;
-
-                      if (nextQuestionId) {
-                        setAnswerStack((prev) => prev.concat(currentQuestion));
-
-                        const nextQuestion = questionNodes.find(
-                          (node) => node.questionId === nextQuestionId
-                        )!;
-
-                        setCurrentQuestion({
-                          ...nextQuestion,
-                          answer: "",
-                        });
-                      }
-                    } else {
-                      const edgeToNextQuestion = questionEdges.find((edge) =>
-                        edge.edgeId.includes(
-                          `${
-                            currentQuestion.questionId
-                          }.${currentQuestion.data.options?.findIndex(
-                            (option) => option === currentQuestion.answer
-                          )}`
-                        )
-                      );
-
-                      if (!edgeToNextQuestion) return;
-
-                      const nextQuestionId = edgeToNextQuestion.target;
-
-                      if (nextQuestionId) {
-                        const nextQuestion = questionNodes.find(
-                          (node) => node.questionId === nextQuestionId
-                        )!;
-
-                        setAnswerStack((prev) => prev.concat(currentQuestion));
-
-                        setCurrentQuestion({
-                          ...nextQuestion,
-                          answer: "",
-                        });
-                      }
-                    }
-                  }}
-                >
-                  다음 질문
-                </S.CurrentQuestionNextButton>
-              </S.CurrentQuestionWrapper>
-            );
-          case "end":
-            return (
-              <S.CurrentQuestionWrapper>
-                <S.CurrentQuestionHeaderWrapper>
-                  <S.CurrentQuestionIndex>마지막 질문</S.CurrentQuestionIndex>
-                  <S.CurrentQuestionTitle>
-                    {currentQuestion.data.questionTitle}
-                  </S.CurrentQuestionTitle>
-                </S.CurrentQuestionHeaderWrapper>
-                <>
-                  {!currentQuestion.data.options ? (
-                    <S.CurrentQuestionTextInputWrapper>
-                      <S.CurrentQuestionTextInput
-                        placeholder="내 답변"
-                        value={currentQuestion.answer}
-                        onChange={(event) => {
-                          setCurrentQuestion((q) => ({
-                            ...q,
-                            answer: event.target.value,
-                          }));
-                        }}
-                      />
-                    </S.CurrentQuestionTextInputWrapper>
-                  ) : (
-                    <S.CurrentQuestionOptionsWrapper>
-                      {currentQuestion.data.options.map(
-                        (option, optionIndex) => (
-                          <S.CurrentQuestionOptionWrapper key={optionIndex}>
-                            <S.CurrentQuestionOptionLabel>
-                              <S.CurrentQuestionOptionRadioButtonInput
-                                type="radio"
-                                name={currentQuestion.questionId}
-                                checked={
-                                  currentQuestion.answer !== "" &&
-                                  currentQuestion.answer === option
-                                }
-                                value={option}
-                                onChange={(event) => {
-                                  setCurrentQuestion((q) => ({
-                                    ...q,
-                                    answer: event.target.value,
-                                  }));
-                                }}
-                              />
-                              {option}
-                            </S.CurrentQuestionOptionLabel>
-                          </S.CurrentQuestionOptionWrapper>
-                        )
-                      )}
-                    </S.CurrentQuestionOptionsWrapper>
-                  )}
-                </>
-                <S.CurrentQuestionFooterWrapper>
-                  <S.CurrentQuestionPreviousButton
-                    onClick={() => {
-                      if (answerStack.length <= 0) return;
-
-                      const copiedAnswerStack = [...answerStack];
-
-                      setCurrentQuestion({ ...copiedAnswerStack.pop()! });
-                      setAnswerStack(copiedAnswerStack);
-                    }}
-                  >
-                    이전 질문
-                  </S.CurrentQuestionPreviousButton>
-                  <S.CurrentQuestionSubmitButton
-                    onClick={() => {
-                      setCurrentQuestion({ ...questionNodes[0], answer: "" });
-                      setAnswerStack([]);
-                    }}
-                  >
-                    처음으로 돌아가기
-                  </S.CurrentQuestionSubmitButton>
-                </S.CurrentQuestionFooterWrapper>
-              </S.CurrentQuestionWrapper>
-            );
-          default:
-            return (
-              <S.CurrentQuestionWrapper>
-                <S.CurrentQuestionHeaderWrapper>
-                  <S.CurrentQuestionTitle>
-                    {currentQuestion.data.questionTitle}
-                  </S.CurrentQuestionTitle>
-                </S.CurrentQuestionHeaderWrapper>
-                {!currentQuestion.data.options ? (
-                  <S.CurrentQuestionTextInputWrapper>
-                    <S.CurrentQuestionTextInput
-                      placeholder="내 답변"
-                      value={currentQuestion.answer}
-                      onChange={(event) => {
-                        setCurrentQuestion((q) => ({
-                          ...q,
-                          answer: event.target.value,
-                        }));
-                      }}
-                    />
-                  </S.CurrentQuestionTextInputWrapper>
-                ) : (
-                  <S.CurrentQuestionOptionsWrapper>
-                    {currentQuestion.data.options.map((option, optionIndex) => (
-                      <S.CurrentQuestionOptionWrapper key={optionIndex}>
-                        <S.CurrentQuestionOptionLabel>
-                          <S.CurrentQuestionOptionRadioButtonInput
-                            type="radio"
-                            name={currentQuestion.questionId}
-                            checked={
-                              currentQuestion.answer !== "" &&
-                              currentQuestion.answer === option
-                            }
-                            value={option}
-                            onChange={(event) => {
-                              setCurrentQuestion((q) => ({
-                                ...q,
-                                answer: event.target.value,
-                              }));
-                            }}
-                          />
-                          {option}
-                        </S.CurrentQuestionOptionLabel>
-                      </S.CurrentQuestionOptionWrapper>
-                    ))}
-                  </S.CurrentQuestionOptionsWrapper>
-                )}
-                <S.CurrentQuestionFooterWrapper>
-                  <S.CurrentQuestionPreviousButton
-                    onClick={() => {
-                      if (answerStack.length <= 0) return;
-
-                      const copiedAnswerStack = [...answerStack];
-
-                      setCurrentQuestion({ ...copiedAnswerStack.pop()! });
-                      setAnswerStack(copiedAnswerStack);
-                    }}
-                  >
-                    이전 질문
-                  </S.CurrentQuestionPreviousButton>
-                  <S.CurrentQuestionNextButton
-                    onClick={() => {
-                      if (!currentQuestion.data.options) {
-                        const edgeToNextQuestion = questionEdges.find(
-                          (edge) =>
-                            edge.edgeId.split("-")[0] ===
-                            currentQuestion.questionId
-                        );
-
-                        if (!edgeToNextQuestion) return;
-
-                        const nextQuestionId = edgeToNextQuestion.target;
-
-                        if (nextQuestionId) {
-                          setAnswerStack((prev) =>
-                            prev.concat(currentQuestion)
-                          );
-
-                          const nextQuestion = questionNodes.find(
-                            (node) => node.questionId === nextQuestionId
-                          )!;
-
-                          setCurrentQuestion({
-                            ...nextQuestion,
-                            answer: "",
-                          });
-                        }
-                      } else {
-                        const edgeToNextQuestion = questionEdges.find((edge) =>
-                          edge.edgeId.includes(
-                            `${
-                              currentQuestion.questionId
-                            }.${currentQuestion.data.options?.findIndex(
-                              (option) => option === currentQuestion.answer
-                            )}`
-                          )
-                        );
-
-                        if (!edgeToNextQuestion) return;
-
-                        const nextQuestionId = edgeToNextQuestion.target;
-
-                        if (nextQuestionId) {
-                          const nextQuestion = questionNodes.find(
-                            (node) => node.questionId === nextQuestionId
-                          )!;
-
-                          setAnswerStack((prev) =>
-                            prev.concat(currentQuestion)
-                          );
-
-                          setCurrentQuestion({
-                            ...nextQuestion,
-                            answer: "",
-                          });
-                        }
-                      }
-                    }}
-                  >
-                    다음 질문
-                  </S.CurrentQuestionNextButton>
-                </S.CurrentQuestionFooterWrapper>
-              </S.CurrentQuestionWrapper>
-            );
-        }
-      })()}
-    </S.PreviewWrapper>
-  );
-}
-
-type Point = {
-  x: number;
-  y: number;
-};
-
-type ArrowProps = {
-  startPoint: Point;
-  endPoint: Point;
-};
-
-const Arrow = ({ startPoint, endPoint }: ArrowProps) => {
-  const strokeWidth = 4;
-
-  const arrowHeadEndingSize = 20;
-  const boundingBoxElementsBuffer = strokeWidth + arrowHeadEndingSize;
-
-  const dotEndingRadius = 1;
-
-  const STRAIGHT_LINE_BEFORE_ARROW_HEAD = 5;
-
-  const { absDx, absDy, dx, dy } = calculateDeltas(startPoint, endPoint);
-  const { p1, p2, p3, p4, boundingBoxBuffer } =
-    calculateControlPointsWithBuffer({
-      boundingBoxElementsBuffer,
-      dx,
-      dy,
-      absDx,
-      absDy,
-    });
-
-  const { canvasWidth, canvasHeight } = calculateCanvasDimensions({
-    absDx,
-    absDy,
-    boundingBoxBuffer,
-  });
-
-  const canvasXOffset =
-    Math.min(startPoint.x, endPoint.x) - boundingBoxBuffer.horizontal;
-  const canvasYOffset =
-    Math.min(startPoint.y, endPoint.y) - boundingBoxBuffer.vertical;
-
-  return (
-    <svg
-      width={canvasWidth}
-      height={canvasHeight}
-      style={{
-        transform: `translate(${canvasXOffset}px, ${canvasYOffset}px)`,
-        position: "absolute",
-      }}
-    >
-      <path
-        stroke="#b1b1b7"
-        strokeWidth={strokeWidth}
-        fill="none"
-        d={`
-          M ${p1.x} ${p1.y}
-          C ${p2.x} ${p2.y},
-          ${p3.x} ${p3.y},
-          ${p4.x - STRAIGHT_LINE_BEFORE_ARROW_HEAD} ${p4.y}
-          L ${p4.x} ${p4.y}`}
-      />
-      <path
-        d={`
-          M ${(arrowHeadEndingSize / 5) * 2} 0
-          L ${arrowHeadEndingSize} ${arrowHeadEndingSize / 2}
-          L ${(arrowHeadEndingSize / 5) * 2} ${arrowHeadEndingSize}`}
-        fill="none"
-        stroke="#b1b1b7"
-        strokeWidth={3}
-        style={{
-          transform: `translate(${p4.x - arrowHeadEndingSize}px, ${
-            p4.y - arrowHeadEndingSize / 2
-          }px)`,
-        }}
-      ></path>
-      <circle
-        cx={p1.x}
-        cy={p1.y}
-        r={dotEndingRadius}
-        stroke="black"
-        strokeWidth={1}
-        fill="white"
-      />
-    </svg>
-  );
-};
-
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
 
@@ -1100,5 +550,5 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       },
     };
 
-  return { props: {} };
+  return { props: { userEmail: session?.user?.email } };
 }
