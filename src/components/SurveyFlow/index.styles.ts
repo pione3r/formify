@@ -24,8 +24,6 @@ export const FlowContainer = styled.div`
   height: 100%;
 
   transform-origin: 0 0;
-
-  border: 2px solid blue;
 `;
 
 export const SurveyTitleInputWrapper = styled.div`
