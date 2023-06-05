@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import signInModalReducer from "./signInModalSlice";
+import screenReducer from "./screenSlice";
 
 export const store = configureStore({
   reducer: {
     signInModal: signInModalReducer,
+    screen: screenReducer,
   },
 });
 

@@ -1,6 +1,33 @@
 import Image from "next/image";
 import styled from "styled-components";
 
+export const Wrapper = styled.div`
+  width: 100%;
+  height: 40rem;
+
+  overflow: hidden;
+
+  position: relative;
+
+  border: 4px solid #efefef;
+
+  overflow: auto;
+  overscroll-behavior: contain;
+`;
+
+export const FlowContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  transform-origin: 0 0;
+
+  border: 2px solid blue;
+`;
+
 export const SurveyTitleInputWrapper = styled.div`
   &::after {
     content: "";
@@ -19,31 +46,6 @@ export const SurveyTitleInput = styled.input`
   outline: none;
   background: none;
   border: none;
-`;
-
-export const ViewFrame = styled.div`
-  width: 100%;
-  height: 40rem;
-
-  overflow: hidden;
-
-  position: relative;
-
-  border: 4px solid #efefef;
-
-  overflow: auto;
-  overscroll-behavior: contain;
-`;
-
-export const Wrapper = styled.div`
-  position: relative;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  transform-origin: 0 0;
 `;
 
 export const QuestionNodeWrapper = styled.div<{ style: any }>`
@@ -66,7 +68,7 @@ export const QuestionNodeWrapper = styled.div<{ style: any }>`
 
   padding: 20px;
 
-  transition: box-shadow, transform 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out;
 
   &:hover {
     box-shadow: rgb(0 0 0 / 12%) 6px 8px 16px;
@@ -233,5 +235,3 @@ export const SubmitButton = styled.button`
 
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 `;
-
-export const DrawEdgesWrapper = styled.div``;

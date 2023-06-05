@@ -1,31 +1,19 @@
+import { useAppSelector } from "@/stores/hooks";
 import { useRef } from "react";
 
-type QuestionNode = {
-  questionId: string;
-  data: { questionTitle: string; options?: string[] };
-  position: { top: number; left: number };
-};
-
-type QuestionEdge = {
-  edgeId: string;
-  source: string;
-  target: string;
-};
+import type { QuestionEdge, QuestionNode } from "@/types/general";
 
 let id = 1;
 
 const getId = () => `${id++}`;
 
 export function useConnect(
-  screenPos: {
-    x: number;
-    y: number;
-  },
-  ratio: number,
   isEdgeAlreadyExist: (sourceId: string) => boolean,
   노드추가: (newNode: QuestionNode) => void,
   엣지추가: (newEdge: QuestionEdge) => void
 ) {
+  const { x, y, ratio } = useAppSelector((state) => state.screen);
+
   const sourceId = useRef<string>();
 
   const onConnectStart = (mouseDownEvent: React.MouseEvent) => {
@@ -39,7 +27,7 @@ export function useConnect(
   };
 
   const onConnectToNewNode = (mouseUpEvent: React.MouseEvent) => {
-    const target = mouseUpEvent.currentTarget as HTMLElement;
+    const target = mouseUpEvent.target as HTMLElement;
 
     const copiedSourceId = sourceId.current;
 
@@ -48,15 +36,15 @@ export function useConnect(
     if (!copiedSourceId) return;
     if (isEdgeAlreadyExist(copiedSourceId)) return;
 
-    if (target.classList.contains("flow-wrapper")) {
-      const newId = getId();
+    const newId = getId();
 
+    if (target.classList.contains("flow-container")) {
       const newNode = {
         questionId: newId,
         data: { questionTitle: "" },
         position: {
-          top: mouseUpEvent.nativeEvent.offsetY - 100,
-          left: mouseUpEvent.nativeEvent.offsetX,
+          x: mouseUpEvent.nativeEvent.offsetX,
+          y: mouseUpEvent.nativeEvent.offsetY - 100,
         },
       };
 
@@ -70,18 +58,16 @@ export function useConnect(
       엣지추가(newEdge);
     }
 
-    if (target.classList.contains("view-frame")) {
-      let newLeft = (mouseUpEvent.pageX - screenPos.x) / ratio;
-      let newTop = (mouseUpEvent.pageY - screenPos.y) / ratio - 230;
-
-      const newId = getId();
+    if (target.classList.contains("flow-wrapper")) {
+      let newX = (mouseUpEvent.nativeEvent.offsetX - x) / ratio;
+      let newY = (mouseUpEvent.nativeEvent.offsetY - y) / ratio - 100;
 
       const newNode = {
         questionId: newId,
         data: { questionTitle: "" },
         position: {
-          top: newTop,
-          left: newLeft,
+          x: newX,
+          y: newY,
         },
       };
 
@@ -109,10 +95,7 @@ export function useConnect(
     if (!targetId) return;
     if (isEdgeAlreadyExist(copiedSourceId)) return;
 
-    if (
-      !target.classList.contains("flow-wrapper") &&
-      !target.classList.contains("end")
-    ) {
+    if (target.classList.contains("node")) {
       const newEdge = {
         edgeId: `${copiedSourceId}-${targetId}`,
         source: copiedSourceId,

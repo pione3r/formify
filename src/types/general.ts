@@ -1,7 +1,7 @@
 export type QuestionNode = {
   questionId: string;
   data: { questionTitle: string; options?: string[] };
-  position: { top: number; left: number };
+  position: { x: number; y: number };
 };
 
 export type QuestionEdge = {
@@ -9,7 +9,3 @@ export type QuestionEdge = {
   source: string;
   target: string;
 };
-
-export interface SurveyEditPageProps {
-  userEmail: string | null | undefined;
-}
