@@ -1,13 +1,11 @@
 import styled, { keyframes } from "styled-components";
 
 export const PreviewWrapper = styled.div`
-  max-width: 640px;
+  width: 70rem;
 
   display: flex;
   flex-direction: column;
   gap: 20px;
-
-  margin: 100px auto;
 `;
 
 export const PreviewTitle = styled.div`
@@ -29,6 +27,8 @@ export const Title = styled.div`
   color: #ffffff;
 
   position: relative;
+
+  word-break: break-word;
 
   &::after {
     content: "";
@@ -87,6 +87,8 @@ export const CurrentQuestionIndex = styled.div`
 export const CurrentQuestionTitle = styled.div`
   font-size: 2.5rem;
   font-weight: 700;
+
+  word-break: break-word;
 `;
 
 const TextInputFocusAnimation = keyframes`
@@ -150,14 +152,16 @@ export const CurrentQuestionOptionLabel = styled.label`
 
   font-size: 1.4rem;
 
-  width: fit-content;
-
   position: relative;
+
+  word-break: break-word;
 
   &:hover {
     cursor: pointer;
   }
 `;
+
+export const CurrentQuestionOptionRadioButtonInputWrapper = styled.div``;
 
 export const RadioButtonCheckedAnimation = keyframes`
   0% {

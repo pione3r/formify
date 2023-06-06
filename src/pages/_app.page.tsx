@@ -8,8 +8,11 @@ import { store } from "@/stores/store";
 import { SignInModal } from "@/components/SignInModal";
 import { Header } from "@/components/Header";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
   return (
     <>
       <Head>
@@ -17,7 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <SessionProvider session={pageProps.session}>
         <Provider store={store}>
-          <Header />
+          {router.pathname !== "/survey/edit" && <Header />}
           <Component {...pageProps} />
           <SignInModal />
         </Provider>

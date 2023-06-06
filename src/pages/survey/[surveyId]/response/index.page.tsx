@@ -66,21 +66,23 @@ export default function ResponsePage({
                         (option, optionIndex) => (
                           <S.CurrentQuestionOptionWrapper key={optionIndex}>
                             <S.CurrentQuestionOptionLabel>
-                              <S.CurrentQuestionOptionRadioButtonInput
-                                type="radio"
-                                name={currentQuestion.questionId}
-                                checked={
-                                  currentQuestion.answer !== "" &&
-                                  currentQuestion.answer === option
-                                }
-                                value={option}
-                                onChange={(event) => {
-                                  setCurrentQuestion((q) => ({
-                                    ...q,
-                                    answer: event.target.value,
-                                  }));
-                                }}
-                              />
+                              <S.CurrentQuestionOptionRadioButtonInputWrapper>
+                                <S.CurrentQuestionOptionRadioButtonInput
+                                  type="radio"
+                                  name={currentQuestion.questionId}
+                                  checked={
+                                    currentQuestion.answer !== "" &&
+                                    currentQuestion.answer === option
+                                  }
+                                  value={option}
+                                  onChange={(event) => {
+                                    setCurrentQuestion((q) => ({
+                                      ...q,
+                                      answer: event.target.value,
+                                    }));
+                                  }}
+                                />
+                              </S.CurrentQuestionOptionRadioButtonInputWrapper>
                               {option}
                             </S.CurrentQuestionOptionLabel>
                           </S.CurrentQuestionOptionWrapper>
@@ -180,21 +182,23 @@ export default function ResponsePage({
                           (option, optionIndex) => (
                             <S.CurrentQuestionOptionWrapper key={optionIndex}>
                               <S.CurrentQuestionOptionLabel>
-                                <S.CurrentQuestionOptionRadioButtonInput
-                                  type="radio"
-                                  name={currentQuestion.questionId}
-                                  checked={
-                                    currentQuestion.answer !== "" &&
-                                    currentQuestion.answer === option
-                                  }
-                                  value={option}
-                                  onChange={(event) => {
-                                    setCurrentQuestion((q) => ({
-                                      ...q,
-                                      answer: event.target.value,
-                                    }));
-                                  }}
-                                />
+                                <S.CurrentQuestionOptionRadioButtonInputWrapper>
+                                  <S.CurrentQuestionOptionRadioButtonInput
+                                    type="radio"
+                                    name={currentQuestion.questionId}
+                                    checked={
+                                      currentQuestion.answer !== "" &&
+                                      currentQuestion.answer === option
+                                    }
+                                    value={option}
+                                    onChange={(event) => {
+                                      setCurrentQuestion((q) => ({
+                                        ...q,
+                                        answer: event.target.value,
+                                      }));
+                                    }}
+                                  />
+                                </S.CurrentQuestionOptionRadioButtonInputWrapper>
                                 {option}
                               </S.CurrentQuestionOptionLabel>
                             </S.CurrentQuestionOptionWrapper>
@@ -273,21 +277,23 @@ export default function ResponsePage({
                         (option, optionIndex) => (
                           <S.CurrentQuestionOptionWrapper key={optionIndex}>
                             <S.CurrentQuestionOptionLabel>
-                              <S.CurrentQuestionOptionRadioButtonInput
-                                type="radio"
-                                name={currentQuestion.questionId}
-                                checked={
-                                  currentQuestion.answer !== "" &&
-                                  currentQuestion.answer === option
-                                }
-                                value={option}
-                                onChange={(event) => {
-                                  setCurrentQuestion((q) => ({
-                                    ...q,
-                                    answer: event.target.value,
-                                  }));
-                                }}
-                              />
+                              <S.CurrentQuestionOptionRadioButtonInputWrapper>
+                                <S.CurrentQuestionOptionRadioButtonInput
+                                  type="radio"
+                                  name={currentQuestion.questionId}
+                                  checked={
+                                    currentQuestion.answer !== "" &&
+                                    currentQuestion.answer === option
+                                  }
+                                  value={option}
+                                  onChange={(event) => {
+                                    setCurrentQuestion((q) => ({
+                                      ...q,
+                                      answer: event.target.value,
+                                    }));
+                                  }}
+                                />
+                              </S.CurrentQuestionOptionRadioButtonInputWrapper>
                               {option}
                             </S.CurrentQuestionOptionLabel>
                           </S.CurrentQuestionOptionWrapper>

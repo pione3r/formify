@@ -11,7 +11,7 @@ interface ScreenState {
 const initialState: ScreenState = {
   x: 0,
   y: 0,
-  ratio: 1,
+  ratio: 0.6,
 };
 
 export const screenSlice = createSlice({

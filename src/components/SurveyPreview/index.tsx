@@ -59,21 +59,23 @@ export function SurveyPreview({
                     {currentQuestion.data.options.map((option, optionIndex) => (
                       <S.CurrentQuestionOptionWrapper key={optionIndex}>
                         <S.CurrentQuestionOptionLabel>
-                          <S.CurrentQuestionOptionRadioButtonInput
-                            type="radio"
-                            name={currentQuestion.questionId}
-                            checked={
-                              currentQuestion.answer !== "" &&
-                              currentQuestion.answer === option
-                            }
-                            value={option}
-                            onChange={(event) => {
-                              setCurrentQuestion((q) => ({
-                                ...q,
-                                answer: event.target.value,
-                              }));
-                            }}
-                          />
+                          <S.CurrentQuestionOptionRadioButtonInputWrapper>
+                            <S.CurrentQuestionOptionRadioButtonInput
+                              type="radio"
+                              name={currentQuestion.questionId}
+                              checked={
+                                currentQuestion.answer !== "" &&
+                                currentQuestion.answer === option
+                              }
+                              value={option}
+                              onChange={(event) => {
+                                setCurrentQuestion((q) => ({
+                                  ...q,
+                                  answer: event.target.value,
+                                }));
+                              }}
+                            />
+                          </S.CurrentQuestionOptionRadioButtonInputWrapper>
                           {option}
                         </S.CurrentQuestionOptionLabel>
                       </S.CurrentQuestionOptionWrapper>
@@ -168,21 +170,23 @@ export function SurveyPreview({
                         (option, optionIndex) => (
                           <S.CurrentQuestionOptionWrapper key={optionIndex}>
                             <S.CurrentQuestionOptionLabel>
-                              <S.CurrentQuestionOptionRadioButtonInput
-                                type="radio"
-                                name={currentQuestion.questionId}
-                                checked={
-                                  currentQuestion.answer !== "" &&
-                                  currentQuestion.answer === option
-                                }
-                                value={option}
-                                onChange={(event) => {
-                                  setCurrentQuestion((q) => ({
-                                    ...q,
-                                    answer: event.target.value,
-                                  }));
-                                }}
-                              />
+                              <S.CurrentQuestionOptionRadioButtonInputWrapper>
+                                <S.CurrentQuestionOptionRadioButtonInput
+                                  type="radio"
+                                  name={currentQuestion.questionId}
+                                  checked={
+                                    currentQuestion.answer !== "" &&
+                                    currentQuestion.answer === option
+                                  }
+                                  value={option}
+                                  onChange={(event) => {
+                                    setCurrentQuestion((q) => ({
+                                      ...q,
+                                      answer: event.target.value,
+                                    }));
+                                  }}
+                                />
+                              </S.CurrentQuestionOptionRadioButtonInputWrapper>
                               {option}
                             </S.CurrentQuestionOptionLabel>
                           </S.CurrentQuestionOptionWrapper>
@@ -241,21 +245,23 @@ export function SurveyPreview({
                     {currentQuestion.data.options.map((option, optionIndex) => (
                       <S.CurrentQuestionOptionWrapper key={optionIndex}>
                         <S.CurrentQuestionOptionLabel>
-                          <S.CurrentQuestionOptionRadioButtonInput
-                            type="radio"
-                            name={currentQuestion.questionId}
-                            checked={
-                              currentQuestion.answer !== "" &&
-                              currentQuestion.answer === option
-                            }
-                            value={option}
-                            onChange={(event) => {
-                              setCurrentQuestion((q) => ({
-                                ...q,
-                                answer: event.target.value,
-                              }));
-                            }}
-                          />
+                          <S.CurrentQuestionOptionRadioButtonInputWrapper>
+                            <S.CurrentQuestionOptionRadioButtonInput
+                              type="radio"
+                              name={currentQuestion.questionId}
+                              checked={
+                                currentQuestion.answer !== "" &&
+                                currentQuestion.answer === option
+                              }
+                              value={option}
+                              onChange={(event) => {
+                                setCurrentQuestion((q) => ({
+                                  ...q,
+                                  answer: event.target.value,
+                                }));
+                              }}
+                            />
+                          </S.CurrentQuestionOptionRadioButtonInputWrapper>
                           {option}
                         </S.CurrentQuestionOptionLabel>
                       </S.CurrentQuestionOptionWrapper>

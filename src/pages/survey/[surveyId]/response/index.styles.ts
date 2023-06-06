@@ -26,6 +26,8 @@ export const Title = styled.div`
 
   position: relative;
 
+  word-break: break-word;
+
   &::after {
     content: "";
     display: block;
@@ -98,6 +100,8 @@ export const CurrentQuestionIndex = styled.div`
 export const CurrentQuestionTitle = styled.div`
   font-size: 2.5rem;
   font-weight: 700;
+
+  word-break: break-word;
 `;
 
 const TextInputFocusAnimation = keyframes`
@@ -109,6 +113,8 @@ const TextInputFocusAnimation = keyframes`
     transform: scale(1);
   }
 `;
+
+export const CurrentQuestionOptionRadioButtonInputWrapper = styled.div``;
 
 export const CurrentQuestionTextInputWrapper = styled.div`
   width: fit-content;
