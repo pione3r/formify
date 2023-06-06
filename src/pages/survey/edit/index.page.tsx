@@ -19,12 +19,12 @@ const initialQuestionNodes = [
   {
     questionId: "start",
     data: { questionTitle: "" },
-    position: { x: 200, y: 100 },
+    position: { x: 100, y: 100 },
   },
   {
     questionId: "end",
     data: { questionTitle: "" },
-    position: { x: 900, y: 150 },
+    position: { x: 1200, y: 700 },
   },
 ];
 
