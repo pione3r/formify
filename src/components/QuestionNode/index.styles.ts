@@ -5,6 +5,8 @@ export const QuestionNodeWrapper = styled.div<{ style: any }>`
   width: 300px;
   height: 200px;
 
+  border: 3px solid #b0b0b0;
+
   border-radius: 16px;
 
   background-color: #ffffff;
@@ -135,6 +137,7 @@ export const OptionsWrapper = styled.div`
 export const OptionWrapper = styled.div`
   background-color: #ffffff;
 
+  border: 2px solid #b0b0b0;
   border-radius: 20px;
 
   display: flex;

@@ -15,7 +15,7 @@ export const Overlay = styled.div`
 
   background-color: rgba(0, 0, 0, 0.84);
 
-  z-index: 1000;
+  z-index: 9000;
 `;
 
 export const Wrapper = styled.div`

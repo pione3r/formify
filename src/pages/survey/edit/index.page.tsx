@@ -24,7 +24,7 @@ const initialQuestionNodes = [
   {
     questionId: "end",
     data: { questionTitle: "" },
-    position: { x: 1200, y: 700 },
+    position: { x: 1100, y: 900 },
   },
 ];
 
@@ -87,12 +87,14 @@ export default function SurveyEditPage() {
         <S.SubmitButton onClick={onSurveySubmit}>폼 생성하기</S.SubmitButton>
       </S.Header>
       <S.Body>
-        <SurveyFlow
-          questionNodes={questionNodes}
-          questionEdges={questionEdges}
-          setQuestionNodes={setQuestionNodes}
-          setQuestionEdges={setQuestionEdges}
-        />
+        <S.SurveyFlowWrapper>
+          <SurveyFlow
+            questionNodes={questionNodes}
+            questionEdges={questionEdges}
+            setQuestionNodes={setQuestionNodes}
+            setQuestionEdges={setQuestionEdges}
+          />
+        </S.SurveyFlowWrapper>
         <SurveyPreview
           surveyTitle={surveyTitle}
           questionNodes={questionNodes}

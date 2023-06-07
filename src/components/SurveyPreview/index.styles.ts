@@ -1,11 +1,13 @@
 import styled, { keyframes } from "styled-components";
 
 export const PreviewWrapper = styled.div`
-  width: 70rem;
+  width: 100%;
 
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  user-select: none;
 `;
 
 export const PreviewTitle = styled.div`

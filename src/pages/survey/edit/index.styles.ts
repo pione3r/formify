@@ -91,7 +91,14 @@ export const Body = styled.div`
   gap: 60px;
 
   max-width: 160rem;
+  height: 800px;
 
   margin: 0 auto;
   padding: 50px;
+`;
+
+export const SurveyFlowWrapper = styled.div`
+  min-width: 900px;
+
+  background-color: #ffffff;
 `;

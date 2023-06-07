@@ -1,21 +1,24 @@
 import styled, { keyframes } from "styled-components";
 
-export const Wrapper = styled.main`
+export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 40px;
 
-  max-width: 1280px;
+  max-width: 140rem;
 
   margin: 0 auto;
-  margin-top: 100px;
+  padding: 80px;
 `;
 
-export const HeaderWrapper = styled.div``;
+export const DescriptionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
-export const Title = styled.h1`
-  font-size: 3.5rem;
-  font-weight: 600;
+export const DescriptionTitle = styled.div`
+  font-size: 4rem;
+  font-weight: 700;
 `;
 
 const subTitleRiseAnimation = keyframes`
@@ -30,18 +33,33 @@ const subTitleRiseAnimation = keyframes`
   }
 `;
 
-export const SubTitle = styled.h3`
-  font-size: 3rem;
+export const DescriptionSubTitle = styled.h3`
+  font-size: 2rem;
   font-weight: 400;
   color: #777777;
 
   animation: ${subTitleRiseAnimation} 0.5s ease-in;
 `;
 
-export const Video = styled.video`
-  padding: 20px;
+export const ExampleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
-  object-fit: contain;
+  padding: 30px;
 
-  box-shadow: rgb(0 0 0 / 12%) 6px 8px 16px;
+  background-color: #ffffff;
+
+  border-radius: 12px;
+
+  box-shadow: 0px 0px 100px #bcbcbc;
+`;
+
+export const ExampleTitle = styled.div`
+  font-size: 2rem;
+  font-weight: 700;
+`;
+
+export const ExampleBody = styled.div`
+  height: 500px;
 `;
